@@ -6,7 +6,7 @@
 
 **在开始 vibe coding 之前，先确认这东西真的值得做。**
 
-一个面向 Codex 与 Claude Code 的轻量技能包：帮你说清问题、冷静判断开发必要性，并认真寻找已经存在的产品、开源项目和可复用组件。
+一个面向 Codex 与 Claude Code 的轻量插件：帮你说清问题、冷静判断开发必要性，并认真寻找已经存在的产品、开源项目和可复用组件。
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
