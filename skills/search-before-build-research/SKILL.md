@@ -1,6 +1,6 @@
 ---
-name: should-i-build-research
-description: Research and GitHub-search enhancement for Should I Build. Given a functional fingerprint, discover and verify existing products, repositories, packages, models, plugins, templates, and components. Also use when the user asks to enable GitHub deep search, configure GitHub MCP, or add GitHub search enhancement for Should I Build.
+name: search-before-build-research
+description: Research and GitHub-search enhancement for Search Before Build. Given a functional fingerprint, discover and verify existing products, repositories, packages, models, plugins, templates, and components. Also use when the user asks to enable GitHub deep search, configure GitHub MCP, or add GitHub search enhancement for Search Before Build.
 ---
 
 # Research Existing Solutions

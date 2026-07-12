@@ -39,9 +39,9 @@ All commands below were successfully executed anonymously on 2026-07-12. Replace
 **Use when:** Looking for open-source products, implementations, reusable code, or repository-level evidence. Prefer a detected GitHub MCP/connector. Read [github-retrieval.md](github-retrieval.md) for capability detection, optional OAuth setup, API limits, and required downgrade wording.
 
 ```bash
-curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: should-i-build" "https://api.github.com/search/repositories?q=github-mcp-server+in:name&per_page=2"
-curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: should-i-build" "https://api.github.com/repos/github/github-mcp-server"
-curl -L -H "Accept: application/vnd.github.raw+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: should-i-build" "https://api.github.com/repos/github/github-mcp-server/readme"
+curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/search/repositories?q=github-mcp-server+in:name&per_page=2"
+curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/repos/github/github-mcp-server"
+curl -L -H "Accept: application/vnd.github.raw+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/repos/github/github-mcp-server/readme"
 ```
 
 Anonymous GitHub code search is not available. On rate-limit `403`, follow the GitHub-specific fallback instead of treating missing data as absence.
@@ -64,9 +64,9 @@ npm search sindresorhus --json --searchlimit=3
 **Use when:** Resolving the same component across ecosystems, comparing maintenance/adoption signals, looking up a PURL, or listing packages by maintainer. It is better for exact/structured lookup than free-text discovery.
 
 ```bash
-curl -L -H "User-Agent: should-i-build" "https://packages.ecosyste.ms/api/v1/packages/lookup?purl=pkg%3Anpm%2Fexpress"
-curl -L -H "User-Agent: should-i-build" "https://packages.ecosyste.ms/api/v1/registries/crates.io/packages/serde"
-curl -L -H "User-Agent: should-i-build" "https://packages.ecosyste.ms/api/v1/registries/npmjs.org/maintainers/sindresorhus/packages?per_page=2"
+curl -L -H "User-Agent: search-before-build" "https://packages.ecosyste.ms/api/v1/packages/lookup?purl=pkg%3Anpm%2Fexpress"
+curl -L -H "User-Agent: search-before-build" "https://packages.ecosyste.ms/api/v1/registries/crates.io/packages/serde"
+curl -L -H "User-Agent: search-before-build" "https://packages.ecosyste.ms/api/v1/registries/npmjs.org/maintainers/sindresorhus/packages?per_page=2"
 ```
 
 Do not use an undocumented `query=` parameter on the registry package-list endpoint; it does not perform keyword search. Official OpenAPI: `https://raw.githubusercontent.com/ecosyste-ms/packages/main/openapi/api/v1/openapi.yaml`.
@@ -78,8 +78,8 @@ Do not use an undocumented `query=` parameter on the registry package-list endpo
 **Use when:** The user needs an existing Agent tool, connector, MCP server, or integration instead of new application code.
 
 ```bash
-curl -L -H "User-Agent: should-i-build" "https://registry.modelcontextprotocol.io/v0.1/servers?search=filesystem&limit=3"
-curl -L -H "User-Agent: should-i-build" "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.github%2Fgithub-mcp-server&version=latest&limit=3"
+curl -L -H "User-Agent: search-before-build" "https://registry.modelcontextprotocol.io/v0.1/servers?search=filesystem&limit=3"
+curl -L -H "User-Agent: search-before-build" "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.github%2Fgithub-mcp-server&version=latest&limit=3"
 ```
 
 Use `metadata.nextCursor` from a response for pagination when needed. API schema: `https://registry.modelcontextprotocol.io/openapi.json`.
@@ -91,9 +91,9 @@ Use `metadata.nextCursor` from a response for pagination when needed. API schema
 **Use when:** Searching Java, Kotlin, Scala, Clojure, Android, Maven, or Gradle dependencies.
 
 ```bash
-curl -L -H "User-Agent: should-i-build" "https://search.maven.org/solrsearch/select?q=guice&rows=3&wt=json"
-curl -L -H "User-Agent: should-i-build" "https://search.maven.org/solrsearch/select?q=g%3Acom.google.inject%20AND%20a%3Aguice&rows=3&wt=json"
-curl -L -H "User-Agent: should-i-build" "https://search.maven.org/solrsearch/select?q=g%3Aorg.apache.maven*&rows=3&wt=json"
+curl -L -H "User-Agent: search-before-build" "https://search.maven.org/solrsearch/select?q=guice&rows=3&wt=json"
+curl -L -H "User-Agent: search-before-build" "https://search.maven.org/solrsearch/select?q=g%3Acom.google.inject%20AND%20a%3Aguice&rows=3&wt=json"
+curl -L -H "User-Agent: search-before-build" "https://search.maven.org/solrsearch/select?q=g%3Aorg.apache.maven*&rows=3&wt=json"
 ```
 
 Use `g:` for group/organization and `a:` for artifact name. Official guide: `https://central.sonatype.org/search/rest-api-guide/`.
@@ -105,9 +105,9 @@ Use `g:` for group/organization and `a:` for artifact name. Official guide: `htt
 **Use when:** The project is written in Rust or a reusable Rust crate could satisfy the need. The API examples are the default anonymous path. If Cargo is already installed, its official `cargo search` command is also suitable; do not install Rust merely to search.
 
 ```bash
-curl -L -H "User-Agent: should-i-build (repository research)" "https://crates.io/api/v1/crates?q=serde&per_page=3"
-curl -L -H "User-Agent: should-i-build (repository research)" "https://crates.io/api/v1/crates/serde"
-curl -L -H "User-Agent: should-i-build (repository research)" "https://crates.io/api/v1/crates?page=1&per_page=3&sort=downloads"
+curl -L -H "User-Agent: search-before-build (repository research)" "https://crates.io/api/v1/crates?q=serde&per_page=3"
+curl -L -H "User-Agent: search-before-build (repository research)" "https://crates.io/api/v1/crates/serde"
+curl -L -H "User-Agent: search-before-build (repository research)" "https://crates.io/api/v1/crates?page=1&per_page=3&sort=downloads"
 ```
 
 ## Hugging Face Hub
@@ -138,9 +138,9 @@ Do not install `huggingface_hub` automatically during normal research. Fall back
 **Use when:** Looking for algorithms, academic precedents, evaluations, benchmarks, or recent research—not ordinary software packages.
 
 ```bash
-curl -L -H "User-Agent: should-i-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=ti%3A%22retrieval%20augmented%20generation%22&start=0&max_results=3"
-curl -L -H "User-Agent: should-i-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=au%3AHinton_G&start=0&max_results=3"
-curl -L -H "User-Agent: should-i-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=cat%3Acs.AI%20AND%20all%3Aagent&start=0&max_results=3&sortBy=submittedDate&sortOrder=descending"
+curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=ti%3A%22retrieval%20augmented%20generation%22&start=0&max_results=3"
+curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=au%3AHinton_G&start=0&max_results=3"
+curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=cat%3Acs.AI%20AND%20all%3Aagent&start=0&max_results=3&sortBy=submittedDate&sortOrder=descending"
 ```
 
 Wait at least three seconds between repeated calls, keep result pages small, and cache identical queries. Official manual: `https://info.arxiv.org/help/api/user-manual.html`.

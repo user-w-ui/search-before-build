@@ -32,7 +32,7 @@ When no sufficient GitHub tool exists, continue with anonymous retrieval, but of
 
 Do not download software, change MCP configuration, or start OAuth until the user explicitly agrees. Do not repeat the offer after refusal during the same task.
 
-Recognize requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 should-i-build 开启 GitHub 搜索增强” as setup intent. Run the installer instead of returning a manual tutorial.
+Recognize requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 search-before-build 开启 GitHub 搜索增强” as setup intent. Run the installer instead of returning a manual tutorial.
 
 ## Run the installer
 
@@ -53,7 +53,7 @@ Use an HTTP-capable host tool. Send these headers on every request:
 ```text
 Accept: application/vnd.github+json
 X-GitHub-Api-Version: 2022-11-28
-User-Agent: should-i-build
+User-Agent: search-before-build
 ```
 
 Use only public endpoints:

@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+LEGACY_NAMES = ("should-" + "i-build", "Should " + "I Build")
 
 
 def read_skill(name: str) -> tuple[dict[str, str], str]:
@@ -19,26 +20,38 @@ def read_skill(name: str) -> tuple[dict[str, str], str]:
     return metadata, body
 
 
+def assert_legacy_name_removed() -> None:
+    for path in ROOT.rglob("*"):
+        if ".git" in path.parts or not path.is_file():
+            continue
+        relative = path.relative_to(ROOT).as_posix()
+        assert not any(name in relative for name in LEGACY_NAMES), relative
+        if path.suffix.lower() in {".md", ".json", ".mjs", ".py"}:
+            text = path.read_text(encoding="utf-8")
+            assert not any(name in text for name in LEGACY_NAMES), relative
+
+
 def main() -> None:
+    assert_legacy_name_removed()
     claude_manifest = json.loads(
         (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
     codex_manifest = json.loads(
         (ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
-    assert claude_manifest["name"] == "should-i-build"
-    assert codex_manifest["name"] == "should-i-build"
+    assert claude_manifest["name"] == "search-before-build"
+    assert codex_manifest["name"] == "search-before-build"
     assert codex_manifest["skills"] == "./skills/"
-    assert codex_manifest["interface"]["displayName"] == "Should I Build?"
+    assert codex_manifest["interface"]["displayName"] == "Search Before Build"
 
-    assess_meta, assess = read_skill("should-i-build-assess")
-    compare_meta, compare = read_skill("should-i-build-compare")
-    research_meta, research = read_skill("should-i-build-research")
+    assess_meta, assess = read_skill("search-before-build-assess")
+    compare_meta, compare = read_skill("search-before-build-compare")
+    research_meta, research = read_skill("search-before-build-research")
 
     assert {assess_meta["name"], compare_meta["name"], research_meta["name"]} == {
-        "should-i-build-assess",
-        "should-i-build-compare",
-        "should-i-build-research",
+        "search-before-build-assess",
+        "search-before-build-compare",
+        "search-before-build-research",
     }
 
     assert "at most five questions" in assess.lower()
@@ -50,14 +63,14 @@ def main() -> None:
     assert "search-sources.md" in research
     assert "select only relevant sources" in research.lower()
     assert "explicit user approval" in research.lower()
-    assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in assess
-    assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in compare
-    assert "bundled `should-i-build-research` skill" in assess
-    assert "bundled `should-i-build-research` skill" in compare
+    assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in assess
+    assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in compare
+    assert "bundled `search-before-build-research` skill" in assess
+    assert "bundled `search-before-build-research` skill" in compare
     for skill in (assess, compare, research):
         assert "${CLAUDE_PLUGIN_ROOT}" not in skill
         assert "$ARGUMENTS" not in skill
-        assert "should-i-build:research" not in skill
+        assert "search-before-build:research" not in skill
 
     for reference in (
         "conversation-and-decision.md",
@@ -118,7 +131,7 @@ def main() -> None:
         assert phrase not in compare
         assert phrase in conversation_rules
 
-    print("should-i-build plugin structure and behavior constraints: OK")
+    print("search-before-build plugin structure and behavior constraints: OK")
 
 
 if __name__ == "__main__":

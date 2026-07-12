@@ -17,9 +17,9 @@ import { basename, join } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { spawn, spawnSync } from "node:child_process";
 
-const SERVER_NAME = "should-i-build-github";
+const SERVER_NAME = "search-before-build-github";
 const RELEASES = "https://github.com/github/github-mcp-server/releases";
-const USER_AGENT = "should-i-build-github-mcp-setup";
+const USER_AGENT = "search-before-build-github-mcp-setup";
 const args = new Set(process.argv.slice(2));
 
 function valueAfter(flag) {
@@ -57,9 +57,9 @@ function target() {
 
 function installDirectory() {
   if (platform() === "win32") {
-    return join(process.env.LOCALAPPDATA || join(homedir(), "AppData", "Local"), "should-i-build", "github-mcp");
+    return join(process.env.LOCALAPPDATA || join(homedir(), "AppData", "Local"), "search-before-build", "github-mcp");
   }
-  return join(process.env.XDG_DATA_HOME || join(homedir(), ".local", "share"), "should-i-build", "github-mcp");
+  return join(process.env.XDG_DATA_HOME || join(homedir(), ".local", "share"), "search-before-build", "github-mcp");
 }
 
 async function fetchChecked(url, options = {}) {
@@ -244,7 +244,7 @@ function rpcConnectionTest(executable, timeoutMs = 300_000) {
       params: {
         protocolVersion: "2025-06-18",
         capabilities: {},
-        clientInfo: { name: "should-i-build-setup", version: "0.1.0" },
+        clientInfo: { name: "search-before-build-setup", version: "0.1.0" },
       },
     });
   });
@@ -266,7 +266,7 @@ async function main() {
   }
 
   if (args.has("--self-test")) {
-    const temporary = mkdtempSync(join(tmpdir(), "should-i-build-github-mcp-self-test-"));
+    const temporary = mkdtempSync(join(tmpdir(), "search-before-build-github-mcp-self-test-"));
     try {
       const release = await releaseInfo(selected.asset);
       const archive = join(temporary, selected.asset);
@@ -296,7 +296,7 @@ async function main() {
   }
 
   if (!existsSync(executable) || args.has("--force-download")) {
-    const temporary = mkdtempSync(join(tmpdir(), "should-i-build-github-mcp-"));
+    const temporary = mkdtempSync(join(tmpdir(), "search-before-build-github-mcp-"));
     try {
       const release = await releaseInfo(selected.asset);
       const archive = join(temporary, selected.asset);

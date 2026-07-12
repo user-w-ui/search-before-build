@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the shared workflows in `skills/`. `should-i-build-assess` evaluates ideas, `should-i-build-compare` examines existing work, and `should-i-build-research` performs candidate research and optional GitHub enhancement. Shared rules belong in `references/`; the one-time installer is `scripts/setup-github-mcp.mjs`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated reports belong in `docs/should-i-build/<topic>/<competitor>.md`.
+This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the shared workflows in `skills/`. `search-before-build-assess` evaluates ideas, `search-before-build-compare` examines existing work, and `search-before-build-research` performs candidate research and optional GitHub enhancement. Shared rules belong in `references/`; the one-time installer is `scripts/setup-github-mcp.mjs`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated reports belong in `docs/search-before-build/<topic>/<competitor>.md`.
 
 ## Build, Test, and Development Commands
 
@@ -11,10 +11,10 @@ There is no build step. Run these commands from the repository root:
 ```bash
 claude plugin validate --strict .
 python tests/validate_plugin.py
-claude --plugin-dir /path/to/should-i-build
+claude --plugin-dir /path/to/search-before-build
 ```
 
-The first command validates the Claude manifest and skill metadata. The second checks both manifests, skill boundaries, reference files, and report structure. The third loads the Claude package for an interactive smoke test. Invoke `/should-i-build:should-i-build-assess <idea>` or `/should-i-build:should-i-build-compare <path>` after loading it. Validate the Codex manifest with Codex's plugin validator before publishing a Codex marketplace entry.
+The first command validates the Claude manifest and skill metadata. The second checks both manifests, skill boundaries, reference files, and report structure. The third loads the Claude package for an interactive smoke test. Invoke `/search-before-build:search-before-build-assess <idea>` or `/search-before-build:search-before-build-compare <path>` after loading it. Validate the Codex manifest with Codex's plugin validator before publishing a Codex marketplace entry.
 
 ## Coding Style & Naming Conventions
 

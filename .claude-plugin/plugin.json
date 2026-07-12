@@ -1,8 +1,8 @@
 {
-  "name": "should-i-build",
+  "name": "search-before-build",
   "version": "0.1.0",
   "description": "A plain-language pre-build reality check and evidence-backed alternative research toolkit for vibe coders.",
   "author": {
-    "name": "should-i-build contributors"
+    "name": "search-before-build contributors"
   }
 }
