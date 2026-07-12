@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` is the Claude Code manifest and `.codex-plugin/plugin.json` is the Codex manifest; both expose the shared workflows in `skills/`. Each user workflow lives in `skills/<name>/SKILL.md`: `should-i-build-assess` evaluates new ideas, `should-i-build-compare` examines an existing plan or prototype, and `should-i-build-research` performs read-only candidate research for the other workflows. Shared rules belong in `references/`; keep detailed procedures there instead of duplicating them across skills. Keep shared skill instructions platform-neutral: do not use Claude-only variables, command names, or frontmatter fields in this directory. Platform-specific installation and discovery metadata belongs only in the relevant manifest and release documentation. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated competitor reports belong in `docs/should-i-build/<topic>/<competitor>.md`, not in the plugin source folders.
+This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the shared workflows in `skills/`. `should-i-build-assess` evaluates ideas, `should-i-build-compare` examines existing work, and `should-i-build-research` performs candidate research and optional GitHub enhancement. Shared rules belong in `references/`; the one-time installer is `scripts/setup-github-mcp.mjs`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated reports belong in `docs/should-i-build/<topic>/<competitor>.md`.
 
 ## Build, Test, and Development Commands
 
@@ -22,7 +22,7 @@ Use UTF-8, LF line endings, four spaces for Python, and two spaces for JSON inde
 
 ## Testing Guidelines
 
-Add assertions to `tests/validate_plugin.py` whenever behavior or report contracts change. Test filenames use `test_` or `validate_` prefixes. Before submitting, run both validation commands and manually smoke-test the affected slash command. Research must remain file-system read-only; only `assess` and `compare` may write competitor reports.
+Add assertions to `tests/validate_plugin.py` whenever behavior or report contracts change. Test filenames use `test_` or `validate_` prefixes. Before submitting, run both validation commands, `node --check scripts/setup-github-mcp.mjs`, and a smoke test. Normal research is read-only; MCP download and configuration may run only after explicit user consent. Only `assess` and `compare` may write competitor reports.
 
 ## Commit & Pull Request Guidelines
 

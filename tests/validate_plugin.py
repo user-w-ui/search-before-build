@@ -44,7 +44,10 @@ def main() -> None:
     assert "at most five questions" in assess.lower()
     assert "ask one question per turn" in assess.lower()
     assert "do not narrate the workflow or use headings" in assess.lower()
-    assert "never create, edit, or delete files" in research.lower()
+    assert "normal research is read-only" in research.lower()
+    assert "only exception" in research.lower()
+    assert "github-retrieval.md" in research
+    assert "explicit user approval" in research.lower()
     assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in assess
     assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in compare
     assert "bundled `should-i-build-research` skill" in assess
@@ -58,10 +61,27 @@ def main() -> None:
         "conversation-and-decision.md",
         "research-method.md",
         "report-template.md",
+        "github-retrieval.md",
     ):
         assert (ROOT / "references" / reference).is_file(), f"missing reference: {reference}"
 
+    setup_script = ROOT / "scripts" / "setup-github-mcp.mjs"
+    assert setup_script.is_file()
+    setup_text = setup_script.read_text(encoding="utf-8")
+    assert "--read-only" in setup_text
+    assert '"--toolsets", "repos"' in setup_text
+    assert "GITHUB_PERSONAL_ACCESS_TOKEN" not in setup_text
+    assert "api.github.com/repos/github/github-mcp-server/releases" not in setup_text
+    assert 'run(candidate, ["stdio", "--help"])' in setup_text
+
+    github_rules = (ROOT / "references" / "github-retrieval.md").read_text(encoding="utf-8")
+    assert "本次未使用 GitHub 专属深度检索工具" in github_rules
+    assert "当前环境无法完成外部检索" in github_rules
+    assert "api.github.com/search/repositories" in github_rules
+    assert "Personal Access Token" in github_rules
+
     report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
+    assert "github-retrieval.md" in report_template
     required_headings = (
         "## 简介",
         "## 与 <当前项目名称> 的对比",

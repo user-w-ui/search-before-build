@@ -21,6 +21,8 @@ Inspect what the host can use: live Web search, interactive browser, CLI, instal
 
 Do not claim to have searched a platform that was only reached through third-party mentions. Do not recommend installing or configuring a dependency unless it would materially improve the current search and the host permits asking the user.
 
+For every GitHub-related search, read and follow [the GitHub retrieval rules](github-retrieval.md). A configured GitHub MCP or equivalent structured connector is optional enhancement, never a prerequisite.
+
 ## Adaptive search funnel
 
 1. **Discover the category**: search the problem, workflow, category terms, and synonyms. For a Chinese or unknown market, query in Chinese and English.

@@ -1,24 +1,25 @@
 ---
 name: should-i-build-research
-description: Internal candidate-research step for Should I Build. Given a functional fingerprint, discover and verify existing products, repositories, packages, models, plugins, templates, and components, then return a structured result. Use only when invoked by a Should I Build workflow.
+description: Research and GitHub-search enhancement for Should I Build. Given a functional fingerprint, discover and verify existing products, repositories, packages, models, plugins, templates, and components. Also use when the user asks to enable GitHub deep search, configure GitHub MCP, or add GitHub search enhancement for Should I Build.
 ---
 
 # Research Existing Solutions
 
-Find what already solves the user's problem. This skill is read-only: never create, edit, or delete files.
+Find what already solves the user's problem. Normal research is read-only: never create, edit, or delete files. The only exception is the bundled GitHub MCP setup flow, which may download the official binary and update the current Agent's MCP configuration after explicit user approval.
 
-Read all of `references/research-method.md` from this package before searching.
+Read all of `references/research-method.md` from this package before searching. Before GitHub research or when the user requests GitHub enhancement, also read `references/github-retrieval.md`.
 
 ## Workflow
 
 1. Derive or accept a functional fingerprint. If the core task or must-have capability is too unclear to search accurately, ask one plain question and wait.
-2. Detect available web search, browser, CLI, platform-specific skill, plugin, MCP, and local code-discovery capabilities. Prefer a reliable platform-specific capability when available. Never require one.
-3. Run at least a basic live web search. If live search is unavailable, stop and explain that a reliable current comparison cannot be completed.
-4. Use the adaptive funnel and platform routes in the reference. Search both Chinese and English when the market is Chinese or unknown.
-5. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround.
-6. Deeply verify the strongest candidates with primary sources. Do not infer functionality from a name, snippet, topic tag, directory name, Stars, or download count.
-7. Compare candidates against the fingerprint. Label each important capability as `native`, `partial`, `extensible`, `unsupported`, or `unverified`.
-8. Return the structured result below. Do not save a report; the calling workflow owns persistence.
+2. Detect available web search, browser, CLI, platform-specific skill, plugin, MCP, and local code-discovery capabilities. For GitHub, follow the dedicated capability check and consent rules. Never install or change configuration without explicit user approval.
+3. If the user explicitly requested GitHub enhancement, run the bundled one-time setup script as directed by `references/github-retrieval.md`, report the result, and stop. Do not return a manual installation tutorial.
+4. Run at least a basic live web search. If live search is unavailable, stop and use the exact no-network statement from the GitHub reference; never claim that no similar project exists.
+5. Use the adaptive funnel and platform routes in the reference. Search both Chinese and English when the market is Chinese or unknown.
+6. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround.
+7. Deeply verify the strongest candidates with primary sources. Do not infer functionality from a name, snippet, topic tag, directory name, Stars, or download count.
+8. Compare candidates against the fingerprint. Label each important capability as `native`, `partial`, `extensible`, `unsupported`, or `unverified`.
+9. Return the structured result below. Do not save a report; the calling workflow owns persistence.
 
 ## Return shape
 

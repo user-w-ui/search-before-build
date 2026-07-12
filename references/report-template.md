@@ -44,6 +44,8 @@ Use this exact section order:
 
 ## 资料来源
 
+检索说明：<说明是否使用 GitHub 专属深度检索工具，以及无法访问或降级的渠道。>
+
 - [<主要来源>](<URL>)
 ```
 
@@ -53,5 +55,6 @@ Use this exact section order:
 - Add or remove comparison rows only when a row materially affects the comparison. Keep the three columns and compact cells.
 - Describe verified current behavior. Distinguish released, planned, inferred, and unverified capabilities.
 - Use primary sources and date time-sensitive facts in the relevant cell or source note. Never cite a search-result page.
+- When GitHub MCP or an equivalent structured GitHub tool was unavailable, include the exact anonymous-search limitation statement from `github-retrieval.md` under “资料来源”.
 - Explain unavoidable technical terms briefly. Do not use product-management jargon.
 - When several competitors are researched, create a separate canonical report for each competitor. Do not combine competitors into extra table columns.
