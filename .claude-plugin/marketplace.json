@@ -1,0 +1,14 @@
+{
+  "name": "search-before-build",
+  "description": "A plain-language pre-build reality check and evidence-backed alternative research toolkit for vibe coders.",
+  "owner": {
+    "name": "superq"
+  },
+  "plugins": [
+    {
+      "name": "search-before-build",
+      "source": "./",
+      "description": "A plain-language pre-build reality check and evidence-backed alternative research toolkit for vibe coders."
+    }
+  ]
+}

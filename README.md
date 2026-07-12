@@ -190,9 +190,27 @@ codex plugin marketplace add user-w-ui/search-before-build --ref main
 codex plugin add search-before-build@search-before-build
 ```
 
+### Claude Code（marketplace 安装）
+
+在 Claude Code 会话中添加 marketplace 并安装插件：
+
+```text
+/plugin marketplace add user-w-ui/search-before-build
+/plugin install search-before-build@search-before-build
+```
+
+安装后即可调用：
+
+```text
+/search-before-build:search-before-build-assess <你的想法、计划或文件路径>
+/search-before-build:search-before-build-compare <计划书、原型或仓库路径>
+```
+
+后续可用 `/plugin marketplace update search-before-build` 获取更新。
+
 ### Claude Code（本地加载）
 
-克隆或下载本项目后，在 Claude Code 中加载插件目录：
+不想通过 marketplace 时，克隆或下载本项目后直接加载插件目录：
 
 ```powershell
 claude --plugin-dir D:\path\to\search-before-build
@@ -204,12 +222,7 @@ macOS 或 Linux：
 claude --plugin-dir /path/to/search-before-build
 ```
 
-进入 Claude Code 后即可手动调用：
-
-```text
-/search-before-build:search-before-build-assess <你的想法、计划或文件路径>
-/search-before-build:search-before-build-compare <计划书、原型或仓库路径>
-```
+调用方式与上面相同。
 
 ### 验证插件
 
@@ -224,11 +237,14 @@ python tests/validate_plugin.py
 ```text
 search-before-build/
 ├── .claude-plugin/
-│   └── plugin.json
+│   ├── plugin.json
+│   └── marketplace.json
 ├── .codex-plugin/
 │   └── plugin.json
 ├── .agents/plugins/
 │   └── marketplace.json
+├── assets/
+│   └── mascot.png
 ├── bin/
 │   └── install.mjs
 ├── skills/

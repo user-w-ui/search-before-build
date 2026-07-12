@@ -44,6 +44,16 @@ def main() -> None:
     assert codex_manifest["skills"] == "./skills/"
     assert codex_manifest["interface"]["displayName"] == "Search Before Build"
 
+    claude_marketplace = json.loads(
+        (ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
+    )
+    assert claude_marketplace["name"] == "search-before-build"
+    assert claude_marketplace.get("description")
+    assert any(
+        plugin["name"] == "search-before-build" and plugin["source"] == "./"
+        for plugin in claude_marketplace["plugins"]
+    ), "Claude marketplace must expose search-before-build from the repo root"
+
     marketplace = json.loads(
         (ROOT / ".agents" / "plugins" / "marketplace.json").read_text(encoding="utf-8")
     )
