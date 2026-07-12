@@ -6,11 +6,12 @@
 
 **在开始 vibe coding 之前，先确认这东西真的值得做。**
 
-一个面向 Claude Code 的轻量技能包：帮你说清问题、冷静判断开发必要性，并认真寻找已经存在的产品、开源项目和可复用组件。
+一个面向 Codex 与 Claude Code 的轻量技能包：帮你说清问题、冷静判断开发必要性，并认真寻找已经存在的产品、开源项目和可复用组件。
 
-![Version](https://img.shields.io/badge/version-0.1.0-4f46e5)
+[![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
+![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-d97706)
-![Status](https://img.shields.io/badge/status-early_preview-059669)
+[![License](https://img.shields.io/badge/license-MIT-059669)](./LICENSE)
 
 </div>
 
@@ -163,7 +164,33 @@ docs/search-before-build/<当前项目>/<竞品>.md
 
 ## 安装与使用
 
-### 本地加载
+### Codex（一条命令安装）
+
+确保已安装 Codex CLI 与 Node.js 18 或更高版本，然后运行：
+
+```bash
+npx @superq/search-before-build install
+```
+
+该命令会从官方 GitHub marketplace 安装 `search-before-build`。完成后新开一个 Codex 任务，再明确请求：
+
+```text
+$search-before-build-assess <你的想法、计划或文件路径>
+$search-before-build-compare <计划书、原型或仓库路径>
+```
+
+`search-before-build-research` 是两个主工作流调用的只读研究步骤，不建议直接使用。
+
+### Codex（手动安装）
+
+不想使用 npm 时，可以直接使用 Codex CLI：
+
+```bash
+codex plugin marketplace add user-w-ui/search-before-build --ref main
+codex plugin add search-before-build@search-before-build
+```
+
+### Claude Code（本地加载）
 
 克隆或下载本项目后，在 Claude Code 中加载插件目录：
 
@@ -184,29 +211,6 @@ claude --plugin-dir /path/to/search-before-build
 /search-before-build:search-before-build-compare <计划书、原型或仓库路径>
 ```
 
-### Codex
-
-仓库根目录也包含 `.codex-plugin/plugin.json`，并复用同一套 `skills/` 与 `references/`。先在终端注册包含本插件的 marketplace：
-
-```bash
-codex plugin marketplace add <owner/repo 或本地 marketplace 路径>
-```
-
-再在 Codex 会话中安装并启用：
-
-```text
-/plugin install search-before-build@<marketplace-name>
-```
-
-安装后新开一个 Codex 任务，用命名空间斜杠命令调用（与 Claude Code 一致）：
-
-```text
-/search-before-build:search-before-build-assess <你的想法、计划或文件路径>
-/search-before-build:search-before-build-compare <计划书、原型或仓库路径>
-```
-
-`search-before-build-research` 是两个主工作流调用的只读研究步骤，不建议直接使用。
-
 ### 验证插件
 
 ```bash
@@ -223,6 +227,10 @@ search-before-build/
 │   └── plugin.json
 ├── .codex-plugin/
 │   └── plugin.json
+├── .agents/plugins/
+│   └── marketplace.json
+├── bin/
+│   └── install.mjs
 ├── skills/
 │   ├── search-before-build-assess/SKILL.md
 │   ├── search-before-build-compare/SKILL.md
@@ -235,6 +243,8 @@ search-before-build/
 │   └── report-template.md
 ├── scripts/
 │   └── setup-github-mcp.mjs
+├── package.json
+├── LICENSE
 └── tests/
     └── validate_plugin.py
 ```

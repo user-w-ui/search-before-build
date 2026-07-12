@@ -1,0 +1,39 @@
+{
+  "name": "@superq/search-before-build",
+  "version": "0.1.0",
+  "description": "Install the Search Before Build Codex plugin from its official marketplace.",
+  "license": "MIT",
+  "author": "superq",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user-w-ui/search-before-build.git"
+  },
+  "bugs": {
+    "url": "https://github.com/user-w-ui/search-before-build/issues"
+  },
+  "homepage": "https://github.com/user-w-ui/search-before-build#readme",
+  "keywords": [
+    "codex",
+    "codex-plugin",
+    "agent-skill",
+    "vibe-coding"
+  ],
+  "bin": {
+    "search-before-build": "bin/install.mjs"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --check bin/install.mjs",
+    "pack:check": "npm pack --dry-run"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

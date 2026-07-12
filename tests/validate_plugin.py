@@ -44,6 +44,28 @@ def main() -> None:
     assert codex_manifest["skills"] == "./skills/"
     assert codex_manifest["interface"]["displayName"] == "Search Before Build"
 
+    marketplace = json.loads(
+        (ROOT / ".agents" / "plugins" / "marketplace.json").read_text(encoding="utf-8")
+    )
+    assert marketplace["name"] == "search-before-build"
+    assert marketplace["plugins"] == [
+        {
+            "name": "search-before-build",
+            "source": {"source": "local", "path": "."},
+            "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+            "category": "Productivity",
+        }
+    ]
+
+    package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    assert package["name"] == "@superq/search-before-build"
+    assert package["license"] == "MIT"
+    assert package["bin"] == {"search-before-build": "bin/install.mjs"}
+    assert (ROOT / "LICENSE").is_file()
+    installer = (ROOT / "bin" / "install.mjs").read_text(encoding="utf-8")
+    assert '"plugin", "marketplace", "add"' in installer
+    assert '"plugin", "add"' in installer
+
     assess_meta, assess = read_skill("search-before-build-assess")
     compare_meta, compare = read_skill("search-before-build-compare")
     research_meta, research = read_skill("search-before-build-research")
