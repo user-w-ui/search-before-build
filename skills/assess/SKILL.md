@@ -29,8 +29,8 @@ Read the conversation and decision rules at `${CLAUDE_PLUGIN_ROOT}/references/co
 3. Give a short necessity check in the conversation. State what is fact, inference, and unknown. If the case is weak, say so directly, but let the user choose to continue.
 4. Before research, convert the request into a functional fingerprint. Confirm only if a remaining ambiguity would change the search.
 5. Invoke `should-i-build:research` with the fingerprint and instruct it not to write files. If the Skill tool cannot invoke it, read and follow `${CLAUDE_PLUGIN_ROOT}/skills/research/SKILL.md` inline.
-6. Combine the necessity check and research evidence into exactly one recommendation: `Build`, `Adapt`, `Use existing`, or `Stop`.
-7. Once research has run, read the report template at `${CLAUDE_PLUGIN_ROOT}/references/report-template.md`, then create or update `docs/should-i-build/<topic-slug>.md`. Reuse the existing file for the same topic. Keep Unicode letters when useful; remove unsafe filename characters and use hyphens for spaces.
-8. Return the recommendation, the main reason, the most reusable option, the report path, and the biggest remaining unknown. Do not begin implementation.
+6. Combine the necessity check and research evidence into exactly one recommendation: `Build`, `Adapt`, `Use existing`, or `Stop`. Keep this decision in the conversation; do not put it in competitor reports.
+7. Once research has run, read the report template at `${CLAUDE_PLUGIN_ROOT}/references/report-template.md`. Write one report per strong competitor to `docs/should-i-build/<topic-slug>/<competitor-slug>.md`. Update the canonical file when it already exists; do not create timestamped variants or a combined multi-competitor table. Keep the earlier clarification and necessity analysis out of every report.
+8. Return the recommendation, the main reason, the most reusable option, all report paths, and the biggest remaining unknown. Do not begin implementation.
 
 The user may override the recommendation. Record that choice without weakening or rewriting the evidence.

@@ -1,72 +1,57 @@
-# Report template
+# Competitor report template
 
-Use this order. Remove comparison rows that do not affect the decision. Keep language plain, cells short, and technical terms briefly explained.
+Write one report per competitor. Keep the report strictly about the competitor and its comparison with the current project. Do not include need clarification, necessity gates, Build/Stop decisions, MVP advice, or the earlier conversation.
+
+Use this exact section order:
 
 ```markdown
-# <项目想法>：是否值得做
+# <竞品名称>
 
-检索日期：<YYYY-MM-DD>
+官方地址：[<项目或产品名称>](<primary URL>)
 
-## 一句话结论
+## 简介
 
-> <Build / Adapt / Use existing / Stop：用一句简单的话说明原因>
+<用一小段话说明竞品的定位、主要使用者和工作方式。>
 
-## 你想解决什么
+## 与 <当前项目名称> 的对比
 
-- 谁会用：
-- 具体问题：
-- 使用场景：
-- 现在怎么解决：
-- 最重要的功能：
-- 个人使用或公开产品：
-
-## 这个需求真的需要开发吗
-
-| 关键问题 | 当前判断 | 根据 |
+| 维度 | <竞品名称> | <当前项目名称> |
 | --- | --- | --- |
-| 问题是否真实发生 | ... | 事实 / 推断 / 未知 |
-| 现有方式是否确实麻烦 | ... | ... |
-| 是否值得做成独立工具 | ... | ... |
+| 核心定位 | ... | ... |
+| 主要使用者 | ... | ... |
+| 核心工作流 | ... | ... |
+| 运行与使用方式 | ... | ... |
+| 最重要的功能 | ... | ... |
+| 扩展与集成 | ... | ... |
+| 数据、部署与限制 | ... | ... |
+| 维护与成熟度 | ... | ... |
+| 许可证或价格 | ... | ... |
+| 主要优势 | ... | ... |
+| 主要局限 | ... | ... |
 
-## 找到了哪些选择
+## 值得 <当前项目名称> 关注的设计
 
-| 方案 | 类型 | 能解决什么 | 缺少什么 | 采用成本 | 匹配程度 |
-| --- | --- | --- | --- | --- | --- |
-| ... | 成品 / 近似项目 / 组件 / 不开发 | ... | ... | 低/中/高 | 高/中/低 |
+1. **<设计或机制>**：<已经验证的工作方式，以及它为什么值得关注。>
 
-## 重点方案对照
+## 可复用或参考的启发
 
-| 关键能力 | 你的想法 | 方案 A | 方案 B | 方案 C |
-| --- | --- | --- | --- | --- |
-| <最重要功能> | ... | 原生支持 | 部分支持 | 不支持 |
-| <使用方式> | ... | ... | ... | ... |
-| <部署或价格> | ... | ... | ... | ... |
-| <维护和限制> | ... | ... | ... | ... |
+- <可以直接采用、试验或借鉴的具体做法。>
+- <需要改造的部分，或不应照搬的边界。>
 
-## 可以直接复用什么
+## 一句话总结
 
-- <可采用的产品、仓库、库、模型、模板或设计>
-- <需要改造的部分>
-- <不建议复用的部分及原因>
-
-## 如果仍然决定开发
-
-- 必须与现有方案不同的地方：
-- 最小可行版本只需要：
-- 暂时不要做：
-- 最大风险：
-
-## 检索范围与不足
-
-- 已检索的平台：
-- 使用的语言：
-- 使用的检索能力：
-- 无法访问或未深入验证的渠道：
-- 可能改变结论的未知信息：
+> <准确说明竞品与当前项目最重要的区别。>
 
 ## 资料来源
 
-- [官方来源](URL)
+- [<主要来源>](<URL>)
 ```
 
-The report must contain current primary-source links for strong candidates. Never cite a search-result page. Do not add empty decorative sections.
+## Format rules
+
+- Preserve the exact heading order. Do not add “你想解决什么”, “这个需求真的需要开发吗”, a verdict section, or an MVP section.
+- Add or remove comparison rows only when a row materially affects the comparison. Keep the three columns and compact cells.
+- Describe verified current behavior. Distinguish released, planned, inferred, and unverified capabilities.
+- Use primary sources and date time-sensitive facts in the relevant cell or source note. Never cite a search-result page.
+- Explain unavoidable technical terms briefly. Do not use product-management jargon.
+- When several competitors are researched, create a separate canonical report for each competitor. Do not combine competitors into extra table columns.

@@ -40,8 +40,8 @@ def main() -> None:
     assert "ask one question per turn" in assess.lower()
     assert "do not narrate the workflow or use headings" in assess.lower()
     assert "never create, edit, or delete files" in research.lower()
-    assert "docs/should-i-build/<topic-slug>.md" in assess
-    assert "docs/should-i-build/<topic-slug>.md" in compare
+    assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in assess
+    assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in compare
     assert "should-i-build:research" in assess
     assert "should-i-build:research" in compare
 
@@ -51,6 +51,25 @@ def main() -> None:
         "report-template.md",
     ):
         assert (ROOT / "references" / reference).is_file(), f"missing reference: {reference}"
+
+    report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
+    required_headings = (
+        "## 简介",
+        "## 与 <当前项目名称> 的对比",
+        "## 值得 <当前项目名称> 关注的设计",
+        "## 可复用或参考的启发",
+        "## 一句话总结",
+        "## 资料来源",
+    )
+    positions = [report_template.index(heading) for heading in required_headings]
+    assert positions == sorted(positions)
+    for forbidden_section in (
+        "## 你想解决什么",
+        "## 这个需求真的需要开发吗",
+        "## 如果仍然决定开发",
+        "## 一句话结论",
+    ):
+        assert forbidden_section not in report_template
 
     forbidden_jargon = ("用户画像", "核心价值主张", "市场细分信息", "商业闭环")
     conversation_rules = (ROOT / "references" / "conversation-and-decision.md").read_text(
