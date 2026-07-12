@@ -1,0 +1,22 @@
+{
+  "name": "should-i-build",
+  "version": "0.1.0",
+  "description": "An evidence-backed pre-build reality check for digital product and coding ideas.",
+  "author": {
+    "name": "should-i-build contributors"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Should I Build?",
+    "shortDescription": "Decide whether to build, adapt, reuse, or stop.",
+    "longDescription": "A plain-language, evidence-backed workflow for deciding whether a digital product or coding idea is worth building before investing more time and tokens.",
+    "developerName": "should-i-build contributors",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": [
+      "Assess whether I should build an app that organizes saved links.",
+      "Compare this project plan with existing alternatives."
+    ],
+    "brandColor": "#D97706"
+  }
+}

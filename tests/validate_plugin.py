@@ -20,20 +20,25 @@ def read_skill(name: str) -> tuple[dict[str, str], str]:
 
 
 def main() -> None:
-    manifest = json.loads((ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    assert manifest["name"] == "should-i-build"
+    claude_manifest = json.loads(
+        (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    codex_manifest = json.loads(
+        (ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    assert claude_manifest["name"] == "should-i-build"
+    assert codex_manifest["name"] == "should-i-build"
+    assert codex_manifest["skills"] == "./skills/"
+    assert codex_manifest["interface"]["displayName"] == "Should I Build?"
 
-    assess_meta, assess = read_skill("assess")
-    compare_meta, compare = read_skill("compare")
-    research_meta, research = read_skill("research")
+    assess_meta, assess = read_skill("should-i-build-assess")
+    compare_meta, compare = read_skill("should-i-build-compare")
+    research_meta, research = read_skill("should-i-build-research")
 
-    assert assess_meta["disable-model-invocation"] == "true"
-    assert compare_meta["disable-model-invocation"] == "true"
-    assert "disable-model-invocation" not in research_meta
     assert {assess_meta["name"], compare_meta["name"], research_meta["name"]} == {
-        "assess",
-        "compare",
-        "research",
+        "should-i-build-assess",
+        "should-i-build-compare",
+        "should-i-build-research",
     }
 
     assert "at most five questions" in assess.lower()
@@ -42,8 +47,12 @@ def main() -> None:
     assert "never create, edit, or delete files" in research.lower()
     assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in assess
     assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in compare
-    assert "should-i-build:research" in assess
-    assert "should-i-build:research" in compare
+    assert "bundled `should-i-build-research` skill" in assess
+    assert "bundled `should-i-build-research` skill" in compare
+    for skill in (assess, compare, research):
+        assert "${CLAUDE_PLUGIN_ROOT}" not in skill
+        assert "$ARGUMENTS" not in skill
+        assert "should-i-build:research" not in skill
 
     for reference in (
         "conversation-and-decision.md",
