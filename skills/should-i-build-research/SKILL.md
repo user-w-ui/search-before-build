@@ -7,7 +7,7 @@ description: Research and GitHub-search enhancement for Should I Build. Given a 
 
 Find what already solves the user's problem. Normal research is read-only: never create, edit, or delete files. The only exception is the bundled GitHub MCP setup flow, which may download the official binary and update the current Agent's MCP configuration after explicit user approval.
 
-Read all of `references/research-method.md` from this package before searching. Before GitHub research or when the user requests GitHub enhancement, also read `references/github-retrieval.md`.
+Read all of `references/research-method.md` and `references/search-sources.md` from this package before searching. Select only relevant sources. Before GitHub research or when the user requests GitHub enhancement, also read `references/github-retrieval.md`.
 
 ## Workflow
 

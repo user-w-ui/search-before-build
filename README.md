@@ -214,6 +214,7 @@ should-i-build/
 │   ├── conversation-and-decision.md
 │   ├── github-retrieval.md
 │   ├── research-method.md
+│   ├── search-sources.md
 │   └── report-template.md
 ├── scripts/
 │   └── setup-github-mcp.mjs

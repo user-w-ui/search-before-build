@@ -19,6 +19,8 @@ Search for the problem, workflow, inputs/outputs, and technical category—not o
 
 Inspect what the host can use: live Web search, interactive browser, CLI, installed Skills/plugins, MCP services, and local repository tools. Prefer specialized access when it provides deeper or more reliable evidence. Fall back to basic Web search. Record what was and was not available.
 
+Read [the maintained search source catalog](search-sources.md), then select only sources relevant to the functional fingerprint. Do not query every registry for every task. The user may request an additional source; add it to the catalog only after official-document review and live command verification.
+
 Do not claim to have searched a platform that was only reached through third-party mentions. Do not recommend installing or configuring a dependency unless it would materially improve the current search and the host permits asking the user.
 
 For every GitHub-related search, read and follow [the GitHub retrieval rules](github-retrieval.md). A configured GitHub MCP or equivalent structured connector is optional enhancement, never a prerequisite.

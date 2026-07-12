@@ -47,6 +47,8 @@ def main() -> None:
     assert "normal research is read-only" in research.lower()
     assert "only exception" in research.lower()
     assert "github-retrieval.md" in research
+    assert "search-sources.md" in research
+    assert "select only relevant sources" in research.lower()
     assert "explicit user approval" in research.lower()
     assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in assess
     assert "docs/should-i-build/<topic-slug>/<competitor-slug>.md" in compare
@@ -62,6 +64,7 @@ def main() -> None:
         "research-method.md",
         "report-template.md",
         "github-retrieval.md",
+        "search-sources.md",
     ):
         assert (ROOT / "references" / reference).is_file(), f"missing reference: {reference}"
 
@@ -79,6 +82,12 @@ def main() -> None:
     assert "当前环境无法完成外部检索" in github_rules
     assert "api.github.com/search/repositories" in github_rules
     assert "Personal Access Token" in github_rules
+
+    source_catalog = (ROOT / "references" / "search-sources.md").read_text(encoding="utf-8")
+    for source in ("GitHub", "npm", "Ecosyste.ms", "Official MCP Registry", "Maven Central", "crates.io", "Hugging Face Hub", "arXiv"):
+        assert f"## {source}" in source_catalog
+    assert "Do not query every source by default" in source_catalog
+    assert "Adding a user-provided source" in source_catalog
 
     report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
     assert "github-retrieval.md" in report_template
