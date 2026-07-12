@@ -222,13 +222,6 @@ search-before-build/
     └── validate_plugin.py
 ```
 
-## Roadmap
-
-- [ ] 加强 GitHub、Hugging Face 和 ModelScope 的平台级深度检索
-- [ ] 增加可选 Skill、插件和 MCP 能力探测与路由
-- [ ] 建立更多真实项目的检索与误匹配测试集
-- [ ] 优化大型仓库、计划书和半成品的能力基线提取
-- [ ] 兼容更多遵循 Agent Skills 标准的开发代理
 
 ## 参与贡献
 
