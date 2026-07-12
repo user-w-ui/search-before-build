@@ -7,7 +7,12 @@ const MARKETPLACE = "search-before-build";
 const SOURCE = "user-w-ui/search-before-build";
 
 function run(args, options = {}) {
-  const result = spawnSync("codex", args, {
+  // pnpm's Windows shim is a .cmd file. Node cannot execute it directly,
+  // while cmd.exe resolves it correctly through PATHEXT.
+  const windows = process.platform === "win32";
+  const command = windows ? process.env.ComSpec || "cmd.exe" : "codex";
+  const commandArgs = windows ? ["/d", "/s", "/c", "codex", ...args] : args;
+  const result = spawnSync(command, commandArgs, {
     encoding: "utf8",
     stdio: options.capture ? "pipe" : "inherit",
   });
