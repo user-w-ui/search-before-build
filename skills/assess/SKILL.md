@@ -20,7 +20,7 @@ Help a non-expert slow down before spending time and tokens. Be candid, practica
 - Separate facts, inferences, and unknowns. Never fill a gap with enthusiasm or guesswork.
 - Do not create files during clarification or the necessity check.
 
-Read [conversation and decision rules](../../references/conversation-and-decision.md) before starting.
+Read the conversation and decision rules at `${CLAUDE_PLUGIN_ROOT}/references/conversation-and-decision.md` before starting.
 
 ## Workflow
 
@@ -28,9 +28,9 @@ Read [conversation and decision rules](../../references/conversation-and-decisio
 2. Ask only for missing information that materially affects the decision. Follow the question order and stopping rules in the reference.
 3. Give a short necessity check in the conversation. State what is fact, inference, and unknown. If the case is weak, say so directly, but let the user choose to continue.
 4. Before research, convert the request into a functional fingerprint. Confirm only if a remaining ambiguity would change the search.
-5. Invoke `should-i-build:research` with the fingerprint and instruct it not to write files. If the Skill tool cannot invoke it, read and follow [the research skill](../research/SKILL.md) inline.
+5. Invoke `should-i-build:research` with the fingerprint and instruct it not to write files. If the Skill tool cannot invoke it, read and follow `${CLAUDE_PLUGIN_ROOT}/skills/research/SKILL.md` inline.
 6. Combine the necessity check and research evidence into exactly one recommendation: `Build`, `Adapt`, `Use existing`, or `Stop`.
-7. Once research has run, read [the report template](../../references/report-template.md), then create or update `docs/should-i-build/<topic-slug>.md`. Reuse the existing file for the same topic. Keep Unicode letters when useful; remove unsafe filename characters and use hyphens for spaces.
+7. Once research has run, read the report template at `${CLAUDE_PLUGIN_ROOT}/references/report-template.md`, then create or update `docs/should-i-build/<topic-slug>.md`. Reuse the existing file for the same topic. Keep Unicode letters when useful; remove unsafe filename characters and use hyphens for spaces.
 8. Return the recommendation, the main reason, the most reusable option, the report path, and the biggest remaining unknown. Do not begin implementation.
 
 The user may override the recommendation. Record that choice without weakening or rewriting the evidence.

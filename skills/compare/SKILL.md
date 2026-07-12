@@ -22,9 +22,9 @@ Research alternatives to an existing plan or implementation without changing pro
 ## Workflow
 
 1. Establish the project baseline: intended user, problem, main workflow, inputs and outputs, operating environment, must-have capability, current maturity, and hard constraints.
-2. Turn the baseline into the functional fingerprint defined in [the research method](../../references/research-method.md).
-3. Invoke `should-i-build:research` with that fingerprint and instruct it not to write files. If the Skill tool cannot invoke it, read and follow [the research skill](../research/SKILL.md) inline.
+2. Turn the baseline into the functional fingerprint defined in the research method at `${CLAUDE_PLUGIN_ROOT}/references/research-method.md`.
+3. Invoke `should-i-build:research` with that fingerprint and instruct it not to write files. If the Skill tool cannot invoke it, read and follow `${CLAUDE_PLUGIN_ROOT}/skills/research/SKILL.md` inline.
 4. Compare verified behavior at the same product or technical layer. Mark every material capability as native, partial, extensible, unsupported, or unverified.
 5. Recommend exactly one of `Build`, `Adapt`, `Use existing`, or `Stop`. Explain which existing work can be reused and what genuinely remains unique.
-6. Read [the report template](../../references/report-template.md), then create or update `docs/should-i-build/<topic-slug>.md`. Reuse the canonical report for the same topic; do not create timestamped variants.
+6. Read the report template at `${CLAUDE_PLUGIN_ROOT}/references/report-template.md`, then create or update `docs/should-i-build/<topic-slug>.md`. Reuse the canonical report for the same topic; do not create timestamped variants.
 7. Return the recommendation, strongest alternatives, reusable pieces, report path, and material evidence gaps.

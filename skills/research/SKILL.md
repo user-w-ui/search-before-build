@@ -1,13 +1,14 @@
 ---
 name: research
-description: Research existing products, repositories, packages, models, plugins, templates, and components that may solve a proposed digital-product or coding need. Use for competitor discovery, build-versus-buy research, reusable-solution searches, and evidence-backed functional comparison. Match actual capabilities rather than similar names.
+description: Internal candidate-research sub-step for the should-i-build:assess and should-i-build:compare skills. Given a functional fingerprint, it discovers and verifies existing products, repositories, packages, models, plugins, templates, and components, then returns a structured result. Invoked by name from assess and compare; not intended for direct use.
+user-invocable: false
 ---
 
 # Research Existing Solutions
 
 Find what already solves the user's problem. This skill is read-only: never create, edit, or delete files.
 
-Read all of [the research method](../../references/research-method.md) before searching.
+Read all of the research method at `${CLAUDE_PLUGIN_ROOT}/references/research-method.md` before searching.
 
 ## Workflow
 
