@@ -1,5 +1,7 @@
 <div align="center">
 
+[简体中文](./README.md) | [English](./README.en.md)
+
 <img src="./assets/mascot.png" alt="Search Before Build mascot" width="145">
 
 # Search Before Build
