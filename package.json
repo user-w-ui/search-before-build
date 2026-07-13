@@ -1,6 +1,6 @@
 {
   "name": "@superq/search-before-build",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Install the Search Before Build Codex plugin from its official marketplace.",
   "license": "MIT",
   "author": "superq",
@@ -15,6 +15,8 @@
   "keywords": [
     "codex",
     "codex-plugin",
+    "plugin",
+    "claude code",
     "agent-skill",
     "vibe-coding"
   ],

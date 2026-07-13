@@ -38,14 +38,6 @@ All commands below were successfully executed anonymously on 2026-07-12. Replace
 
 **Use when:** Looking for open-source products, implementations, reusable code, or repository-level evidence. Follow [github-retrieval.md](github-retrieval.md) for capability checks, fallback order, optional setup, API limits, and coverage wording.
 
-```bash
-curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/search/repositories?q=github-mcp-server+in:name&per_page=2"
-curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/repos/github/github-mcp-server"
-curl -L -H "Accept: application/vnd.github.raw+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/repos/github/github-mcp-server/readme"
-```
-
-Anonymous GitHub code search is not available. On rate-limit `403`, follow the GitHub-specific fallback instead of treating missing data as absence.
-
 ## npm
 
 **Main content:** JavaScript and Node.js package names, descriptions, keywords, maintainers, versions, licenses, dates, and project links.

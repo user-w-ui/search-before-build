@@ -71,6 +71,8 @@ def main() -> None:
     assert package["name"] == "@superq/search-before-build"
     assert package["license"] == "MIT"
     assert package["bin"] == {"search-before-build": "bin/install.mjs"}
+    assert package["version"] == claude_manifest["version"] == codex_manifest["version"]
+    assert {"codex-plugin", "plugin", "claude code"} <= set(package["keywords"])
     assert (ROOT / "LICENSE").is_file()
     installer = (ROOT / "bin" / "install.mjs").read_text(encoding="utf-8")
     assert '"plugin", "marketplace", "add"' in installer
@@ -121,6 +123,7 @@ def main() -> None:
     setup_script = ROOT / "scripts" / "setup-github-mcp.mjs"
     assert setup_script.is_file()
     setup_text = setup_script.read_text(encoding="utf-8")
+    assert f'clientInfo: {{ name: "search-before-build-setup", version: "{package["version"]}" }}' in setup_text
     assert "--read-only" in setup_text
     assert '"--toolsets", "repos"' in setup_text
     assert "GITHUB_PERSONAL_ACCESS_TOKEN" not in setup_text
@@ -182,6 +185,14 @@ def main() -> None:
     assert "Do not query every source by default" in source_catalog
     assert "Adding a user-provided source" in source_catalog
     assert "Follow [github-retrieval.md]" in source_catalog
+    for canonical_detail, duplicated_detail in (
+        ("api.github.com/search/repositories", "api.github.com/search/repositories"),
+        ("api.github.com/repos/", "api.github.com/repos/"),
+        ("code-search REST endpoint requires authentication", "Anonymous GitHub code search"),
+        ("On `403` caused by rate limiting", "rate-limit `403`"),
+    ):
+        assert canonical_detail in github_rules
+        assert duplicated_detail not in source_catalog
     for detailed_github_term in (
         "search_repositories",
         "search_installed_repositories",
