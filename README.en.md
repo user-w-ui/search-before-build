@@ -1,6 +1,5 @@
 <div align="center">
 
-[简体中文](./README.md) | [English](./README.en.md)
 
 <img src="./assets/mascot.png" alt="Search Before Build mascot" width="145">
 
@@ -14,6 +13,8 @@ A lightweight, beginner-friendly plugin for Codex and Claude Code. It helps you 
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-d97706)
 [![License](https://img.shields.io/badge/license-MIT-059669)](./LICENSE)
+
+[简体中文](./README.md) | [English](./README.en.md)
 
 </div>
 
