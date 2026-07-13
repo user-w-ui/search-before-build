@@ -122,9 +122,13 @@ def main() -> None:
     assert "api.github.com/repos/github/github-mcp-server/releases" not in setup_text
     assert 'run(candidate, ["stdio", "--help"])' in setup_text
 
+    research_method = (ROOT / "references" / "research-method.md").read_text(
+        encoding="utf-8"
+    )
     github_rules = (ROOT / "references" / "github-retrieval.md").read_text(encoding="utf-8")
     assert "本次未使用 GitHub 专属深度检索工具" in github_rules
-    assert "当前环境无法完成外部检索" in github_rules
+    assert "当前环境无法完成外部检索" in research_method
+    assert "当前环境无法完成外部检索" not in github_rules
     assert "api.github.com/search/repositories" in github_rules
     assert "Personal Access Token" in github_rules
     exposed_position = github_rules.index("tools already exposed")
@@ -132,22 +136,77 @@ def main() -> None:
     offer_position = github_rules.index("offer the optional official MCP setup")
     assert exposed_position < gh_position < offer_position
     assert "gh auth status" in github_rules
-    assert "Do not scan plugin directories" in github_rules
-    assert "Only when neither an exposed GitHub tool" in github_rules
-    assert "Complete the capability check first" in github_rules
-    assert "first use suitable GitHub tools already exposed" in research
-    assert "check for an available and authenticated `gh` CLI" in research
-    assert "enhancement is already available" in research
-    assert "Only when neither route is usable" in research
+    assert "Do not scan plugin directories" not in github_rules
+    assert "relevant read-only call succeeds" in github_rules
+    assert "Try the exposed route" in github_rules
+    assert "If the calls fail" in github_rules
+    assert "run a relevant read-only query" in github_rules
+    assert "If any required check or query fails" in github_rules
+    assert "enhancement intent, not installation consent" in github_rules
+    assert "wait for explicit approval" in github_rules
+    for exposed_route in (
+        "a GitHub plugin or app",
+        "a GitHub MCP server",
+        "a GitHub connector or other built-in GitHub integration",
+    ):
+        assert exposed_route in github_rules
+    for example_operation in (
+        "search_repositories",
+        "search_installed_repositories",
+        "fetch_file",
+        "get_file_contents",
+        "get_repository",
+        "search_code",
+        "code_search",
+    ):
+        assert example_operation in github_rules
+    assert "examples, not an exhaustive allowlist" in github_rules
+    assert "do not treat an unfamiliar tool name as absence" in github_rules
+    assert "follow the capability check, fallback order" in research
+    assert "obtain explicit installation consent" in research
+    assert "Stop only when all external routes are unavailable" in research
+    assert "Generic Web search is not a prerequisite" in research_method
+    assert "If generic Web search is unavailable" in research_method
+    assert "name the specialized routes used" in research_method
+    assert "explain the resulting coverage limits" in research_method
+    assert "Stop only when every external route is unavailable" in research_method
 
     source_catalog = (ROOT / "references" / "search-sources.md").read_text(encoding="utf-8")
     for source in ("GitHub", "npm", "Ecosyste.ms", "Official MCP Registry", "Maven Central", "crates.io", "Hugging Face Hub", "arXiv"):
         assert f"## {source}" in source_catalog
     assert "Do not query every source by default" in source_catalog
     assert "Adding a user-provided source" in source_catalog
+    assert "Follow [github-retrieval.md]" in source_catalog
+    for detailed_github_term in (
+        "search_repositories",
+        "search_installed_repositories",
+        "get_file_contents",
+        "gh --version",
+    ):
+        assert detailed_github_term in github_rules
+        assert detailed_github_term not in research
+        assert detailed_github_term not in research_method
+        assert detailed_github_term not in source_catalog
+
+    support_labels = (
+        "原生支持",
+        "部分支持",
+        "可通过扩展实现",
+        "不支持",
+        "尚未验证",
+    )
+    for label in support_labels:
+        assert label in research_method
+        assert label in research
+        assert label in compare
+    english_label_contract = "native, partial, extensible, unsupported, or unverified"
+    assert english_label_contract not in research
+    assert english_label_contract not in compare
 
     report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
     assert "github-retrieval.md" in report_template
+    assert "authenticated `gh` CLI" in report_template
+    assert "three coverage items required by `research-method.md`" in report_template
     required_headings = (
         "## 简介",
         "## 与 <当前项目名称> 的对比",

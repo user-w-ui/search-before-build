@@ -17,13 +17,21 @@ Search for the problem, workflow, inputs/outputs, and technical category—not o
 
 ## Capability detection
 
-Inspect what the host can use: live Web search, interactive browser, CLI, installed Skills/plugins, MCP services, and local repository tools. Prefer specialized access when it provides deeper or more reliable evidence. Fall back to basic Web search. Record what was and was not available.
+Inspect the external routes available in the current session: live Web search, interactive browser, tools exposed by Skills/plugins, MCP services, CLIs, public APIs, and registries. Use whichever relevant routes work, preferring specialized access when it provides deeper or more reliable evidence. Generic Web search is not a prerequisite.
+
+If generic Web search is unavailable but one or more specialized routes work, continue the research. In the final search coverage, state that generic Web search was unavailable, name the specialized routes used, and explain the resulting coverage limits. Stop only when every external route is unavailable, then say exactly:
+
+```text
+当前环境无法完成外部检索，因此不能确认是否已经存在类似方案。
+```
+
+Record every route used, unavailable channels, and material depth limits. Never claim that no similar project exists without external search evidence.
 
 Read [the maintained search source catalog](search-sources.md), then select only sources relevant to the functional fingerprint. Do not query every registry for every task. The user may request an additional source; add it to the catalog only after official-document review and live command verification.
 
 Do not claim to have searched a platform that was only reached through third-party mentions. Do not recommend installing or configuring a dependency unless it would materially improve the current search and the host permits asking the user.
 
-For every GitHub-related search, read and follow [the GitHub retrieval rules](github-retrieval.md). Prefer suitable GitHub tools already exposed by an MCP, plugin, connector, or equivalent integration; otherwise try an already authenticated `gh` CLI before offering setup. A configured GitHub MCP is an optional enhancement, never a prerequisite.
+For every GitHub-related search, follow [the GitHub retrieval rules](github-retrieval.md) for capability checks, fallback order, optional setup, and coverage wording.
 
 ## Adaptive search funnel
 

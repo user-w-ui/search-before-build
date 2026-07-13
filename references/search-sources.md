@@ -36,7 +36,7 @@ All commands below were successfully executed anonymously on 2026-07-12. Replace
 
 **Main content:** Public repositories, source code, README files, licenses, releases, issues, activity, stars, forks, and archived state.
 
-**Use when:** Looking for open-source products, implementations, reusable code, or repository-level evidence. Prefer suitable GitHub tools already exposed by an MCP, plugin, connector, or equivalent integration; otherwise use an available, authenticated `gh` CLI before offering setup. Read [github-retrieval.md](github-retrieval.md) for the exact order, optional OAuth setup, API limits, and required downgrade wording.
+**Use when:** Looking for open-source products, implementations, reusable code, or repository-level evidence. Follow [github-retrieval.md](github-retrieval.md) for capability checks, fallback order, optional setup, API limits, and coverage wording.
 
 ```bash
 curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" -H "User-Agent: search-before-build" "https://api.github.com/search/repositories?q=github-mcp-server+in:name&per_page=2"

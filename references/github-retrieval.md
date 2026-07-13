@@ -2,24 +2,20 @@
 
 ## Capability check
 
-Before GitHub research, use this order and stop as soon as one route is usable:
+Before GitHub research, use this order. A route is usable only after a relevant read-only call succeeds; names and descriptions are discovery hints, not proof of availability.
 
-1. Inspect the tools already exposed in the current Agent session. Look for callable GitHub tools supplied by an MCP server, plugin, connector, or equivalent integration. Do not scan plugin directories, configuration files, marketplaces, or installation catalogs: installed integrations should already expose their tools to the Agent. Treat the exposed route as sufficient when it can search repositories and read repository contents or metadata. Code search is strongly preferred.
-2. Only when no sufficient GitHub tool is exposed, check whether the GitHub CLI is available with `gh --version`, then verify that it is already authenticated with `gh auth status`. If both checks succeed, use read-only `gh` commands such as `gh search repos`, `gh repo view`, `gh api`, and, when useful, `gh search code`. Do not start login, change authentication, or reconfigure `gh` during normal research.
-3. Only when neither an exposed GitHub tool nor an available, authenticated GitHub CLI can provide the search, offer the optional official MCP setup below.
+1. Inspect the tools already exposed in the current Agent session. Before concluding that GitHub access is unavailable, explicitly check the exposed tool list for each common route:
+   - a GitHub plugin or app;
+   - a GitHub MCP server;
+   - a GitHub connector or other built-in GitHub integration.
 
-When a sufficient exposed GitHub tool exists:
+   Look at tool names and descriptions. Common repository-search functions include `search_repositories`, `search_installed_repositories`, or similarly described GitHub repository search. Common content and metadata readers include `fetch`, `fetch_file`, `get_file_contents`, `get_repository`, or similarly described README/file/repository readers. Code-search functions such as `search`, `search_code`, or `code_search` are strongly preferred when exposed. These names are examples, not an exhaustive allowlist: do not treat an unfamiliar tool name as absence when its description provides the same GitHub operation.
 
-- use them directly;
-- do not install another server or ask for authorization again;
-- prefer structured repository, README, code, and metadata calls over generic web search;
-- keep all research operations read-only.
-
-When the authenticated GitHub CLI is the selected route, keep commands read-only and do not modify repositories, issues, pull requests, releases, authentication, or configuration.
+   Try the exposed route with repository search and repository content or metadata reading needed for the current task. If the calls fail, require authorization that is unavailable, or cannot support the research, continue to step 2. If they succeed, use the route directly, record which integration supplied it, keep all calls read-only, and do not offer another server.
+2. When no exposed route works, check GitHub CLI availability with `gh --version` and existing authentication with `gh auth status`, then run a relevant read-only query. Suitable commands include `gh search repos`, `gh repo view`, `gh api` with its default `GET`, and `gh search code`. If any required check or query fails, continue to step 3. Do not start login, change authentication or configuration, or modify GitHub data during normal research.
+3. When neither route works, tell the user that no GitHub dedicated deep-retrieval route is currently usable, then offer the optional official MCP setup once.
 
 ## Offer the optional enhancement
-
-When no sufficient exposed GitHub tool or authenticated GitHub CLI exists, continue with anonymous retrieval, but offer setup once before deep GitHub research:
 
 ```text
 当前没有检测到 GitHub 深度检索能力。
@@ -36,9 +32,7 @@ When no sufficient exposed GitHub tool or authenticated GitHub CLI exists, conti
 你只需要确认安装，并在浏览器中登录 GitHub 后授权。
 ```
 
-Do not download software, change MCP configuration, or start OAuth until the user explicitly agrees. Do not repeat the offer after refusal during the same task.
-
-Recognize requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 search-before-build 开启 GitHub 搜索增强” as enhancement intent. Complete the capability check first. If an exposed GitHub tool or authenticated `gh` CLI is already usable, report that the enhancement is already available and do not install another server. Otherwise, after user consent, run the installer instead of returning a manual tutorial.
+Requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 search-before-build 开启 GitHub 搜索增强” express enhancement intent, not installation consent. Complete the capability check first. If an existing route works, report that enhancement is already available. Otherwise, show the offer above and wait for explicit approval; do not download software, change configuration, or start OAuth before approval, and do not repeat the offer after refusal during the same task.
 
 ## Run the installer
 
@@ -50,7 +44,7 @@ node <package-root>/scripts/setup-github-mcp.mjs --agent <claude|codex>
 
 Use the package root that contains `scripts/`. The script detects OS/CPU, reuses a working installation, downloads only from `github/github-mcp-server` official releases, verifies the published SHA-256 digest, installs to a stable user directory, registers `stdio --read-only --toolsets repos`, and performs an OAuth-backed connection test. It never requests a PAT, Docker, npm package, Python package, or environment variable.
 
-If the host is unsupported, configuration fails, authorization is refused, or the user declines, continue with the anonymous path. Tell the user whether the current Agent session must be reopened before newly configured MCP tools appear.
+If the host is unsupported, configuration fails, authorization is refused, or the user declines, continue with the anonymous path below. Tell the user whether the current Agent session must be reopened before newly configured MCP tools appear.
 
 ## Anonymous public REST path
 
@@ -88,12 +82,6 @@ When neither an exposed structured GitHub tool nor the authenticated GitHub CLI 
 
 ```text
 本次未使用 GitHub 专属深度检索工具，结果主要来自公开 API 或网页索引，可能遗漏较新、低曝光或仅在代码内部出现的项目。
-```
-
-When no external network is available, say:
-
-```text
-当前环境无法完成外部检索，因此不能确认是否已经存在类似方案。
 ```
 
 Never conclude that no similar project exists without external search evidence.

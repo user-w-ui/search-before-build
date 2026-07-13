@@ -55,6 +55,6 @@ Use this exact section order:
 - Add or remove comparison rows only when a row materially affects the comparison. Keep the three columns and compact cells.
 - Describe verified current behavior. Distinguish released, planned, inferred, and unverified capabilities.
 - Use primary sources and date time-sensitive facts in the relevant cell or source note. Never cite a search-result page.
-- When GitHub MCP or an equivalent structured GitHub tool was unavailable, include the exact anonymous-search limitation statement from `github-retrieval.md` under “资料来源”.
+- When neither a structured GitHub tool nor an authenticated `gh` CLI was used, include the exact anonymous-search limitation statement from `github-retrieval.md` under “资料来源”. When generic Web search was unavailable but specialized routes worked, include the three coverage items required by `research-method.md`.
 - Explain unavoidable technical terms briefly. Do not use product-management jargon.
 - When several competitors are researched, create a separate canonical report for each competitor. Do not combine competitors into extra table columns.
