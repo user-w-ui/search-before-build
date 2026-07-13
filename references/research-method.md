@@ -23,7 +23,7 @@ Read [the maintained search source catalog](search-sources.md), then select only
 
 Do not claim to have searched a platform that was only reached through third-party mentions. Do not recommend installing or configuring a dependency unless it would materially improve the current search and the host permits asking the user.
 
-For every GitHub-related search, read and follow [the GitHub retrieval rules](github-retrieval.md). A configured GitHub MCP or equivalent structured connector is optional enhancement, never a prerequisite.
+For every GitHub-related search, read and follow [the GitHub retrieval rules](github-retrieval.md). Prefer suitable GitHub tools already exposed by an MCP, plugin, connector, or equivalent integration; otherwise try an already authenticated `gh` CLI before offering setup. A configured GitHub MCP is an optional enhancement, never a prerequisite.
 
 ## Adaptive search funnel
 

@@ -2,18 +2,24 @@
 
 ## Capability check
 
-Before GitHub research, inspect the tools already exposed by the host. Treat a GitHub MCP, GitHub connector, or equivalent structured tool as sufficient only when it can search repositories and read repository contents or metadata. Code search is strongly preferred.
+Before GitHub research, use this order and stop as soon as one route is usable:
 
-When sufficient structured tools exist:
+1. Inspect the tools already exposed in the current Agent session. Look for callable GitHub tools supplied by an MCP server, plugin, connector, or equivalent integration. Do not scan plugin directories, configuration files, marketplaces, or installation catalogs: installed integrations should already expose their tools to the Agent. Treat the exposed route as sufficient when it can search repositories and read repository contents or metadata. Code search is strongly preferred.
+2. Only when no sufficient GitHub tool is exposed, check whether the GitHub CLI is available with `gh --version`, then verify that it is already authenticated with `gh auth status`. If both checks succeed, use read-only `gh` commands such as `gh search repos`, `gh repo view`, `gh api`, and, when useful, `gh search code`. Do not start login, change authentication, or reconfigure `gh` during normal research.
+3. Only when neither an exposed GitHub tool nor an available, authenticated GitHub CLI can provide the search, offer the optional official MCP setup below.
+
+When a sufficient exposed GitHub tool exists:
 
 - use them directly;
 - do not install another server or ask for authorization again;
 - prefer structured repository, README, code, and metadata calls over generic web search;
 - keep all research operations read-only.
 
+When the authenticated GitHub CLI is the selected route, keep commands read-only and do not modify repositories, issues, pull requests, releases, authentication, or configuration.
+
 ## Offer the optional enhancement
 
-When no sufficient GitHub tool exists, continue with anonymous retrieval, but offer setup once before deep GitHub research:
+When no sufficient exposed GitHub tool or authenticated GitHub CLI exists, continue with anonymous retrieval, but offer setup once before deep GitHub research:
 
 ```text
 当前没有检测到 GitHub 深度检索能力。
@@ -32,7 +38,7 @@ When no sufficient GitHub tool exists, continue with anonymous retrieval, but of
 
 Do not download software, change MCP configuration, or start OAuth until the user explicitly agrees. Do not repeat the offer after refusal during the same task.
 
-Recognize requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 search-before-build 开启 GitHub 搜索增强” as setup intent. Run the installer instead of returning a manual tutorial.
+Recognize requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 search-before-build 开启 GitHub 搜索增强” as enhancement intent. Complete the capability check first. If an exposed GitHub tool or authenticated `gh` CLI is already usable, report that the enhancement is already available and do not install another server. Otherwise, after user consent, run the installer instead of returning a manual tutorial.
 
 ## Run the installer
 
@@ -78,7 +84,7 @@ Anonymous mode accesses only public repositories. Never imply access to private 
 
 ## Required coverage statement
 
-When MCP or an equivalent structured GitHub tool was not used, include this in the research coverage and final report:
+When neither an exposed structured GitHub tool nor the authenticated GitHub CLI was used, include this in the research coverage and final report:
 
 ```text
 本次未使用 GitHub 专属深度检索工具，结果主要来自公开 API 或网页索引，可能遗漏较新、低曝光或仅在代码内部出现的项目。

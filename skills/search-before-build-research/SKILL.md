@@ -12,8 +12,8 @@ Read all of `references/research-method.md` and `references/search-sources.md` f
 ## Workflow
 
 1. Derive or accept a functional fingerprint. If the core task or must-have capability is too unclear to search accurately, ask one plain question and wait.
-2. Detect available web search, browser, CLI, platform-specific skill, plugin, MCP, and local code-discovery capabilities. For GitHub, follow the dedicated capability check and consent rules. Never install or change configuration without explicit user approval.
-3. If the user explicitly requested GitHub enhancement, run the bundled one-time setup script as directed by `references/github-retrieval.md`, report the result, and stop. Do not return a manual installation tutorial.
+2. Detect available web search, browser, CLI, platform-specific skill, plugin, MCP, and local code-discovery capabilities. For GitHub, follow the dedicated order: first use suitable GitHub tools already exposed by an MCP, plugin, connector, or equivalent integration; only if none are exposed, check for an available and authenticated `gh` CLI; only if both routes are unavailable, offer the optional MCP setup. Never install or change configuration without explicit user approval.
+3. If the user explicitly requested GitHub enhancement, first complete the GitHub capability check above. When an exposed GitHub tool or authenticated `gh` CLI is already usable, use it and report that enhancement is already available. Only when neither route is usable, run the bundled one-time setup script as directed by `references/github-retrieval.md`, report the result, and stop. Do not return a manual installation tutorial.
 4. Run at least a basic live web search. If live search is unavailable, stop and use the exact no-network statement from the GitHub reference; never claim that no similar project exists.
 5. Use the adaptive funnel and platform routes in the reference. Search both Chinese and English when the market is Chinese or unknown.
 6. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround.

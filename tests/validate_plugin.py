@@ -127,6 +127,18 @@ def main() -> None:
     assert "当前环境无法完成外部检索" in github_rules
     assert "api.github.com/search/repositories" in github_rules
     assert "Personal Access Token" in github_rules
+    exposed_position = github_rules.index("tools already exposed")
+    gh_position = github_rules.index("gh --version")
+    offer_position = github_rules.index("offer the optional official MCP setup")
+    assert exposed_position < gh_position < offer_position
+    assert "gh auth status" in github_rules
+    assert "Do not scan plugin directories" in github_rules
+    assert "Only when neither an exposed GitHub tool" in github_rules
+    assert "Complete the capability check first" in github_rules
+    assert "first use suitable GitHub tools already exposed" in research
+    assert "check for an available and authenticated `gh` CLI" in research
+    assert "enhancement is already available" in research
+    assert "Only when neither route is usable" in research
 
     source_catalog = (ROOT / "references" / "search-sources.md").read_text(encoding="utf-8")
     for source in ("GitHub", "npm", "Ecosyste.ms", "Official MCP Registry", "Maven Central", "crates.io", "Hugging Face Hub", "arXiv"):
