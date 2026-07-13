@@ -13,7 +13,8 @@ Help a non-expert slow down before spending time and tokens. Be candid, practica
 - Use accurate everyday language. Explain an unavoidable technical term in one short phrase.
 - Never ask for a "user persona," "value proposition," "market segment," or "business loop."
 - Ask only a question whose answer could change the recommendation. Ask one question per turn.
-- Ask at most five questions total. Do not ask when the available information is sufficient.
+- Prioritize the three essential facts defined in `references/conversation-and-decision.md` before research. Infer them from the user's description when the meaning is clear; never ask the user to repeat or confirm information already supplied or safely inferred. If an essential remains unclear after five questions, continue from the best current understanding and mark the gap as unknown.
+- Ask at most five questions total. Five is a ceiling, not a target. After the essentials are clear, ask a secondary question only when it would materially sharpen the recommendation or search.
 - During clarification, do not narrate the workflow or use headings. Use at most one sentence to confirm the idea, optionally one sentence for the decisive unknown, then ask the single question.
 - Separate facts, inferences, and unknowns. Never fill a gap with enthusiasm or guesswork.
 - Do not create files during clarification or the necessity check.
@@ -22,8 +23,8 @@ Read `references/conversation-and-decision.md` from this package before starting
 
 ## Workflow
 
-1. Summarize the idea in plain language. Internally identify who uses it, the real problem, the situation, the current workaround, why building is needed, whether it is personal or public, and the most important function.
-2. Ask only for missing information that materially affects the decision. Follow the question order and stopping rules in the reference.
+1. Summarize the idea in plain language and build the prioritized clarification brief defined in the reference, marking each item as fact, inference, or unknown.
+2. Resolve missing essentials in priority order. Once they are clear, stop or use the remaining question budget sparingly for decision-changing secondary questions. After five questions, stop asking and continue with explicit unknowns. Follow the reference's question and stopping rules.
 3. Give a short necessity check in the conversation. State what is fact, inference, and unknown. If the case is weak, say so directly, but let the user choose to continue.
 4. Before research, convert the request into a functional fingerprint. Confirm only if a remaining ambiguity would change the search.
 5. Invoke the bundled `search-before-build-research` skill with the fingerprint and instruct it not to write files. If that skill cannot be invoked, follow its `SKILL.md` workflow inline.

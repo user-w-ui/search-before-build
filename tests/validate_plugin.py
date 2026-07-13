@@ -89,6 +89,11 @@ def main() -> None:
     assert "at most five questions" in assess.lower()
     assert "ask one question per turn" in assess.lower()
     assert "do not narrate the workflow or use headings" in assess.lower()
+    assert "three essential facts" in assess.lower()
+    assert "five is a ceiling, not a target" in assess.lower()
+    assert "never ask the user to repeat or confirm" in assess.lower()
+    assert "continue from the best current understanding" in assess.lower()
+    assert "continue with explicit unknowns" in assess.lower()
     assert "normal research is read-only" in research.lower()
     assert "only exception" in research.lower()
     assert "github-retrieval.md" in research
@@ -229,6 +234,27 @@ def main() -> None:
     conversation_rules = (ROOT / "references" / "conversation-and-decision.md").read_text(
         encoding="utf-8"
     )
+    essential_items = (
+        "Problem and need",
+        "Core product or project",
+        "Delivery form",
+    )
+    essential_positions = [conversation_rules.index(item) for item in essential_items]
+    assert essential_positions == sorted(essential_positions)
+    assert "A clear, unambiguous inference is sufficient" in conversation_rules
+    assert "ask about it only when multiple plausible forms" in conversation_rules
+    assert "If five questions have been exhausted" in conversation_rules
+    assert "continue from the best current understanding" in conversation_rules
+    assert "mark the unresolved item as unknown" in conversation_rules
+    assert "broaden the search where needed" in conversation_rules
+    assert "lower confidence in conclusions affected by the gap" in conversation_rules
+    assert "use the remaining question budget sparingly" in conversation_rules
+    assert "Five is not a quota" in conversation_rules
+    assert "widely known, functionally similar examples" in conversation_rules
+    assert "without live research" in conversation_rules
+    assert "illustrative prompts, not verified competitors" in conversation_rules
+    assert "never ask a secondary question merely because question budget remains" in conversation_rules
+    assert "continue the assessment and research with explicit unknowns" in conversation_rules
     for phrase in forbidden_jargon:
         assert phrase not in assess
         assert phrase not in compare
