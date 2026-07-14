@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 
 const PLUGIN = "search-before-build";
 const MARKETPLACE = "search-before-build";
 const SOURCE = "user-w-ui/search-before-build";
+const PACKAGE = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+const RELEASE_REF = `v${PACKAGE.version}`;
 
 function run(args, options = {}) {
   // pnpm's Windows shim is a .cmd file. Node cannot execute it directly,
@@ -54,12 +57,11 @@ function main() {
 
   const marketplaces = installedMarketplaceNames();
   if (marketplaces.has(MARKETPLACE)) {
-    console.log(`Refreshing the ${MARKETPLACE} marketplace...`);
-    run(["plugin", "marketplace", "upgrade", MARKETPLACE]);
-  } else {
-    console.log(`Adding the ${MARKETPLACE} marketplace...`);
-    run(["plugin", "marketplace", "add", SOURCE, "--ref", "main"]);
+    console.log(`Removing the existing ${MARKETPLACE} marketplace binding...`);
+    run(["plugin", "marketplace", "remove", MARKETPLACE]);
   }
+  console.log(`Adding the ${MARKETPLACE} marketplace at ${RELEASE_REF}...`);
+  run(["plugin", "marketplace", "add", SOURCE, "--ref", RELEASE_REF]);
 
   console.log(`Installing ${PLUGIN}...`);
   run(["plugin", "add", `${PLUGIN}@${MARKETPLACE}`]);

@@ -72,11 +72,23 @@ def main() -> None:
     assert package["license"] == "MIT"
     assert package["bin"] == {"search-before-build": "bin/install.mjs"}
     assert package["version"] == claude_manifest["version"] == codex_manifest["version"]
+    assert package["scripts"]["prepublishOnly"] == "node scripts/verify-release.mjs"
     assert {"codex-plugin", "plugin", "claude code"} <= set(package["keywords"])
     assert (ROOT / "LICENSE").is_file()
     installer = (ROOT / "bin" / "install.mjs").read_text(encoding="utf-8")
     assert '"plugin", "marketplace", "add"' in installer
+    assert '"plugin", "marketplace", "remove"' in installer
     assert '"plugin", "add"' in installer
+    assert 'const RELEASE_REF = `v${PACKAGE.version}`' in installer
+    assert '"--ref", "main"' not in installer
+    assert '"--ref", RELEASE_REF' in installer
+
+    release_verifier = (ROOT / "scripts" / "verify-release.mjs").read_text(encoding="utf-8")
+    assert 'git(["status", "--porcelain"])' in release_verifier
+    assert 'git(["rev-parse", "HEAD"])' in release_verifier
+    assert 'git(["rev-parse", `${expectedTag}^{commit}`])' in release_verifier
+    assert "packageVersion !== claudeVersion" in release_verifier
+    assert "packageVersion !== codexVersion" in release_verifier
 
     assess_meta, assess = read_skill("search-before-build-assess")
     compare_meta, compare = read_skill("search-before-build-compare")

@@ -110,6 +110,8 @@ docs/search-before-build/<当前项目>/<竞品>.md
 npx @superq/search-before-build install
 ```
 
+npm 安装器会把自身版本映射到同版本 Git tag（例如 `0.1.2` 对应 `v0.1.2`），不会跟随移动中的 `main`。安装或回滚到指定版本时使用 `npx @superq/search-before-build@<version> install`。
+
 完成后新开一个 Codex 任务：
 
 ```text
@@ -117,7 +119,7 @@ $search-before-build-assess <你的想法、计划或文件路径>
 $search-before-build-compare <计划书、原型或仓库路径>
 ```
 
-**Codex（手动）**
+**Codex（开发安装，跟随 `main`）**
 
 ```bash
 codex plugin marketplace add user-w-ui/search-before-build --ref main

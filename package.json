@@ -1,6 +1,6 @@
 {
   "name": "@superq/search-before-build",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Install the Search Before Build Codex plugin from its official marketplace.",
   "license": "MIT",
   "author": "superq",
@@ -33,7 +33,8 @@
   },
   "scripts": {
     "test": "node --check bin/install.mjs",
-    "pack:check": "npm pack --dry-run"
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "node scripts/verify-release.mjs"
   },
   "publishConfig": {
     "access": "public"

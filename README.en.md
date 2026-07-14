@@ -109,6 +109,8 @@ Each report focuses on the comparison and includes an overview, a comparison tab
 npx @superq/search-before-build install
 ```
 
+The npm installer maps its own version to the matching Git tag (for example, `0.1.2` to `v0.1.2`) instead of following the moving `main` branch. To install or roll back to a specific release, run `npx @superq/search-before-build@<version> install`.
+
 Then open a new Codex task:
 
 ```text
@@ -116,7 +118,7 @@ $search-before-build-assess <your idea, plan, or file path>
 $search-before-build-compare <path to a plan, prototype, or repository>
 ```
 
-**Codex (manual installation)**
+**Codex (development install, tracks `main`)**
 
 ```bash
 codex plugin marketplace add user-w-ui/search-before-build --ref main
