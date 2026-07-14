@@ -106,6 +106,21 @@ def main() -> None:
     assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in compare
     assert "bundled `search-before-build-research` skill" in assess
     assert "bundled `search-before-build-research` skill" in compare
+    assert "evidence package only" in assess.lower()
+    assert "evidence package only" in compare.lower()
+    assert "sole final decision-maker" in assess.lower()
+    assert "sole final decision-maker" in compare.lower()
+    assert "recommendation meanings" in assess.lower()
+    assert "recommendation meanings" in compare.lower()
+    assert "key comparison" in compare.lower()
+    assert "do not relabel capabilities independently" in compare.lower()
+    assert "evidence package only" in research.lower()
+    assert "do not make or imply a final" in research.lower()
+    assert "**Recommendation**" not in research
+    verdict_contract = "`Build`, `Adapt`, `Use existing`, or `Stop`"
+    assert verdict_contract in assess
+    assert verdict_contract in compare
+    assert verdict_contract not in research
     for skill in (assess, compare, research):
         assert "${CLAUDE_PLUGIN_ROOT}" not in skill
         assert "$ARGUMENTS" not in skill
@@ -214,7 +229,7 @@ def main() -> None:
     for label in support_labels:
         assert label in research_method
         assert label in research
-        assert label in compare
+        assert label not in compare
     english_label_contract = "native, partial, extensible, unsupported, or unverified"
     assert english_label_contract not in research
     assert english_label_contract not in compare

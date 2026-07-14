@@ -26,9 +26,8 @@ Read all of `references/research-method.md` and `references/search-sources.md` f
 - **Functional fingerprint**: user, situation, core task, input/output, operating mode, must-have capability, acceptable and unacceptable substitutes.
 - **Search coverage**: date, languages, platforms, tools used, unavailable channels, and search-depth limits.
 - **Candidates**: category, official identity, short fit explanation, adoption cost, maintenance evidence, license/price, and primary sources.
-- **Key comparison**: only decision-changing capabilities, using the five support labels.
+- **Key comparison**: only material capabilities, using the five support labels.
 - **Reusable parts**: products, repositories, packages, models, templates, or design ideas that avoid rebuilding.
-- **Recommendation**: one of `Build`, `Adapt`, `Use existing`, or `Stop`, plus the decisive evidence.
 - **Unknowns**: facts that could materially change the result.
 
-Keep cells and explanations compact. Link to primary sources, never search-result pages.
+Return an evidence package only. Do not make or imply a final build, adoption, or stop recommendation; the calling assessment or comparison workflow owns that decision. Keep cells and explanations compact. Link to primary sources, never search-result pages.

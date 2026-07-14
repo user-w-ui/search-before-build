@@ -39,7 +39,7 @@ For every GitHub-related search, follow [the GitHub retrieval rules](github-retr
 2. **Build candidate pools**: ready-made product, adaptable project, reusable component, and no-build workaround. Keep weak candidates only long enough to explain exclusion.
 3. **Narrow by functional fit**: prioritize the same user, situation, core task, operating mode, and must-have capability. Popularity is only a maturity signal and tie-breaker.
 4. **Verify strong candidates**: open official pages, repositories, documentation, manifests/model cards, releases, pricing, licenses, and representative implementation where relevant.
-5. **Stop when decision-ready**: stop expanding when each plausible decision has representative evidence and further candidates are near-duplicates. State coverage limits.
+5. **Stop when caller-ready**: stop expanding when the ready-made, adaptable, reusable, and no-build paths have representative evidence for the calling workflow and further candidates are near-duplicates. State coverage limits.
 
 ## Platform routes
 
@@ -55,7 +55,7 @@ Choose only relevant routes:
 
 ## Deep matching
 
-Compare actual behavior at the same layer. For every decision-changing capability use exactly one label:
+Compare actual behavior at the same layer. For every material capability use exactly one label:
 
 - **原生支持**: directly supported in the normal product flow.
 - **部分支持**: covers only part of the requirement or has a material limitation.

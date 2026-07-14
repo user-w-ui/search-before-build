@@ -17,12 +17,14 @@ Research alternatives to an existing plan or implementation without changing pro
 - Do not use project names, README claims, Stars, or popularity as proof of functional similarity.
 - Do not modify source code, plans, or unrelated documentation.
 
+Read the `Recommendation meanings` section of `references/conversation-and-decision.md` from this package before making the final decision.
+
 ## Workflow
 
 1. Establish the project baseline: intended user, problem, main workflow, inputs and outputs, operating environment, must-have capability, current maturity, and hard constraints.
 2. Turn the baseline into the functional fingerprint defined in `references/research-method.md` from this package.
-3. Invoke the bundled `search-before-build-research` skill with that fingerprint and instruct it not to write files. If that skill cannot be invoked, follow its `SKILL.md` workflow inline.
-4. Compare verified behavior at the same product or technical layer. Mark every material capability as `原生支持`, `部分支持`, `可通过扩展实现`, `不支持`, or `尚未验证`.
-5. Recommend exactly one of `Build`, `Adapt`, `Use existing`, or `Stop` in the conversation. Do not place this verdict or a necessity discussion in competitor reports.
+3. Invoke the bundled `search-before-build-research` skill with that fingerprint and request its evidence package only. Instruct it not to write files or make a final recommendation. If that skill cannot be invoked, follow its `SKILL.md` workflow inline with the same boundary.
+4. Consume the research evidence package and its key comparison at the same product or technical layer. Do not relabel capabilities independently.
+5. Act as the sole final decision-maker for an existing-project comparison. Recommend exactly one of `Build`, `Adapt`, `Use existing`, or `Stop` in the conversation. Do not place this verdict or a necessity discussion in competitor reports.
 6. Read `references/report-template.md` from this package. Write one report per strong competitor to `docs/search-before-build/<topic-slug>/<competitor-slug>.md`. Update each canonical file; do not create timestamped variants or combine several competitors into one comparison table.
 7. Return the recommendation, strongest alternatives, reusable pieces, all report paths, and material evidence gaps.
