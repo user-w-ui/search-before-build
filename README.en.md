@@ -51,13 +51,12 @@ It ends with a clear recommendation that you remain free to override:
 | **Use existing** | A mature solution already addresses the main problem, so using it is the better trade-off |
 | **Stop** | Evidence for the need is weak, or the cost of building clearly outweighs the benefit |
 
-## Three skills
+## Two skills
 
 | Skill | Best for | What it does |
 | --- | --- | --- |
 | `search-before-build-assess` | You have an idea but have not started | Reads the available context first, asks only for missing critical information (one question at a time, up to five), then researches and recommends a direction |
 | `search-before-build-compare` | You already have a plan, prototype, or repository | Extracts capabilities from the existing material, then looks directly for comparable products and reusable solutions |
-| `search-before-build-research` | Internal workflow step | Performs the read-only research used by the other two skills and stays hidden from the command menu |
 
 ```text
 /search-before-build:search-before-build-assess I want to build a tool that automatically organizes saved content
@@ -82,6 +81,8 @@ The plugin first determines what it needs to find, then chooses where to look. I
 For SaaS products, commercial tools, app-store listings, and other solutions outside those catalogs, it supplements the research with web search and official product pages. When the target market is unclear, it searches in both Chinese and English. Stars and download counts help assess maturity, but never replace functional matching, and similar names alone are not treated as evidence that two products compete.
 
 ### Optional in-depth GitHub search
+
+A direct request to enable, configure, or improve GitHub deep search first checks existing capabilities and offers the official MCP setup only when no route works. Enhancement intent is not installation consent; every download or configuration change still requires explicit approval.
 
 If a GitHub MCP server, connector, or equivalent tool is available, the plugin reuses it. Otherwise, it can still work through public APIs and web search. With your consent, it can install GitHub’s official MCP server automatically:
 

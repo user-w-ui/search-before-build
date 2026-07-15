@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the shared workflows in `skills/`. `search-before-build-assess` evaluates ideas, `search-before-build-compare` examines existing work, and `search-before-build-research` performs candidate research and optional GitHub enhancement. Shared rules belong in `references/`; the one-time installer is `scripts/setup-github-mcp.mjs`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated reports belong in `docs/search-before-build/<topic>/<competitor>.md`.
+This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the two shared workflows in `skills/`: `search-before-build-assess` evaluates ideas and `search-before-build-compare` examines existing work. Their internal candidate-research workflow lives in `references/research-method.md`; source-specific rules live in the other files under `references/`. The one-time installer is `scripts/setup-github-mcp.mjs`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated reports belong in `docs/search-before-build/<topic>/<competitor>.md`.
 
 ## Build, Test, and Development Commands
 

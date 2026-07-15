@@ -92,13 +92,13 @@ def main() -> None:
 
     assess_meta, assess = read_skill("search-before-build-assess")
     compare_meta, compare = read_skill("search-before-build-compare")
-    research_meta, research = read_skill("search-before-build-research")
+    research_method = (ROOT / "references" / "research-method.md").read_text(encoding="utf-8")
 
-    assert {assess_meta["name"], compare_meta["name"], research_meta["name"]} == {
+    assert {assess_meta["name"], compare_meta["name"]} == {
         "search-before-build-assess",
         "search-before-build-compare",
-        "search-before-build-research",
     }
+    assert not (ROOT / "skills" / "search-before-build-research").exists()
 
     assert "at most five questions" in assess.lower()
     assert "ask one question per turn" in assess.lower()
@@ -108,32 +108,34 @@ def main() -> None:
     assert "never ask the user to repeat or confirm" in assess.lower()
     assert "continue from the best current understanding" in assess.lower()
     assert "continue with explicit unknowns" in assess.lower()
-    assert "normal research is read-only" in research.lower()
-    assert "only exception" in research.lower()
-    assert "github-retrieval.md" in research
-    assert "search-sources.md" in research
-    assert "select only relevant sources" in research.lower()
-    assert "explicit user approval" in research.lower()
+    assert "normal research is read-only" in research_method.lower()
+    assert "only exception" in research_method.lower()
+    assert "github-retrieval.md" in research_method
+    assert "search-sources.md" in research_method
+    assert "select only sources relevant" in research_method.lower()
+    assert "explicit user approval" in research_method.lower()
     assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in assess
     assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in compare
-    assert "bundled `search-before-build-research` skill" in assess
-    assert "bundled `search-before-build-research` skill" in compare
-    assert "evidence package only" in assess.lower()
-    assert "evidence package only" in compare.lower()
+    assert "read and execute all of `references/research-method.md`" in assess.lower()
+    assert "read and execute all of `references/research-method.md`" in compare.lower()
     assert "sole final decision-maker" in assess.lower()
     assert "sole final decision-maker" in compare.lower()
     assert "recommendation meanings" in assess.lower()
     assert "recommendation meanings" in compare.lower()
     assert "key comparison" in compare.lower()
     assert "do not relabel capabilities independently" in compare.lower()
-    assert "evidence package only" in research.lower()
-    assert "do not make or imply a final" in research.lower()
-    assert "**Recommendation**" not in research
+    for skill in (assess, compare):
+        assert "github deep-search enhancement intent" in skill.lower()
+        assert "references/github-retrieval.md" in skill
+        assert "report the capability or setup result and stop" in skill.lower()
+    assert "standalone request to enable, configure, or improve github deep search" in assess_meta["description"].lower()
+    assert "github deep-search enhancement request includes" in compare_meta["description"].lower()
+    assert "Do not put a Build, Adapt, Use existing, or Stop verdict" in research_method
     verdict_contract = "`Build`, `Adapt`, `Use existing`, or `Stop`"
     assert verdict_contract in assess
     assert verdict_contract in compare
-    assert verdict_contract not in research
-    for skill in (assess, compare, research):
+    assert verdict_contract not in research_method
+    for skill in (assess, compare):
         assert "${CLAUDE_PLUGIN_ROOT}" not in skill
         assert "$ARGUMENTS" not in skill
         assert "search-before-build:research" not in skill
@@ -197,9 +199,9 @@ def main() -> None:
         assert example_operation in github_rules
     assert "examples, not an exhaustive allowlist" in github_rules
     assert "do not treat an unfamiliar tool name as absence" in github_rules
-    assert "follow the capability check, fallback order" in research
-    assert "obtain explicit installation consent" in research
-    assert "Stop only when all external routes are unavailable" in research
+    assert "capability checks, fallback order, optional setup" in research_method
+    assert "explicit user approval" in research_method
+    assert "Stop only when every external route is unavailable" in research_method
     assert "Generic Web search is not a prerequisite" in research_method
     assert "If generic Web search is unavailable" in research_method
     assert "name the specialized routes used" in research_method
@@ -227,16 +229,17 @@ def main() -> None:
         "gh --version",
     ):
         assert detailed_github_term in github_rules
-        assert detailed_github_term not in research
+        assert detailed_github_term not in assess
+        assert detailed_github_term not in compare
         assert detailed_github_term not in research_method
         assert detailed_github_term not in source_catalog
 
     support_enums = ("native", "partial", "extensible", "unsupported", "unverified")
     for value in support_enums:
         assert f"`{value}`" in research_method
-        assert f"`{value}`" in research
+        assert f"`{value}`" not in assess
         assert f"`{value}`" not in compare
-    assert "without translating them" in research
+    assert "without translating them" in research_method
     assert "Do not translate them there" in research_method
 
     report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
