@@ -55,13 +55,15 @@ Choose only relevant routes:
 
 ## Deep matching
 
-Compare actual behavior at the same layer. For every material capability use exactly one label:
+Compare actual behavior at the same layer. For every material capability use exactly one stable enum:
 
-- **原生支持**: directly supported in the normal product flow.
-- **部分支持**: covers only part of the requirement or has a material limitation.
-- **可通过扩展实现**: a documented extension path exists; name the required work.
-- **不支持**: reliable evidence shows the capability is absent or incompatible.
-- **尚未验证**: evidence is insufficient. Never silently convert this to “不支持”.
+- **`native`**: directly supported in the normal product flow.
+- **`partial`**: covers only part of the requirement or has a material limitation.
+- **`extensible`**: a documented extension path exists; name the required work.
+- **`unsupported`**: reliable evidence shows the capability is absent or incompatible.
+- **`unverified`**: evidence is insufficient. Never silently convert this to `unsupported`.
+
+Use these exact lowercase values in the internal research evidence package. Do not translate them there; the report template owns localized display labels.
 
 Also compare adoption effort, operating mode, maintenance, license/price, data or deployment constraints, and migration cost. Date time-sensitive facts. Separate verified facts from inference.
 

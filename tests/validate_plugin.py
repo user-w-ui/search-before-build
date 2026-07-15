@@ -231,42 +231,45 @@ def main() -> None:
         assert detailed_github_term not in research_method
         assert detailed_github_term not in source_catalog
 
-    support_labels = (
-        "原生支持",
-        "部分支持",
-        "可通过扩展实现",
-        "不支持",
-        "尚未验证",
-    )
-    for label in support_labels:
-        assert label in research_method
-        assert label in research
-        assert label not in compare
-    english_label_contract = "native, partial, extensible, unsupported, or unverified"
-    assert english_label_contract not in research
-    assert english_label_contract not in compare
+    support_enums = ("native", "partial", "extensible", "unsupported", "unverified")
+    for value in support_enums:
+        assert f"`{value}`" in research_method
+        assert f"`{value}`" in research
+        assert f"`{value}`" not in compare
+    assert "without translating them" in research
+    assert "Do not translate them there" in research_method
 
     report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
     assert "github-retrieval.md" in report_template
     assert "authenticated `gh` CLI" in report_template
     assert "three coverage items required by `research-method.md`" in report_template
-    required_headings = (
-        "## 简介",
-        "## 与 <当前项目名称> 的对比",
-        "## 值得 <当前项目名称> 关注的设计",
-        "## 可复用或参考的启发",
-        "## 一句话总结",
-        "## 资料来源",
+    localized_support_labels = (
+        ("native", "原生支持", "Native support"),
+        ("partial", "部分支持", "Partial support"),
+        ("extensible", "可通过扩展实现", "Achievable through extension"),
+        ("unsupported", "不支持", "Unsupported"),
+        ("unverified", "尚未验证", "Unverified"),
     )
-    positions = [report_template.index(heading) for heading in required_headings]
+    for value, chinese, english in localized_support_labels:
+        assert f"| `{value}` | {chinese} | {english} |" in report_template
+    assert "language explicitly requested by the user" in report_template
+    assert "language of the user's current request" in report_template
+    assert "fall back to the English support labels" in report_template
+    assert "Never switch because a source" in report_template
+    semantic_sections = (
+        "`overview`",
+        "`comparison`",
+        "`notable_designs`",
+        "`reusable_lessons`",
+        "`summary`",
+        "`sources`",
+    )
+    positions = [report_template.index(section) for section in semantic_sections]
     assert positions == sorted(positions)
-    for forbidden_section in (
-        "## 你想解决什么",
-        "## 这个需求真的需要开发吗",
-        "## 如果仍然决定开发",
-        "## 一句话结论",
-    ):
-        assert forbidden_section not in report_template
+    assert "Do not print the semantic identifiers themselves" in report_template
+    assert "Do not translate enum meanings ad hoc" in report_template
+    for forbidden_section in ("need-clarification section", "necessity-gate section", "verdict section", "MVP section"):
+        assert forbidden_section in report_template
 
     forbidden_jargon = ("用户画像", "核心价值主张", "市场细分信息", "商业闭环")
     conversation_rules = (ROOT / "references" / "conversation-and-decision.md").read_text(

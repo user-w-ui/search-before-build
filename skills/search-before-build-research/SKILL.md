@@ -18,7 +18,7 @@ Read all of `references/research-method.md` and `references/search-sources.md` f
 5. Use the adaptive funnel and platform routes in the reference. Search both Chinese and English when the market is Chinese or unknown.
 6. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround.
 7. Deeply verify the strongest candidates with primary sources. Do not infer functionality from a name, snippet, topic tag, directory name, Stars, or download count.
-8. Compare candidates against the fingerprint. Label each important capability as `原生支持`, `部分支持`, `可通过扩展实现`, `不支持`, or `尚未验证`.
+8. Compare candidates against the fingerprint. Label each important capability with exactly one stable enum: `native`, `partial`, `extensible`, `unsupported`, or `unverified`.
 9. Return the structured result below. Do not save a report; the calling workflow owns persistence.
 
 ## Return shape
@@ -26,7 +26,7 @@ Read all of `references/research-method.md` and `references/search-sources.md` f
 - **Functional fingerprint**: user, situation, core task, input/output, operating mode, must-have capability, acceptable and unacceptable substitutes.
 - **Search coverage**: date, languages, platforms, tools used, unavailable channels, and search-depth limits.
 - **Candidates**: category, official identity, short fit explanation, adoption cost, maintenance evidence, license/price, and primary sources.
-- **Key comparison**: only material capabilities, using the five support labels.
+- **Key comparison**: only material capabilities, using the five stable support enums without translating them.
 - **Reusable parts**: products, repositories, packages, models, templates, or design ideas that avoid rebuilding.
 - **Unknowns**: facts that could materially change the result.
 
