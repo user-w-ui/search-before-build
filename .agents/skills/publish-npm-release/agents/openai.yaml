@@ -1,0 +1,4 @@
+interface:
+  display_name: "Publish npm Release"
+  short_description: "Publish a verified, tagged npm release"
+  default_prompt: "Use $publish-npm-release to release this repository's completed changes."
