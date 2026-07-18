@@ -26,9 +26,9 @@ Research evidence uses stable enums. Never expose a raw enum in the report when 
 
 | Stable enum | 中文 | English |
 | --- | --- | --- |
-| `native` | 原生支持 | Native support |
-| `partial` | 部分支持 | Partial support |
-| `extensible` | 可通过扩展实现 | Achievable through extension |
+| `native` | 原生支持 | Native |
+| `partial` | 部分支持 | Partial |
+| `extensible` | 可通过扩展实现 | Extensible |
 | `unsupported` | 不支持 | Unsupported |
 | `unverified` | 尚未验证 | Unverified |
 

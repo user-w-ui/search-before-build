@@ -97,8 +97,31 @@ def validate() -> None:
     assert _css_px(viewer_asset, ".content-title", "font-size") >= 14
     assert _css_px(viewer_asset, ".comparison-table", "font-size") >= 14
     assert _css_px(viewer_asset, ".comparison-table th", "font-size") >= 12
+    assert _css_px(viewer_asset, 'html[lang^="en"] body', "font-size") >= 16
+    assert _css_px(viewer_asset, 'html[lang^="en"] .section-description', "font-size") >= 17
+    assert _css_px(viewer_asset, 'html[lang^="en"] .matrix thead th', "font-size") >= 13
+    assert _css_px(viewer_asset, 'html[lang^="en"] .support-badge', "font-size") >= 13
+    assert _css_px(viewer_asset, 'html[lang^="en"] .cell-note', "font-size") >= 14
+    assert _css_px(viewer_asset, 'html[lang^="en"] .comparison-table', "font-size") >= 15
+    assert _css_px(viewer_asset, 'html[lang^="en"] .comparison-table th', "font-size") >= 13
+    assert _css_px(viewer_asset, 'html[lang^="en"] .button', "font-size") >= 13
+    assert _css_px(viewer_asset, 'html[lang^="en"] .content-title', "font-size") >= 15
+    assert _css_px(viewer_asset, 'html[lang^="en"] .summary-quote', "font-size") >= 17
+    assert _css_px(
+        viewer_asset,
+        'html[lang^="en"] .design-item p,\n      html[lang^="en"] .lesson-list li,\n      html[lang^="en"] .source-list li',
+        "font-size",
+    ) >= 15
     primary_hover = _css_rule(viewer_asset, ".button-primary:hover")
     assert "color: #eff8f3" in primary_hover
+    for concise_label in (
+        'native: "Native"',
+        'partial: "Partial"',
+        'extensible: "Extensible"',
+        'capability: "Capability"',
+        'comparisonWithProject: "Project comparison"',
+    ):
+        assert concise_label in viewer_asset
 
     fixture = ROOT / "tests" / "fixtures" / "report-sample.json"
     assert fixture.is_file()
@@ -255,9 +278,9 @@ def validate() -> None:
     assert "authenticated `gh` CLI" in report_template
     assert "three coverage items required by `research-method.md`" in report_template
     localized_support_labels = (
-        ("native", "原生支持", "Native support"),
-        ("partial", "部分支持", "Partial support"),
-        ("extensible", "可通过扩展实现", "Achievable through extension"),
+        ("native", "原生支持", "Native"),
+        ("partial", "部分支持", "Partial"),
+        ("extensible", "可通过扩展实现", "Extensible"),
         ("unsupported", "不支持", "Unsupported"),
         ("unverified", "尚未验证", "Unverified"),
     )
@@ -267,6 +290,9 @@ def validate() -> None:
     assert "language of the user's current request" in report_template
     assert "fall back to the English support labels" in report_template
     assert "Never switch because a source" in report_template
+    assert "For English payloads, keep `topic` to a compact phrase" in report_viewer
+    assert "Keep each capability note and candidate overview to one compact sentence" in report_viewer
+    assert "Do not repeat the same point across payload fields" in report_viewer
     semantic_sections = (
         "`overview`",
         "`comparison`",

@@ -1062,6 +1062,74 @@
         }
       }
 
+      html[lang^="en"] body {
+        font-size: 16px;
+      }
+
+      html[lang^="en"] .topic {
+        max-width: 840px;
+        font-size: clamp(30px, 4.4vw, 54px);
+        letter-spacing: -0.04em;
+        line-height: 1.04;
+      }
+
+      html[lang^="en"] .section-kicker {
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .section-description {
+        font-size: 17px;
+      }
+
+      html[lang^="en"] .matrix thead th {
+        font-size: 13px;
+        letter-spacing: 0.06em;
+      }
+
+      html[lang^="en"] .capability-name {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      html[lang^="en"] .support-badge {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .cell-note {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      html[lang^="en"] .candidate-category,
+      html[lang^="en"] .button {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .content-title {
+        font-size: 15px;
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .comparison-table {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .comparison-table th {
+        font-size: 13px;
+        letter-spacing: 0.05em;
+      }
+
+      html[lang^="en"] .design-item strong,
+      html[lang^="en"] .design-item p,
+      html[lang^="en"] .lesson-list li,
+      html[lang^="en"] .source-list li {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .summary-quote {
+        font-size: 17px;
+      }
+
       @media (max-width: 900px) {
         .hero {
           grid-template-columns: 1fr;
@@ -1409,26 +1477,26 @@
             report: "Research brief",
             project: "Subject",
             recommendation: "Final recommendation",
-            strongestReuse: "Strongest reuse option",
+            strongestReuse: "Best reuse option",
             biggestUnknown: "Biggest unknown",
             generated: "Generated",
-            temporaryNotice: "Temporary viewer · reports export only when you choose",
+            temporaryNotice: "Temporary viewer · export only when you choose",
             contextKicker: "01 / Context",
             context: "Problem fingerprint",
-            contextDescription: "The user, task, workflow, and constraints that shaped the research.",
+            contextDescription: "The user, task, and constraints behind the search.",
             coverageKicker: "02 / Evidence",
             coverage: "Search coverage",
-            coverageDescription: "The evidence routes actually used, including unavailable or degraded channels.",
+            coverageDescription: "Evidence routes used and any coverage limits.",
             matrixKicker: "03 / Fit",
             comparison: "Capability comparison",
-            comparisonDescription: "Only material capabilities are shown. Unknown does not mean unsupported.",
-            capability: "Material capability",
+            comparisonDescription: "Decision-relevant capabilities only. Unknown is not unsupported.",
+            capability: "Capability",
             currentProject: "Current project",
             candidatesKicker: "04 / Alternatives",
             candidates: "Candidate details",
-            candidatesDescription: "Inspect each strong candidate's operating model, differences, reusable designs, and sources.",
+            candidatesDescription: "Review fit, constraints, reuse, and sources.",
             overview: "Overview",
-            comparisonWithProject: "Comparison with the current project",
+            comparisonWithProject: "Project comparison",
             dimension: "Dimension",
             notableDesigns: "Notable designs",
             reusableLessons: "Reusable lessons",
@@ -1438,10 +1506,10 @@
             coverageNote: "Coverage note",
             saveMarkdown: "Save Markdown",
             copyMarkdown: "Copy Markdown",
-            openOfficial: "Open official site",
+            openOfficial: "Official site",
             unknownsKicker: "05 / Unknowns",
             unknowns: "Still unverified",
-            unknownsDescription: "These facts could change the decision and deserve early validation before implementation.",
+            unknownsDescription: "These facts could still change the decision.",
             used: "Used",
             limited: "Limited",
             unavailable: "Unavailable",
@@ -1473,9 +1541,9 @@
               unverified: "尚未验证",
             }
           : {
-              native: "Native support",
-              partial: "Partial support",
-              extensible: "Achievable through extension",
+              native: "Native",
+              partial: "Partial",
+              extensible: "Extensible",
               unsupported: "Unsupported",
               unverified: "Unverified",
             };

@@ -85,6 +85,8 @@ Keep stable support enums inside capability cells only. When a detailed `compari
 
 The viewer has built-in Chinese and English interface text. Use a language tag beginning with `zh` for Chinese or `en` for English.
 
+For English payloads, keep `topic` to a compact phrase rather than a full requirement sentence. Use the shortest unambiguous phrase for capability names and comparison dimensions. Keep each capability note and candidate overview to one compact sentence, and keep reusable lessons focused on one actionable point. Do not repeat the same point across payload fields merely to fill the layout; the viewer handles deliberate whitespace.
+
 For every other target language, translate the free text and provide localized interface strings in `labels`. Supply every key reported by the renderer's `REQUIRED_CUSTOM_LABELS` contract; the key names describe their UI purpose. Support-enum labels still fall back to English, as required by `report-template.md`.
 
 ## Visual behavior
