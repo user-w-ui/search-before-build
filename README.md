@@ -1,184 +1,181 @@
 <div align="center">
 
 
-
 <img src="./assets/mascot.png" alt="Search Before Build mascot" width="145">
 
 # Search Before Build
 
-**在开始 vibe coding 之前，先确认这东西真的值得做。**
+**Before you start vibe coding, make sure the idea is actually worth building.**
 
-一个对新手友好的 Codex / Claude Code 的轻量插件：帮你说清问题、判断开发必要性，并认真寻找已经存在的产品、开源项目和可复用组件。
+A lightweight, beginner-friendly plugin for Codex and Claude Code. It helps you clarify the problem, decide whether development is necessary, and seriously look for existing products, open-source projects, and reusable components.
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
 ![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-d97706)
 [![License](https://img.shields.io/badge/license-MIT-059669)](./LICENSE)
 
-[简体中文](./README.md) | [English](./README.en.md)
+[English](./README.md) | [简体中文](./README.zh-CN.md)
 
 </div>
 
 ---
 
-## 为什么做这个？
+## Why does this exist?
 
-Vibe coding 让“有个想法”到“开始写代码”的距离变得非常短。这很爽，但也容易：为一次性问题搭一整套系统、写到一半才发现已有成熟产品、重复造轮子，最后花掉大量 token 得到一个自己也不会用的项目。
+Vibe coding has made the distance between “I have an idea” and “I’m writing code” incredibly short. That feels great, but it also makes it easy to build an entire system for a one-off problem, discover a mature product halfway through, reinvent the wheel, or spend a huge number of tokens on a project you will never use.
 
-`search-before-build` 不打击想法，只是让你开工前多停几分钟，回答三个问题：
+`search-before-build` is not here to discourage ideas. It simply asks you to pause for a few minutes before starting and answer three questions:
 
-1. **你真正想解决的是什么？**
-2. **这件事真的需要开发吗？**
-3. **有没有现成方案可以直接用或拿来改？**
+1. **What are you actually trying to solve?**
+2. **Does this really need to be built?**
+3. **Is there an existing solution you can use or adapt?**
 
-## 它怎么工作？
+## How does it work?
 
 ```text
-一个模糊的想法
-      │
-      ▼
-说清真实问题 ──→ 判断是否值得开发 ──→ 检索并验证现有方案
-                                              │
-                                              ▼
-                         Build / Adapt / Use existing / Stop
+A vague idea
+     │
+     ▼
+Clarify the real problem ──→ Decide whether it is worth building ──→ Find and verify existing solutions
+                                                                                  │
+                                                                                  ▼
+                                                             Build / Adapt / Use existing / Stop
 ```
 
-最终给出一个明确但可由你覆盖的建议：
+It ends with a clear recommendation that you remain free to override:
 
-| 建议 | 含义 |
+| Recommendation | Meaning |
 | --- | --- |
-| **Build** | 需求真实，现有方案确实没覆盖关键缺口 |
-| **Adapt** | 已有接近的方案，改造比从头开发更合适 |
-| **Use existing** | 成熟方案已能解决主要问题，直接用更划算 |
-| **Stop** | 需求证据不足，或开发成本明显高于收益 |
+| **Build** | The need is real, and existing solutions do not cover the critical gap |
+| **Adapt** | A close solution already exists, and modifying it makes more sense than starting from scratch |
+| **Use existing** | A mature solution already addresses the main problem, so using it is the better trade-off |
+| **Stop** | Evidence for the need is weak, or the cost of building clearly outweighs the benefit |
 
-## 两个技能
+## Two skills
 
-| 技能 | 适用场景 | 用法 |
+| Skill | Best for | What it does |
 | --- | --- | --- |
-| `search-before-build-assess` | 只有想法、尚未开始 | 先读已有信息，仅在关键内容缺失时追问（每次一问，最多五个），再检索并给出建议 |
-| `search-before-build-compare` | 已有计划书、原型或仓库 | 从现有材料提取能力，直接寻找相似竞品和可复用方案 |
+| `search-before-build-assess` | You have an idea but have not started | Reads the available context first, asks only for missing critical information (one question at a time, up to five), then researches and recommends a direction |
+| `search-before-build-compare` | You already have a plan, prototype, or repository | Extracts capabilities from the existing material, then looks directly for comparable products and reusable solutions |
 
 ```text
-/search-before-build:search-before-build-assess 我想做一个自动整理收藏内容的工具
+/search-before-build:search-before-build-assess I want to build a tool that automatically organizes saved content
 /search-before-build:search-before-build-compare ./docs/plan.md
 ```
 
-## 不只是搜索 GitHub
+## More than GitHub search
 
-先看要找什么，再决定去哪里找。插件从需求中提取功能指纹，只选真正相关的来源，不会每次扫遍所有平台。
+The plugin first determines what it needs to find, then chooses where to look. It extracts a functional fingerprint from your needs and searches only relevant sources instead of scanning every platform every time.
 
-| 要找的东西 | 优先来源 |
+| What you are looking for | Preferred source |
 | --- | --- |
-| 开源仓库、源码或可复用实现 | GitHub |
-| JS / Node.js 依赖、CLI 或插件 | npm |
-| 跨生态软件包信息与维护信号 | Ecosyste.ms Packages |
-| Agent 可用的 MCP 工具或连接器 | Official MCP Registry |
-| JVM（Java / Kotlin / Android）依赖 | Maven Central |
-| Rust crate | crates.io |
-| 模型、数据集或可复用 AI 应用 | Hugging Face Hub |
-| 算法、论文或学术先例 | arXiv |
+| Open-source repositories, source code, or reusable implementations | GitHub |
+| JavaScript / Node.js dependencies, CLIs, or plugins | npm |
+| Cross-ecosystem package metadata and maintenance signals | Ecosyste.ms Packages |
+| MCP tools or connectors for agents | Official MCP Registry |
+| JVM dependencies (Java / Kotlin / Android) | Maven Central |
+| Rust crates | crates.io |
+| Models, datasets, or reusable AI applications | Hugging Face Hub |
+| Algorithms, papers, or academic precedents | arXiv |
 
-SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索和官方页面补充。目标市场不明确时中英文同时检索。Stars、下载量只辅助判断成熟度，不代替功能匹配，也不会仅因名称相似就认定为竞品。
+For SaaS products, commercial tools, app-store listings, and other solutions outside those catalogs, it supplements the research with web search and official product pages. When the target market is unclear, it searches in both Chinese and English. Stars and download counts help assess maturity, but never replace functional matching, and similar names alone are not treated as evidence that two products compete.
 
-### 可选的 GitHub 深度检索
+### Optional in-depth GitHub search
 
-直接提出“启用、配置或增强 GitHub 深度检索”时，插件会先检查现有能力；没有可用渠道时才会提供官方 MCP 配置选项。表达增强意图不等于同意安装，任何下载或配置修改仍需明确授权。
-
-有 GitHub MCP、Connector 或等价工具时直接复用；没有也能通过公开 API 和网页搜索正常运行。经用户同意可自动安装 GitHub 官方 MCP：
+If a GitHub MCP server, connector, or equivalent tool is available, the plugin reuses it. Otherwise, it can still work through public APIs and web search. With your consent, it can install GitHub’s official MCP server automatically:
 
 ```text
-启用 GitHub 深度检索
+Enable in-depth GitHub search
 ```
 
-安装器会下载并校验官方二进制，以 `repos` 工具集和 `--read-only` 模式运行，首次连接用浏览器 OAuth（无需 PAT、Docker 或额外包）。需要本机 Node.js 18+，Windows / macOS / Linux 通用；基础检索本身不依赖 Node。拒绝或授权失败会自动回退。
+The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. The first connection uses browser-based OAuth, so no PAT, Docker, or extra package is required. It supports Windows, macOS, and Linux and requires Node.js 18 or later; the basic research workflow itself does not depend on Node.js. If installation is declined or authorization fails, it falls back automatically.
 
-## 临时研究简报与可选保存
+## Temporary research brief and optional saving
 
-研究完成后，插件会生成一份精心排版的本地 HTML 简报，集中展示最终建议、检索覆盖、能力矩阵、重点竞品、可复用经验和未知项。页面使用单文件离线渲染，不依赖 CDN，并覆盖写入系统临时目录，因此不会因为一次随手询问就在当前项目中留下报告文件。
+After research, the plugin renders a polished local HTML brief containing the final recommendation, search coverage, capability matrix, strongest candidates, reusable lessons, and unknowns. The page is a self-contained offline file with no CDN dependency. It overwrites one file in the OS temporary directory, so a casual question does not leave reports in the current project.
 
-### 三步读懂一份研究简报
+### Read a research brief in three steps
 
-**1. 先看结论**
+[Explore a live report](https://user-w-ui.github.io/search-before-build/)
 
-把真实需求、主要证据和剩余未知项汇总为一个明确建议，让你在投入开发之前先看清最值得复用的方向。
+**1. Start with the decision**
 
-[![Search Before Build 中文研究简报的首页结论，展示 Use existing 建议、最值得复用方案和最大未知项](./assets/showcase/zh/01-decision.png)](./assets/showcase/zh/01-decision.png)
+Turn the real need, strongest evidence, and remaining unknowns into one clear recommendation before development begins.
 
-**2. 再看能力矩阵**
+[![The English Search Before Build brief showing a Use existing recommendation, strongest reuse option, and biggest unknown](./assets/showcase/en/01-decision.png)](./assets/showcase/en/01-decision.png)
 
-只比较会影响选择的关键能力，用统一的支持标签呈现候选差异；证据不足时保留“尚未验证”，而不是猜测为不支持。
+**2. Inspect the capability matrix**
 
-[![Search Before Build 中文研究简报的能力矩阵，对比当前想法与多个候选方案的关键能力](./assets/showcase/zh/02-capability-matrix.png)](./assets/showcase/zh/02-capability-matrix.png)
+Compare only decision-relevant capabilities with consistent support labels. Missing evidence stays unverified instead of becoming unsupported.
 
-**3. 最后深挖候选**
+[![The English Search Before Build capability matrix comparing the proposed idea with several candidate solutions](./assets/showcase/en/02-capability-matrix.png)](./assets/showcase/en/02-capability-matrix.png)
 
-逐个查看采用成本、关键限制、值得关注的设计和可复用经验，并保留可追溯的官方来源。
+**3. Examine each candidate**
 
-[![Search Before Build 中文研究简报的单个竞品分析模块，展示项目对比、可复用经验和总结](./assets/showcase/zh/03-competitor-analysis.png)](./assets/showcase/zh/03-competitor-analysis.png)
+Review adoption cost, material constraints, reusable designs, and traceable primary sources for every strong candidate.
 
-每个竞品都提供“保存 Markdown”和“复制 Markdown”操作。只有你在看完结果后主动选择导出，或者明确要求插件持久化某个竞品时，才会形成长期报告：
+[![The English Search Before Build candidate analysis showing project comparison, reusable lessons, and summary](./assets/showcase/en/03-competitor-analysis.png)](./assets/showcase/en/03-competitor-analysis.png)
+
+Every competitor has **Save Markdown** and **Copy Markdown** actions. A long-lived report is created only when you choose to export it after reviewing the result, or explicitly ask the plugin to persist a selected competitor:
 
 ```text
-docs/search-before-build/<当前项目>/<竞品>.md
+docs/search-before-build/<current-project>/<competitor>.md
 ```
 
-持久化报告继续保持一竞品一文件，只包含竞品简介、与当前项目的对比表、值得关注的设计、可复用启发、一句话总结和资料来源，不包含必要性判断或最终裁决。
+Persisted reports remain one file per competitor and contain only the overview, comparison with the current project, notable designs, reusable lessons, one-sentence summary, and sources. They exclude the necessity check and final verdict.
 
-## 安装与使用
+## Installation and usage
 
-**Codex（一条命令）**
+**Codex (one command)**
 
 ```bash
 npx @superq/search-before-build install
 ```
 
-npm 安装器会把自身版本映射到同版本 Git tag（例如 `0.1.2` 对应 `v0.1.2`），不会跟随移动中的 `main`。安装或回滚到指定版本时使用 `npx @superq/search-before-build@<version> install`。
-
-完成后新开一个 Codex 任务：
+Then open a new Codex task:
 
 ```text
-$search-before-build-assess <你的想法、计划或文件路径>
-$search-before-build-compare <计划书、原型或仓库路径>
+$search-before-build-assess <your idea, plan, or file path>
+$search-before-build-compare <path to a plan, prototype, or repository>
 ```
 
-**Codex（开发安装，跟随 `main`）**
+**Codex (development install, tracks `main`)**
 
 ```bash
 codex plugin marketplace add user-w-ui/search-before-build --ref main
 codex plugin add search-before-build@search-before-build
 ```
 
-**Claude Code（marketplace）**
+**Claude Code (marketplace)**
 
 ```text
 /plugin marketplace add user-w-ui/search-before-build
 /plugin install search-before-build@search-before-build
 ```
 
-安装后即可调用 `/search-before-build:search-before-build-assess` 与 `...-compare`；用 `/plugin marketplace update search-before-build` 更新。
+After installation, use `/search-before-build:search-before-build-assess` or `...-compare`. Update it with `/plugin marketplace update search-before-build`.
 
-**Claude Code（本地加载）**
+**Claude Code (local loading)**
 
 ```bash
 claude --plugin-dir /path/to/search-before-build
 ```
 
-**验证插件**
+**Validate the plugin**
 
 ```bash
 claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
-## 参与贡献
+## Contributing
 
-欢迎提交 Issue 或 Pull Request，尤其欢迎：常被漏掉的检索平台、名称相似但功能不同的误匹配案例、能明显省时或省 token 的复用案例，以及对非专业用户仍太难理解的表达。
+Issues and pull requests are welcome, especially for commonly overlooked search platforms, false matches between similarly named but functionally different products, reuse cases that save meaningful time or tokens, and wording that is still too difficult for non-technical users.
 
 ---
 
 <div align="center">
 
-### 三思而后行。
+### Think twice. Build once.
 
 </div>

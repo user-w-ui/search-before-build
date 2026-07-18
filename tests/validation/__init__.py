@@ -1,6 +1,7 @@
 from .validate_github import validate as validate_github
 from .validate_package import validate as validate_package
 from .validate_report import validate as validate_report
+from .validate_showcase import validate as validate_showcase
 from .validate_skills import validate as validate_skills
 
 
@@ -9,4 +10,5 @@ VALIDATORS = {
     "skills": validate_skills,
     "github": validate_github,
     "report": validate_report,
+    "showcase": validate_showcase,
 }
