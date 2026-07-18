@@ -39,16 +39,16 @@ def validate() -> None:
     assert f"[Explore a live report]({pages_url})" in readme
     assert f"[体验完整报告样例]({pages_url}zh/)" in readme_zh
 
-    showcase_en = read_text("showcase/index.html")
-    showcase_zh = read_text("showcase/zh/index.html")
+    showcase_en = read_text("docs/index.html")
+    showcase_zh = read_text("docs/zh/index.html")
     assert 'href="./zh/"' in showcase_en
     assert 'href="../"' in showcase_zh
     assert _embedded_language(showcase_en) == "en"
     assert _embedded_language(showcase_zh) == "zh-CN"
 
     for path, showcase in (
-        ("showcase/index.html", showcase_en),
-        ("showcase/zh/index.html", showcase_zh),
+        ("docs/index.html", showcase_en),
+        ("docs/zh/index.html", showcase_zh),
     ):
         for forbidden in ("file://", "AppData", "C:\\\\Users", "<script src=", "<link href="):
             assert forbidden not in showcase, f"{path} contains non-portable content: {forbidden}"
@@ -56,11 +56,8 @@ def validate() -> None:
         assert "Save Markdown" in showcase
         assert "保存 Markdown" in showcase
 
-    workflow = read_text(".github/workflows/pages.yml")
-    assert "actions/configure-pages" in workflow
-    assert "actions/upload-pages-artifact" in workflow
-    assert "actions/deploy-pages" in workflow
-    assert "cp -R showcase/. _site/" in workflow
+    assert not (ROOT / "showcase").exists()
+    assert not (ROOT / ".github" / "workflows" / "pages.yml").exists()
 
 
 def _embedded_language(showcase: str) -> str:
