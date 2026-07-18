@@ -16,6 +16,8 @@ claude --plugin-dir /path/to/search-before-build
 
 The first command validates the Claude manifest and skill metadata. The second checks both manifests, skill boundaries, reference files, and report structure. The third loads the Claude package for an interactive smoke test. Invoke `/search-before-build:search-before-build-assess <idea>` or `/search-before-build:search-before-build-compare <path>` after loading it. Validate the Codex manifest with Codex's plugin validator before publishing a Codex marketplace entry.
 
+For a focused local check, pass one or more contract groups to the Python validator: `package`, `skills`, `github`, or `report`. Running it without arguments remains the full validation entrypoint.
+
 ## Coding Style & Naming Conventions
 
 Use UTF-8, LF line endings, four spaces for Python, and two spaces for JSON indentation. Skill directories and names use lowercase kebab-case. Keep `SKILL.md` instructions imperative, concise, and plain-language. Refer to package resources by their package-relative path, such as `references/research-method.md`; do not use a host-specific root variable. Put reusable detail one level deep in `references/`. Do not add product-management jargon or infer competitor capabilities from names, popularity, or search snippets.

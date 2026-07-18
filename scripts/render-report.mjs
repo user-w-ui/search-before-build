@@ -27,6 +27,7 @@ const SUPPORT_ENUMS = new Set([
 ]);
 const RECOMMENDATIONS = new Set(["Build", "Adapt", "Use existing", "Stop"]);
 const COVERAGE_STATUSES = new Set(["used", "limited", "unavailable"]);
+const ISO_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
 const REQUIRED_CUSTOM_LABELS = [
   "skipToContent", "assessment", "comparisonMode", "report", "project",
   "recommendation", "strongestReuse", "biggestUnknown", "generated",
@@ -118,7 +119,7 @@ function validatePayload(payload) {
   requireString(payload.topic, "report.topic");
   requireString(payload.projectName, "report.projectName");
   requireString(payload.generatedAt, "report.generatedAt");
-  if (Number.isNaN(Date.parse(payload.generatedAt))) {
+  if (!ISO_DATE_TIME.test(payload.generatedAt) || Number.isNaN(Date.parse(payload.generatedAt))) {
     fail("report.generatedAt must be an ISO-8601 date-time.");
   }
 

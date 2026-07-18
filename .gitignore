@@ -1,1 +1,3 @@
 .npmrc
+__pycache__/
+*.py[cod]
