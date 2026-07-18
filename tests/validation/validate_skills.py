@@ -14,16 +14,22 @@ def validate() -> None:
     }
     assert not (ROOT / "skills" / "search-before-build-research").exists()
 
-    assert "at most five questions" in assess.lower()
+    assert "at most five information-seeking questions" in assess.lower()
     assert "ask one question per turn" in assess.lower()
     assert "do not narrate the workflow or use headings" in assess.lower()
-    assert "three essential facts" in assess.lower()
+    assert "intent model" in assess.lower()
     assert "five is a ceiling, not a target" in assess.lower()
-    assert "never ask the user to repeat or confirm" in assess.lower()
+    assert "never ask the user to repeat information" in assess.lower()
+    assert "surface function and delivery form" in assess.lower()
+    assert "material, user-answerable unknown" in assess.lower()
+    assert "match the user's language and demonstrated level of expertise" in assess.lower()
     assert "continue from the best current understanding" in assess.lower()
-    assert "continue with explicit unknowns" in assess.lower()
+    assert "confirmation does not count toward the five-question limit" in assess.lower()
+    assert "stop the turn and wait" in assess.lower()
+    assert "do not research until the user confirms" in assess.lower()
     assert "Do not create files during clarification or the necessity check" in assess
     assert "Do not begin implementation" in assess
+    confirmation_position = assess.index("present the concise pre-research understanding summary")
     necessity_position = assess.index("Give a short necessity check in the conversation")
     assess_research_position = assess.index(
         "Read and execute all of `references/research-method.md`"
@@ -31,7 +37,8 @@ def validate() -> None:
     assess_recommendation_position = assess.index(
         "Act as the sole final decision-maker for idea assessment"
     )
-    assert necessity_position < assess_research_position < assess_recommendation_position
+    assert confirmation_position < necessity_position < assess_research_position
+    assert assess_research_position < assess_recommendation_position
 
     assert "Do not modify source code, plans, or unrelated documentation" in compare
     assert "Prefer codebase knowledge-graph tools for code discovery" in compare
@@ -132,27 +139,39 @@ def validate() -> None:
         assert definition in research_method
 
     conversation_rules = read_text("references/conversation-and-decision.md")
-    essential_items = (
-        "Problem and need",
-        "Core product or project",
-        "Delivery form",
+    intent_dimensions = (
+        "Trigger and situation",
+        "Current approach and pain",
+        "Desired outcome",
+        "Core capability and boundaries",
+        "Difference from alternatives",
+        "Proposed approach and delivery form",
+        "Hard constraints",
     )
-    essential_positions = [conversation_rules.index(item) for item in essential_items]
-    assert essential_positions == sorted(essential_positions)
+    intent_positions = [conversation_rules.index(item) for item in intent_dimensions]
+    assert intent_positions == sorted(intent_positions)
     assert "A clear, unambiguous inference is sufficient" in conversation_rules
-    assert "ask about it only when multiple plausible forms" in conversation_rules
-    assert "If five questions have been exhausted" in conversation_rules
+    assert "solution hypothesis" in conversation_rules
+    assert "Do not start research merely because the surface function" in conversation_rules
+    assert "foreseeable, answerable by the user" in conversation_rules
+    assert "change the candidate set, capability comparison, or recommendation" in conversation_rules
+    assert "If five information-seeking questions have been exhausted" in conversation_rules
     assert "continue from the best current understanding" in conversation_rules
-    assert "mark the unresolved item as unknown" in conversation_rules
+    assert "mark unresolved items as unknown" in conversation_rules
     assert "broaden the search where needed" in conversation_rules
-    assert "lower confidence in conclusions affected by the gap" in conversation_rules
-    assert "use the remaining question budget sparingly" in conversation_rules
+    assert "lower confidence in affected conclusions" in conversation_rules
     assert "Five is not a quota" in conversation_rules
+    assert "highest expected information gain" in conversation_rules
+    assert "Match the user's wording and demonstrated level of expertise" in conversation_rules
     assert "widely known, functionally similar examples" in conversation_rules
     assert "without live research" in conversation_rules
-    assert "illustrative prompts, not verified competitors" in conversation_rules
-    assert "never ask a secondary question merely because question budget remains" in conversation_rules
-    assert "continue the assessment and research with explicit unknowns" in conversation_rules
+    assert "contrast prompts" in conversation_rules
+    assert "Do not present them as verified competitors" in conversation_rules
+    assert "conserving questions is not more important than grounding an expensive search" in conversation_rules
+    assert "does not count toward the five information-seeking questions" in conversation_rules
+    assert "Stop the turn and wait for the user's response" in conversation_rules
+    assert "must not introduce as its biggest unknown" in conversation_rules
+    assert "material, foreseeable, user-answerable question" in conversation_rules
 
     forbidden_jargon = ("用户画像", "核心价值主张", "市场细分信息", "商业闭环")
     for phrase in forbidden_jargon:
