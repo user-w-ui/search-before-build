@@ -41,6 +41,19 @@ def _assert_renderer_rejects(
     assert not output_path.exists(), case
 
 
+def _css_rule(source: str, selector: str) -> str:
+    match = re.search(rf"{re.escape(selector)}\s*\{{([^}}]+)\}}", source)
+    assert match, f"missing CSS rule: {selector}"
+    return match.group(1)
+
+
+def _css_px(source: str, selector: str, property_name: str) -> float:
+    rule = _css_rule(source, selector)
+    match = re.search(rf"{re.escape(property_name)}:\s*([\d.]+)px", rule)
+    assert match, f"missing {property_name} in CSS rule: {selector}"
+    return float(match.group(1))
+
+
 def validate() -> None:
     assess = read_skill("search-before-build-assess")[1]
     compare = read_skill("search-before-build-compare")[1]
@@ -80,6 +93,12 @@ def validate() -> None:
     assert "prefers-reduced-motion" in viewer_asset
     assert "@media (max-width: 680px)" in viewer_asset
     assert "@media print" in viewer_asset
+    assert _css_px(viewer_asset, ".matrix thead th", "font-size") >= 12
+    assert _css_px(viewer_asset, ".content-title", "font-size") >= 14
+    assert _css_px(viewer_asset, ".comparison-table", "font-size") >= 14
+    assert _css_px(viewer_asset, ".comparison-table th", "font-size") >= 12
+    primary_hover = _css_rule(viewer_asset, ".button-primary:hover")
+    assert "color: #eff8f3" in primary_hover
 
     fixture = ROOT / "tests" / "fixtures" / "report-sample.json"
     assert fixture.is_file()
@@ -98,6 +117,44 @@ def validate() -> None:
         assert encoded
         decoded = json.loads(base64.b64decode(encoded.group(1)).decode("utf-8"))
         assert decoded == fixture_data
+
+        duplicate_source_payload = deepcopy(fixture_data)
+        duplicate_source_payload["competitors"][0]["url"] = (
+            "https://example.com/product/"
+        )
+        duplicate_source_payload["competitors"][0]["sources"] = [
+            {
+                "label": "Official page duplicate",
+                "url": "https://EXAMPLE.com/product?utm_source=report#overview",
+            },
+            {
+                "label": "Supplementary documentation",
+                "url": "https://example.com/product/docs",
+            },
+        ]
+        duplicate_source_input = Path(directory) / "duplicate-source.json"
+        duplicate_source_output = Path(directory) / "duplicate-source.html"
+        duplicate_source_input.write_text(
+            json.dumps(duplicate_source_payload), encoding="utf-8"
+        )
+        duplicate_source_result = _run_renderer(
+            duplicate_source_input, duplicate_source_output
+        )
+        assert duplicate_source_result.returncode == 0, duplicate_source_result.stderr
+        duplicate_source_html = duplicate_source_output.read_text(encoding="utf-8")
+        duplicate_source_encoded = re.search(
+            r'const encodedReport = "([A-Za-z0-9+/=]+)";', duplicate_source_html
+        )
+        assert duplicate_source_encoded
+        filtered_payload = json.loads(
+            base64.b64decode(duplicate_source_encoded.group(1)).decode("utf-8")
+        )
+        assert filtered_payload["competitors"][0]["sources"] == [
+            {
+                "label": "Supplementary documentation",
+                "url": "https://example.com/product/docs",
+            }
+        ]
 
         unknown_candidate = deepcopy(fixture_data)
         unknown_candidate["capabilities"][0]["candidates"]["missing-candidate"] = {

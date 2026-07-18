@@ -591,7 +591,7 @@
       .matrix thead th {
         background: color-mix(in srgb, var(--paper) 82%, transparent);
         color: var(--muted);
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 780;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -626,7 +626,7 @@
         padding: 4px 9px;
         border: 1px solid transparent;
         border-radius: 999px;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 760;
         white-space: nowrap;
       }
@@ -664,7 +664,7 @@
       .cell-note {
         margin: 8px 0 0;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 13px;
         line-height: 1.45;
       }
 
@@ -754,9 +754,21 @@
         color: #eff8f3;
       }
 
+      .button-primary:hover {
+        border-color: var(--night-raised);
+        background: var(--night-raised);
+        color: #eff8f3;
+      }
+
       html[data-theme="dark"] .button-primary {
         border-color: var(--mint);
         background: var(--mint);
+        color: #052017;
+      }
+
+      html[data-theme="dark"] .button-primary:hover {
+        border-color: #83edc4;
+        background: #83edc4;
         color: #052017;
       }
 
@@ -795,7 +807,7 @@
         align-items: center;
         gap: 10px;
         margin: 0 0 17px;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 790;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -812,7 +824,7 @@
       .comparison-table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .comparison-table th,
@@ -825,7 +837,7 @@
 
       .comparison-table th {
         color: var(--faint);
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 780;
         letter-spacing: 0.07em;
         text-transform: uppercase;
@@ -875,7 +887,7 @@
       .source-list li {
         margin: 0;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .lesson-list li {

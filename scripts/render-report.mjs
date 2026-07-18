@@ -27,6 +27,7 @@ const SUPPORT_ENUMS = new Set([
 ]);
 const RECOMMENDATIONS = new Set(["Build", "Adapt", "Use existing", "Stop"]);
 const COVERAGE_STATUSES = new Set(["used", "limited", "unavailable"]);
+const TRACKING_QUERY_PARAMS = new Set(["fbclid", "gclid", "msclkid"]);
 const ISO_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
 const REQUIRED_CUSTOM_LABELS = [
   "skipToContent", "assessment", "comparisonMode", "report", "project",
@@ -216,6 +217,40 @@ function encodePayload(payload) {
   return Buffer.from(JSON.stringify(payload), "utf8").toString("base64");
 }
 
+function comparableUrl(value) {
+  try {
+    const url = new URL(value);
+    if (!new Set(["http:", "https:"]).has(url.protocol)) return null;
+    url.hash = "";
+    for (const key of [...url.searchParams.keys()]) {
+      const normalizedKey = key.toLowerCase();
+      if (normalizedKey.startsWith("utm_") || TRACKING_QUERY_PARAMS.has(normalizedKey)) {
+        url.searchParams.delete(key);
+      }
+    }
+    url.searchParams.sort();
+    url.pathname = url.pathname.replace(/\/+$/, "") || "/";
+    return url.href;
+  } catch {
+    return null;
+  }
+}
+
+function filterDuplicateSources(payload) {
+  for (const candidate of payload.competitors) {
+    const seen = new Set();
+    const officialUrl = comparableUrl(candidate.url);
+    if (officialUrl) seen.add(officialUrl);
+    candidate.sources = candidate.sources.filter((source) => {
+      const sourceUrl = comparableUrl(source.url);
+      if (!sourceUrl || seen.has(sourceUrl)) return false;
+      seen.add(sourceUrl);
+      return true;
+    });
+  }
+  return payload;
+}
+
 function writeAtomically(outputPath, contents) {
   mkdirSync(dirname(outputPath), { recursive: true });
   const temporaryPath = `${outputPath}.${process.pid}.tmp`;
@@ -256,6 +291,7 @@ function main() {
   }
   const payload = JSON.parse(inputBuffer.toString("utf8"));
   validatePayload(payload);
+  filterDuplicateSources(payload);
 
   const template = readFileSync(TEMPLATE_PATH, "utf8");
   if (template.split(PLACEHOLDER).length !== 2) {
