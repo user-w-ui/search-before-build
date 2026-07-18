@@ -92,15 +92,17 @@ Enable in-depth GitHub search
 
 The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. The first connection uses browser-based OAuth, so no PAT, Docker, or extra package is required. It supports Windows, macOS, and Linux and requires Node.js 18 or later; the basic research workflow itself does not depend on Node.js. If installation is declined or authorization fails, it falls back automatically.
 
-## Competitor reports
+## Temporary research brief and optional saving
 
-Once research begins, the plugin creates a separate report for each key competitor. Reanalyzing the same competitor updates the existing file instead of producing timestamped copies:
+After research, the plugin renders a polished local HTML brief containing the final recommendation, search coverage, capability matrix, strongest candidates, reusable lessons, and unknowns. The page is a self-contained offline file with no CDN dependency. It overwrites one file in the OS temporary directory, so a casual question does not leave reports in the current project.
+
+Every competitor has **Save Markdown** and **Copy Markdown** actions. A long-lived report is created only when you choose to export it after reviewing the result, or explicitly ask the plugin to persist a selected competitor:
 
 ```text
 docs/search-before-build/<current-project>/<competitor>.md
 ```
 
-Each report focuses on the comparison and includes an overview, a comparison table against the current project, notable design choices, reusable lessons, a one-sentence conclusion, and sources.
+Persisted reports remain one file per competitor and contain only the overview, comparison with the current project, notable designs, reusable lessons, one-sentence summary, and sources. They exclude the necessity check and final verdict.
 
 ## Installation and usage
 

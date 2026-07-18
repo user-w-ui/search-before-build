@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "language": "zh-CN",
+  "mode": "compare",
+  "topic": "先搜索，再决定是否继续构建",
+  "projectName": "Search Before Build",
+  "generatedAt": "2026-07-18T09:30:00Z",
+  "recommendation": {
+    "value": "Adapt",
+    "reason": "现有工作已经形成清晰的证据链与裁决边界，但临时展示和选择性保存仍值得补齐，无需推倒重来。",
+    "reusableOption": "保留现有 research → assess / compare 单向职责链，并复用浏览器原生下载能力。",
+    "biggestUnknown": "不同 Agent 宿主打开本地 HTML 与触发下载时的兼容性仍需分别冒烟验证。"
+  },
+  "fingerprint": [
+    {
+      "label": "目标用户",
+      "value": "希望在投入编码前先验证必要性与现有方案的开发者"
+    },
+    {
+      "label": "核心任务",
+      "value": "查明是否已有可直接使用、改造或复用的成熟方案"
+    },
+    {
+      "label": "交付形式",
+      "value": "Codex 与 Claude Code 共用的双 Skill 插件"
+    },
+    {
+      "label": "关键约束",
+      "value": "研究只读、证据与裁决分离、默认不污染用户仓库"
+    }
+  ],
+  "coverage": [
+    {
+      "label": "GitHub",
+      "status": "used",
+      "detail": "检查仓库结构、源码与最近维护记录"
+    },
+    {
+      "label": "官方文档",
+      "status": "used",
+      "detail": "核对浏览器保存 API 和 Skill 资源分层规则"
+    },
+    {
+      "label": "通用网页搜索",
+      "status": "limited",
+      "detail": "仅用于发现候选，关键结论回到一手来源验证"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "研究与最终裁决分离",
+      "current": {
+        "status": "native",
+        "note": "research 只提供证据包"
+      },
+      "candidates": {
+        "architecture-review": {
+          "status": "partial",
+          "note": "流程明确，但未区分可持久化输出"
+        },
+        "static-markdown": {
+          "status": "unsupported",
+          "note": "报告与裁决通常混在同一文件"
+        }
+      }
+    },
+    {
+      "name": "查看后再选择保存",
+      "current": {
+        "status": "extensible",
+        "note": "通过临时查看器补齐"
+      },
+      "candidates": {
+        "architecture-review": {
+          "status": "unsupported",
+          "note": "只有静态展示，没有导出交互"
+        },
+        "static-markdown": {
+          "status": "unsupported",
+          "note": "文件在查看前已经落盘"
+        }
+      }
+    },
+    {
+      "name": "离线且可移植的视觉展示",
+      "current": {
+        "status": "native",
+        "note": "单文件 HTML，不依赖 CDN"
+      },
+      "candidates": {
+        "architecture-review": {
+          "status": "partial",
+          "note": "页面精美，但 Tailwind 和 Mermaid 依赖 CDN"
+        },
+        "static-markdown": {
+          "status": "native",
+          "note": "纯文本格式天然可移植"
+        }
+      }
+    }
+  ],
+  "competitors": [
+    {
+      "id": "architecture-review",
+      "name": "Architecture Review HTML",
+      "url": "https://example.com/architecture-review",
+      "category": "可借鉴的 HTML 报告工作流",
+      "overview": "它让模型根据一份视觉规范现场生成架构评审网页，强调图形表达、临时目录输出和不污染仓库。",
+      "comparison": [
+        {
+          "dimension": "页面生成",
+          "candidate": "模型每次直接创作完整 HTML",
+          "current": "结构化数据交给固定模板渲染"
+        },
+        {
+          "dimension": "交互",
+          "candidate": "只读展示",
+          "current": "每个候选可独立保存或复制 Markdown"
+        },
+        {
+          "dimension": "网络依赖",
+          "candidate": "Tailwind 与 Mermaid 使用 CDN",
+          "current": "样式与脚本全部内嵌"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "视觉规范与主流程分离",
+          "detail": "Skill 只保留执行步骤，详细页面语言放进单独 reference，避免主指令持续膨胀。"
+        },
+        {
+          "title": "临时目录交付",
+          "detail": "结果不会落入被评审仓库，天然减少无关文件和误提交。"
+        }
+      ],
+      "reusableLessons": [
+        "保留独立的视觉规范，让页面风格可审查、可演进",
+        "生成后返回绝对路径，并在宿主允许时主动打开",
+        "不复用 CDN 依赖，确保报告离线仍可阅读"
+      ],
+      "summary": "最值得复用的是职责分层和临时交付，不是让模型反复手写整页 HTML。",
+      "coverageNote": "基于本地 Skill 与 HTML 规范文件进行结构审查。",
+      "sources": [
+        {
+          "label": "HTML report design reference",
+          "url": "https://example.com/architecture-review/spec"
+        }
+      ]
+    },
+    {
+      "id": "static-markdown",
+      "name": "Static Markdown Reports",
+      "url": "https://commonmark.org/",
+      "category": "现有持久化方式",
+      "overview": "Markdown 简洁、可审查且适合版本控制，但强制生成会污染仓库，也无法让用户在看到结果后再决定保存哪些候选。",
+      "comparison": [
+        {
+          "dimension": "版本控制",
+          "candidate": "天然适合 Git diff",
+          "current": "只有用户主动持久化后才进入 Git"
+        },
+        {
+          "dimension": "视觉层级",
+          "candidate": "依赖宿主渲染，表现有限",
+          "current": "具有裁决、证据、矩阵和候选卡片层级"
+        },
+        {
+          "dimension": "选择性保存",
+          "candidate": "生成即保存",
+          "current": "查看后按候选独立导出"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "稳定的语义结构",
+          "detail": "概览、比较、设计、复用经验、总结和来源的顺序清晰，适合继续作为导出契约。"
+        }
+      ],
+      "reusableLessons": [
+        "继续把 Markdown 作为长期保存格式，而不是默认展示格式",
+        "导出的文件保持一竞品一报告，避免合并表格失控"
+      ],
+      "summary": "Markdown 应从默认副作用变成用户主动选择的长期载体。",
+      "coverageNote": "比较的是格式和工作流属性，不代表某个具体竞品。",
+      "sources": [
+        {
+          "label": "CommonMark specification",
+          "url": "https://spec.commonmark.org/"
+        }
+      ]
+    }
+  ],
+  "unknowns": [
+    "Claude Code 是否会在所有支持平台上以一致方式打开 file:// 页面",
+    "部分浏览器对连续下载和剪贴板权限的限制是否需要额外提示",
+    "非中英文界面标签由模型提供时能否稳定保持完整"
+  ],
+  "labels": {}
+}

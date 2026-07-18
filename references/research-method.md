@@ -1,12 +1,12 @@
 # Research workflow and evidence contract
 
-This is an internal workflow for `search-before-build-assess` and `search-before-build-compare`. The calling Skill owns clarification, the final recommendation, and report persistence.
+This is an internal workflow for `search-before-build-assess` and `search-before-build-compare`. The calling Skill owns clarification, the final recommendation, temporary presentation, and any explicitly requested report persistence.
 
 ## Boundaries
 
 Normal research is read-only: do not create, edit, or delete files. The only exception is the GitHub MCP setup flow in `github-retrieval.md`, which may download the official binary and update the current Agent's MCP configuration only after explicit user approval.
 
-Research must produce an evidence package before the caller makes a final recommendation. Do not put a Build, Adapt, Use existing, or Stop verdict in the evidence package. Do not save competitor reports; the calling Skill owns persistence.
+Research must produce an evidence package before the caller makes a final recommendation. Do not put a Build, Adapt, Use existing, or Stop verdict in the evidence package. Do not save competitor reports or render the viewer; the calling Skill owns presentation and optional persistence.
 
 ## Functional fingerprint
 

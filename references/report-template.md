@@ -1,6 +1,12 @@
-# Competitor report template
+# Competitor report contract
 
-Write one report per competitor. Keep the report strictly about the competitor and its comparison with the current project. Do not include need clarification, necessity gates, Build/Stop decisions, MVP advice, or the earlier conversation.
+Use this semantic contract for each competitor card in the temporary viewer and for every Markdown report the user explicitly chooses to export or persist. Keep the competitor content strictly about the competitor and its comparison with the current project. Do not include need clarification, necessity gates, Build/Stop decisions, MVP advice, or the earlier conversation.
+
+## Persistence boundary
+
+Do not write competitor reports into the current project by default. After the user has seen the result, persist only the competitors they explicitly request to `docs/search-before-build/<topic-slug>/<competitor-slug>.md`. Update the canonical file when it already exists; do not create timestamped variants or a combined multi-competitor report.
+
+The temporary viewer may offer a user-initiated download or copy action for each competitor. Those actions are optional exports, not project writes, and must produce this same Markdown structure.
 
 ## Output language
 
@@ -85,4 +91,4 @@ Choose only material comparison dimensions. Common semantic dimensions include `
 - Use primary sources and date time-sensitive facts in the relevant cell or source note. Never cite a search-result page.
 - When neither a structured GitHub tool nor an authenticated `gh` CLI was used, include the exact anonymous-search limitation statement from `github-retrieval.md` under the localized `sources` heading. When generic Web search was unavailable but specialized routes worked, include the three coverage items required by `research-method.md`.
 - Explain unavoidable technical terms briefly. Do not use product-management jargon.
-- When several competitors are researched, create a separate canonical report for each competitor. Do not combine competitors into extra table columns.
+- When the user exports or persists several competitors, keep a separate report for each competitor. Do not combine competitors into extra table columns.

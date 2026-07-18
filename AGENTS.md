@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the two shared workflows in `skills/`: `search-before-build-assess` evaluates ideas and `search-before-build-compare` examines existing work. Their internal candidate-research workflow lives in `references/research-method.md`; source-specific rules live in the other files under `references/`. The one-time installer is `scripts/setup-github-mcp.mjs`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Generated reports belong in `docs/search-before-build/<topic>/<competitor>.md`.
+This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the two shared workflows in `skills/`: `search-before-build-assess` evaluates ideas and `search-before-build-compare` examines existing work. Their internal candidate-research workflow lives in `references/research-method.md`; source-specific rules live in the other files under `references/`. The one-time installer is `scripts/setup-github-mcp.mjs`; the temporary result viewer is rendered by `scripts/render-report.mjs` from `assets/report-viewer.html`. Keep shared skill instructions platform-neutral. `tests/validate_plugin.py` checks structure and behavioral invariants. Persisted reports are optional and belong in `docs/search-before-build/<topic>/<competitor>.md` only after an explicit user request.
 
 ## Build, Test, and Development Commands
 
@@ -22,7 +22,7 @@ Use UTF-8, LF line endings, four spaces for Python, and two spaces for JSON inde
 
 ## Testing Guidelines
 
-Add assertions to `tests/validate_plugin.py` whenever behavior or report contracts change. Test filenames use `test_` or `validate_` prefixes. Before submitting, run both validation commands, `node --check scripts/setup-github-mcp.mjs`, and a smoke test. Normal research is read-only; MCP download and configuration may run only after explicit user consent. Only `assess` and `compare` may write competitor reports.
+Add assertions to `tests/validate_plugin.py` whenever behavior or report contracts change. Test filenames use `test_` or `validate_` prefixes. Before submitting, run both validation commands, `node --check scripts/setup-github-mcp.mjs`, `node --check scripts/render-report.mjs`, and a smoke test. Normal research is read-only; MCP download and configuration may run only after explicit user consent. Only `assess` and `compare` may render the temporary viewer or write explicitly requested competitor reports.
 
 ## Commit & Pull Request Guidelines
 

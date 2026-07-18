@@ -28,5 +28,7 @@ If the user expresses GitHub deep-search enhancement intent, read and follow the
 3. Read and execute all of `references/research-method.md` to build the evidence package before making a final recommendation.
 4. Consume the research evidence package and its key comparison at the same product or technical layer. Do not relabel capabilities independently.
 5. Act as the sole final decision-maker for an existing-project comparison. Recommend exactly one of `Build`, `Adapt`, `Use existing`, or `Stop` in the conversation. Do not place this verdict or a necessity discussion in competitor reports.
-6. Read `references/report-template.md` from this package. Write one report per strong competitor to `docs/search-before-build/<topic-slug>/<competitor-slug>.md`. Update each canonical file; do not create timestamped variants or combine several competitors into one comparison table.
-7. Return the recommendation, strongest alternatives, reusable pieces, all report paths, and material evidence gaps.
+6. Read `references/report-template.md` and `references/report-viewer.md` from this package. Render the result to the shared temporary HTML viewer. Do not write competitor reports into the user's project unless the user explicitly asks to persist selected competitors after seeing the result.
+7. Return the recommendation, strongest alternatives, reusable pieces, the temporary viewer path, and material evidence gaps.
+
+If the user later asks to persist one or more competitors, write only those reports to `docs/search-before-build/<topic-slug>/<competitor-slug>.md` under the contract in `references/report-template.md`. Update canonical files and return their paths.

@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import base64
 import json
+import re
+import subprocess
+import tempfile
 from pathlib import Path
 
 
@@ -144,6 +148,7 @@ def main() -> None:
         "conversation-and-decision.md",
         "research-method.md",
         "report-template.md",
+        "report-viewer.md",
         "github-retrieval.md",
         "search-sources.md",
     ):
@@ -243,6 +248,92 @@ def main() -> None:
     assert "Do not translate them there" in research_method
 
     report_template = (ROOT / "references" / "report-template.md").read_text(encoding="utf-8")
+    report_viewer = (ROOT / "references" / "report-viewer.md").read_text(encoding="utf-8")
+    viewer_script = (ROOT / "scripts" / "render-report.mjs").read_text(encoding="utf-8")
+    viewer_asset = (ROOT / "assets" / "report-viewer.html").read_text(encoding="utf-8")
+    for skill in (assess, compare):
+        assert "references/report-viewer.md" in skill
+        assert "shared temporary html viewer" in skill.lower()
+        assert "unless the user explicitly asks to persist selected competitors" in skill.lower()
+        assert "all report paths" not in skill.lower()
+    assert "do not write competitor reports into the current project by default" in report_template.lower()
+    assert "user-initiated download or copy action" in report_template.lower()
+    assert "optional persistence" in research_method.lower()
+    assert "do not save competitor reports or render the viewer" in research_method.lower()
+    assert "<temp>/search-before-build/latest.html" in report_viewer
+    assert "do not fall back to creating reports in the project" in report_viewer.lower()
+    assert "the viewer supplements the answer" in report_viewer.lower()
+    assert "node <package-root>/scripts/render-report.mjs" in report_viewer
+    assert "schemaVersion" in report_viewer
+    assert "REQUIRED_CUSTOM_LABELS" in report_viewer
+    assert "tmpdir()" in viewer_script
+    assert '"latest.html"' in viewer_script
+    assert "writeAtomically" in viewer_script
+    assert "--consume-input" in viewer_script
+    assert "REQUIRED_CUSTOM_LABELS" in viewer_script
+    assert viewer_asset.count("__SEARCH_BEFORE_BUILD_REPORT_DATA__") == 1
+    assert "https://cdn" not in viewer_asset
+    assert 'src="http' not in viewer_asset
+    assert "showSaveFilePicker" in viewer_asset
+    assert "new Blob" in viewer_asset
+    assert "Copy Markdown" in viewer_asset
+    assert "Save Markdown" in viewer_asset
+    assert "prefers-reduced-motion" in viewer_asset
+    assert "@media (max-width: 680px)" in viewer_asset
+    assert "@media print" in viewer_asset
+
+    fixture = ROOT / "tests" / "fixtures" / "report-sample.json"
+    assert fixture.is_file()
+    fixture_data = json.loads(fixture.read_text(encoding="utf-8"))
+    assert fixture_data["schemaVersion"] == 1
+    assert len(fixture_data["competitors"]) >= 2
+    with tempfile.TemporaryDirectory() as directory:
+        rendered = Path(directory) / "report.html"
+        result = subprocess.run(
+            [
+                "node",
+                str(ROOT / "scripts" / "render-report.mjs"),
+                "--input",
+                str(fixture),
+                "--output",
+                str(rendered),
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        rendered_text = rendered.read_text(encoding="utf-8")
+        assert "__SEARCH_BEFORE_BUILD_REPORT_DATA__" not in rendered_text
+        assert fixture_data["topic"] not in rendered_text, "payload must stay encoded"
+        assert str(rendered) in result.stdout
+        encoded = re.search(r'const encodedReport = "([A-Za-z0-9+/=]+)";', rendered_text)
+        assert encoded
+        decoded = json.loads(base64.b64decode(encoded.group(1)).decode("utf-8"))
+        assert decoded == fixture_data
+
+        unsupported_language = dict(fixture_data)
+        unsupported_language["language"] = "fr-FR"
+        unsupported_language["labels"] = {}
+        invalid_input = Path(directory) / "invalid-language.json"
+        invalid_input.write_text(json.dumps(unsupported_language), encoding="utf-8")
+        invalid_result = subprocess.run(
+            [
+                "node",
+                str(ROOT / "scripts" / "render-report.mjs"),
+                "--input",
+                str(invalid_input),
+                "--output",
+                str(Path(directory) / "invalid.html"),
+            ],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert invalid_result.returncode != 0
+        assert "REQUIRED_CUSTOM_LABELS" in invalid_result.stderr
     assert "github-retrieval.md" in report_template
     assert "authenticated `gh` CLI" in report_template
     assert "three coverage items required by `research-method.md`" in report_template

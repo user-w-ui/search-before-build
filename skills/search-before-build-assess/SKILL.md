@@ -31,7 +31,9 @@ If the user expresses GitHub deep-search enhancement intent, read and follow the
 4. Before research, convert the request into a functional fingerprint. Confirm only if a remaining ambiguity would change the search.
 5. Read and execute all of `references/research-method.md` to build the evidence package before making a final recommendation.
 6. Act as the sole final decision-maker for idea assessment. Using the recommendation meanings in `references/conversation-and-decision.md`, combine the necessity check and research evidence into exactly one recommendation: `Build`, `Adapt`, `Use existing`, or `Stop`. Keep this decision in the conversation; do not put it in competitor reports.
-7. Once research has run, read `references/report-template.md` from this package. Write one report per strong competitor to `docs/search-before-build/<topic-slug>/<competitor-slug>.md`. Update the canonical file when it already exists; do not create timestamped variants or a combined multi-competitor table. Keep the earlier clarification and necessity analysis out of every report.
-8. Return the recommendation, the main reason, the most reusable option, all report paths, and the biggest remaining unknown. Do not begin implementation.
+7. Once research has run, read `references/report-template.md` and `references/report-viewer.md` from this package. Render the result to the shared temporary HTML viewer. Do not write competitor reports into the user's project unless the user explicitly asks to persist selected competitors after seeing the result.
+8. Return the recommendation, the main reason, the most reusable option, the temporary viewer path, and the biggest remaining unknown. Do not begin implementation.
+
+If the user later asks to persist one or more competitors, write only those reports to `docs/search-before-build/<topic-slug>/<competitor-slug>.md` under the contract in `references/report-template.md`. Update canonical files and return their paths.
 
 The user may override the recommendation. Record that choice without weakening or rewriting the evidence.
