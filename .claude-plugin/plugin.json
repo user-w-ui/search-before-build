@@ -1,6 +1,6 @@
 {
   "name": "search-before-build",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A plain-language pre-build reality check and evidence-backed alternative research toolkit for vibe coders.",
   "author": {
     "name": "search-before-build contributors"

@@ -244,7 +244,7 @@ function rpcConnectionTest(executable, timeoutMs = 300_000) {
       params: {
         protocolVersion: "2025-06-18",
         capabilities: {},
-        clientInfo: { name: "search-before-build-setup", version: "0.1.2" },
+        clientInfo: { name: "search-before-build-setup", version: "0.2.0" },
       },
     });
   });

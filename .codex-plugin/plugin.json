@@ -1,6 +1,6 @@
 {
   "name": "search-before-build",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "An evidence-backed pre-build reality check for digital product and coding ideas.",
   "author": {
     "name": "search-before-build contributors"
