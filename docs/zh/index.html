@@ -181,6 +181,10 @@
         gap: 12px;
       }
 
+      .export-button {
+        white-space: nowrap;
+      }
+
       .mode-chip,
       .demo-language,
       .icon-button {
@@ -580,6 +584,10 @@
 
       .matrix-scroll {
         overflow-x: auto;
+      }
+
+      .print-matrix {
+        display: none;
       }
 
       .matrix {
@@ -1080,6 +1088,74 @@
         }
       }
 
+      html[lang^="en"] body {
+        font-size: 16px;
+      }
+
+      html[lang^="en"] .topic {
+        max-width: 840px;
+        font-size: clamp(30px, 4.4vw, 54px);
+        letter-spacing: -0.04em;
+        line-height: 1.04;
+      }
+
+      html[lang^="en"] .section-kicker {
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .section-description {
+        font-size: 17px;
+      }
+
+      html[lang^="en"] .matrix thead th {
+        font-size: 13px;
+        letter-spacing: 0.06em;
+      }
+
+      html[lang^="en"] .capability-name {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      html[lang^="en"] .support-badge {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .cell-note {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      html[lang^="en"] .candidate-category,
+      html[lang^="en"] .button {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .content-title {
+        font-size: 15px;
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .comparison-table {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .comparison-table th {
+        font-size: 13px;
+        letter-spacing: 0.05em;
+      }
+
+      html[lang^="en"] .design-item strong,
+      html[lang^="en"] .design-item p,
+      html[lang^="en"] .lesson-list li,
+      html[lang^="en"] .source-list li {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .summary-quote {
+        font-size: 17px;
+      }
+
       @media (max-width: 900px) {
         .hero {
           grid-template-columns: 1fr;
@@ -1208,6 +1284,11 @@
       }
 
       @media print {
+        @page {
+          size: A4 portrait;
+          margin: 12mm;
+        }
+
         :root {
           --paper: #fff;
           --paper-raised: #fff;
@@ -1222,13 +1303,230 @@
 
         body {
           background: #fff;
+          font-size: 10pt;
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
         }
 
         body::before,
+        .skip-link,
         .mast-actions,
         .candidate-actions,
         .toast {
           display: none !important;
+        }
+
+        .shell {
+          width: 100%;
+          max-width: none;
+        }
+
+        .masthead {
+          min-height: 0;
+          margin-bottom: 8mm;
+        }
+
+        .hero {
+          grid-template-columns: minmax(0, 1.45fr) minmax(54mm, 0.75fr);
+          min-height: 0;
+          box-shadow: none;
+        }
+
+        .hero-main {
+          padding: 12mm;
+        }
+
+        .hero-aside {
+          display: flex;
+          grid-template-columns: none;
+          border-top: 0;
+          border-left: 1px solid rgba(226, 245, 237, 0.1);
+        }
+
+        .hero-note {
+          padding: 8mm;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .topic {
+          font-size: 27pt;
+        }
+
+        .decision-block {
+          margin-top: 14mm;
+        }
+
+        .decision {
+          font-size: 38pt;
+        }
+
+        .reason {
+          font-size: 11pt;
+        }
+
+        .meta-line {
+          padding-top: 4mm;
+        }
+
+        .section {
+          padding-top: 12mm;
+        }
+
+        .section-head {
+          grid-template-columns: minmax(52mm, 0.68fr) minmax(0, 1.32fr);
+          gap: 8mm;
+          margin-bottom: 6mm;
+          break-after: avoid;
+        }
+
+        .section-title {
+          font-size: 24pt;
+        }
+
+        .context-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          box-shadow: none;
+        }
+
+        .coverage-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .matrix-shell {
+          display: none;
+        }
+
+        .print-matrix {
+          display: block;
+        }
+
+        .print-matrix-group {
+          break-inside: auto;
+        }
+
+        .print-matrix-group + .print-matrix-group {
+          break-before: page;
+        }
+
+        .print-matrix-heading {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 6mm;
+          margin: 0 0 5mm;
+          break-after: avoid;
+        }
+
+        .print-matrix-heading h3 {
+          margin: 0;
+          font-size: 17pt;
+        }
+
+        .print-matrix-heading span {
+          color: var(--muted);
+          font-size: 9pt;
+        }
+
+        .print-matrix-table {
+          width: 100%;
+          border: 1px solid var(--line);
+          border-collapse: collapse;
+          table-layout: fixed;
+        }
+
+        .print-matrix-table thead {
+          display: table-header-group;
+        }
+
+        .print-matrix-table th,
+        .print-matrix-table td {
+          padding: 3.5mm;
+          border-right: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+          text-align: left;
+          vertical-align: top;
+          overflow-wrap: anywhere;
+        }
+
+        .print-matrix-table th {
+          background: #f3f4ef;
+          color: var(--muted);
+          font-size: 8.5pt;
+          text-transform: uppercase;
+        }
+
+        .print-matrix-table th:first-child,
+        .print-matrix-table td:first-child {
+          width: 27%;
+        }
+
+        .print-matrix-table th:last-child,
+        .print-matrix-table td:last-child {
+          border-right: 0;
+        }
+
+        .print-matrix-table tr:last-child td {
+          border-bottom: 0;
+        }
+
+        .print-matrix-table tr,
+        .comparison-table tr,
+        .design-item,
+        .lesson-list li,
+        .source-list li,
+        .unknown-list li {
+          break-inside: avoid;
+        }
+
+        .print-matrix .support-cell {
+          min-width: 0;
+        }
+
+        .candidate-stack {
+          display: block;
+        }
+
+        .candidate-card {
+          overflow: visible;
+          break-inside: auto;
+          box-shadow: none;
+        }
+
+        .candidate-card + .candidate-card {
+          margin-top: 0;
+          break-before: page;
+        }
+
+        .candidate-header,
+        .candidate-overview,
+        .content-title {
+          break-after: avoid;
+        }
+
+        .candidate-body {
+          display: block;
+        }
+
+        .candidate-side {
+          border-top: 1px solid var(--line);
+          border-left: 0;
+        }
+
+        .comparison-table {
+          display: table;
+          overflow: visible;
+        }
+
+        .comparison-table thead {
+          display: table-header-group;
+        }
+
+        .reveal {
+          animation: none;
         }
 
         .hero,
@@ -1236,9 +1534,6 @@
           break-inside: avoid;
         }
 
-        .candidate-card {
-          break-inside: avoid;
-        }
       }
     </style>
   </head>
@@ -1250,7 +1545,8 @@
         <span>Search Before Build</span>
       </div>
       <div class="mast-actions">
-        <a class="demo-language" href="../" lang="en" aria-label="View the English report sample">English</a>
+        <button class="button button-primary export-button" id="export-pdf" type="button"></button>
+        <a class="demo-language" href="../index.html" lang="en" aria-label="View the English report sample">English</a>
         <span class="mode-chip" id="mode-chip"></span>
         <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
           <span class="theme-symbol" aria-hidden="true"></span>
@@ -1329,6 +1625,7 @@
             <table class="matrix" id="capability-matrix"></table>
           </div>
         </div>
+        <div class="print-matrix" id="print-capability-matrix" aria-hidden="true"></div>
       </section>
 
       <section class="section" id="candidates-section" aria-labelledby="candidates-title">
@@ -1428,26 +1725,26 @@
             report: "Research brief",
             project: "Subject",
             recommendation: "Final recommendation",
-            strongestReuse: "Strongest reuse option",
+            strongestReuse: "Best reuse option",
             biggestUnknown: "Biggest unknown",
             generated: "Generated",
-            temporaryNotice: "Temporary viewer · reports export only when you choose",
+            temporaryNotice: "Temporary viewer · export only when you choose",
             contextKicker: "01 / Context",
             context: "Problem fingerprint",
-            contextDescription: "The user, task, workflow, and constraints that shaped the research.",
+            contextDescription: "The user, task, and constraints behind the search.",
             coverageKicker: "02 / Evidence",
             coverage: "Search coverage",
-            coverageDescription: "The evidence routes actually used, including unavailable or degraded channels.",
+            coverageDescription: "Evidence routes used and any coverage limits.",
             matrixKicker: "03 / Fit",
             comparison: "Capability comparison",
-            comparisonDescription: "Only material capabilities are shown. Unknown does not mean unsupported.",
-            capability: "Material capability",
+            comparisonDescription: "Decision-relevant capabilities only. Unknown is not unsupported.",
+            capability: "Capability",
             currentProject: "Current project",
             candidatesKicker: "04 / Alternatives",
             candidates: "Candidate details",
-            candidatesDescription: "Inspect each strong candidate's operating model, differences, reusable designs, and sources.",
+            candidatesDescription: "Review fit, constraints, reuse, and sources.",
             overview: "Overview",
-            comparisonWithProject: "Comparison with the current project",
+            comparisonWithProject: "Project comparison",
             dimension: "Dimension",
             notableDesigns: "Notable designs",
             reusableLessons: "Reusable lessons",
@@ -1457,10 +1754,10 @@
             coverageNote: "Coverage note",
             saveMarkdown: "Save Markdown",
             copyMarkdown: "Copy Markdown",
-            openOfficial: "Open official site",
+            openOfficial: "Official site",
             unknownsKicker: "05 / Unknowns",
             unknowns: "Still unverified",
-            unknownsDescription: "These facts could change the decision and deserve early validation before implementation.",
+            unknownsDescription: "These facts could still change the decision.",
             used: "Used",
             limited: "Limited",
             unavailable: "Unavailable",
@@ -1474,6 +1771,8 @@
             theme: "Toggle light or dark theme",
           },
         };
+        dictionaries.zh.exportPdf = "导出完整 PDF";
+        dictionaries.en.exportPdf = "Export full PDF";
 
         const languageFamily = report.language.toLowerCase().startsWith("zh")
           ? "zh"
@@ -1492,9 +1791,9 @@
               unverified: "尚未验证",
             }
           : {
-              native: "Native support",
-              partial: "Partial support",
-              extensible: "Achievable through extension",
+              native: "Native",
+              partial: "Partial",
+              extensible: "Extensible",
               unsupported: "Unsupported",
               unverified: "Unverified",
             };
@@ -1539,6 +1838,12 @@
         $("theme-toggle").title = labels.theme;
         $("theme-toggle").addEventListener("click", () => {
           document.documentElement.dataset.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        });
+        $("export-pdf").textContent = labels.exportPdf;
+        $("export-pdf").title = labels.exportPdf;
+        $("export-pdf").addEventListener("click", async () => {
+          if (document.fonts && document.fonts.ready) await document.fonts.ready;
+          window.print();
         });
 
         $("skip-link").textContent = labels.skipToContent;
@@ -1639,6 +1944,52 @@
           matrixBody.append(row);
         }
         $("capability-matrix").append(matrixHead, matrixBody);
+
+        const buildPrintMatrix = () => {
+          const container = $("print-capability-matrix");
+          if (!report.competitors.length) {
+            container.append(element("p", "empty-state", labels.noCandidates));
+            return;
+          }
+
+          report.competitors.forEach((candidate, index) => {
+            const group = element("section", "print-matrix-group");
+            const heading = element("header", "print-matrix-heading");
+            heading.append(
+              element("h3", "", candidate.name),
+              element("span", "", `${String(index + 1).padStart(2, "0")} / ${String(report.competitors.length).padStart(2, "0")}`),
+            );
+
+            const table = element("table", "print-matrix-table");
+            const head = element("thead");
+            const headRow = element("tr");
+            [labels.capability, report.projectName, candidate.name].forEach((text) => headRow.append(element("th", "", text)));
+            head.append(headRow);
+
+            const body = element("tbody");
+            report.capabilities.forEach((capability) => {
+              const row = element("tr");
+              const current = element("td");
+              const alternative = element("td");
+              current.append(supportCell(capability.current));
+              alternative.append(supportCell(capability.candidates[candidate.id]));
+              row.append(element("td", "capability-name", capability.name), current, alternative);
+              body.append(row);
+            });
+            if (!report.capabilities.length) {
+              const row = element("tr");
+              const cell = element("td", "empty-state", labels.noData);
+              cell.colSpan = 3;
+              row.append(cell);
+              body.append(row);
+            }
+
+            table.append(head, body);
+            group.append(heading, table);
+            container.append(group);
+          });
+        };
+        buildPrintMatrix();
 
         const makeMarkdown = (candidate) => {
           const lines = [

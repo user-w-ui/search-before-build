@@ -91,12 +91,8 @@ For every other target language, translate the free text and provide localized i
 
 ## Visual behavior
 
-The viewer is a self-contained, responsive HTML page with no CDN or runtime network dependency. It presents:
+The viewer is a self-contained, responsive HTML page with no CDN or runtime network dependency. The payload contract already defines the content it presents.
 
-1. the final recommendation and its reasoning
-2. the functional fingerprint and search coverage
-3. the material capability matrix
-4. one detailed card per strong competitor
-5. material unknowns and source links
+The top action bar owns an **Export full PDF** action. It opens the browser's print flow and uses print-specific capability tables so every candidate remains readable without horizontal-scroll clipping. The exported document includes the complete assessment and all competitor cards.
 
 Each competitor card owns its own **Save Markdown** and **Copy Markdown** actions. Those exports follow `report-template.md` and exclude the necessity check and final recommendation. Do not add a silent auto-save action or an action that claims to write directly into the user's repository.

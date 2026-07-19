@@ -90,9 +90,24 @@ def validate() -> None:
     assert "new Blob" in viewer_asset
     assert "Copy Markdown" in viewer_asset
     assert "Save Markdown" in viewer_asset
+    assert "Export full PDF" in viewer_asset
+    assert "\u5bfc\u51fa\u5b8c\u6574 PDF" in viewer_asset
+    assert 'id="export-pdf"' in viewer_asset
+    assert viewer_asset.index('id="export-pdf"') < viewer_asset.index('id="mode-chip"')
+    assert "window.print()" in viewer_asset
+    assert 'id="print-capability-matrix"' in viewer_asset
+    assert "buildPrintMatrix" in viewer_asset
+    assert '"exportPdf"' in viewer_script
     assert "prefers-reduced-motion" in viewer_asset
     assert "@media (max-width: 680px)" in viewer_asset
     assert "@media print" in viewer_asset
+    print_styles = viewer_asset.split("@media print", 1)[1].split("</style>", 1)[0]
+    assert "print-color-adjust: exact" in print_styles
+    assert ".skip-link" in print_styles
+    assert ".matrix-shell" in print_styles and "display: none" in print_styles
+    assert ".print-matrix" in print_styles and "display: block" in print_styles
+    assert "display: table-header-group" in print_styles
+    assert "break-inside: auto" in print_styles
     assert _css_px(viewer_asset, ".matrix thead th", "font-size") >= 12
     assert _css_px(viewer_asset, ".content-title", "font-size") >= 14
     assert _css_px(viewer_asset, ".comparison-table", "font-size") >= 14
@@ -293,6 +308,8 @@ def validate() -> None:
     assert "For English payloads, keep `topic` to a compact phrase" in report_viewer
     assert "Keep each capability note and candidate overview to one compact sentence" in report_viewer
     assert "Do not repeat the same point across payload fields" in report_viewer
+    assert "Export full PDF" in report_viewer
+    assert "print-specific capability tables" in report_viewer
     semantic_sections = (
         "`overview`",
         "`comparison`",

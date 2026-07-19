@@ -50,8 +50,6 @@ Treat these fingerprint signals as strong route triggers:
 
 When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listing, or official service could satisfy the need, ordinary Web search is required unless unavailable. Use it alongside, not instead of, the matching specialized routes.
 
-Keep the ledger internal during research, then copy the attempted, successful, unavailable, and materially skipped routes with their reasons into the evidence package's search coverage.
-
 ## Workflow
 
 1. Read all of `search-sources.md`, then select only sources relevant to the fingerprint. Do not query every registry by default.
@@ -79,13 +77,13 @@ Never claim that no similar project exists without external search evidence. Do 
 Build this complete package before returning to the calling Skill:
 
 - **Functional fingerprint**: user, situation, core task, input/output, operating mode, must-have capability, acceptable and unacceptable substitutes.
-- **Search coverage**: date, languages, platforms, tools used, unavailable channels, and search-depth limits.
+- **Search coverage**: date, languages, and attempted, successful, unavailable, or materially skipped routes with reasons and search-depth limits.
 - **Candidates**: category, official identity, short fit explanation, adoption cost, maintenance evidence, license/price, and primary sources.
 - **Key comparison**: only material capabilities, using the five stable support enums without translating them.
 - **Reusable parts**: products, repositories, packages, models, templates, or design ideas that avoid rebuilding.
 - **Unknowns**: facts that could materially change the caller's decision.
 
-Keep cells and explanations compact. Link to primary sources, never search-result pages.
+Keep cells and explanations compact. Cite exact primary or official pages for important claims; never link search-result pages. Treat generated summaries as discovery aids only. Use secondary sources only when primary evidence cannot answer a material question, and label the limitation.
 
 ## Stable support enums
 
@@ -100,7 +98,3 @@ For every material capability use exactly one value:
 Use these exact lowercase values in the internal evidence package. Do not translate them there; `report-template.md` owns localized display labels.
 
 Also compare adoption effort, operating mode, maintenance, license/price, data or deployment constraints, and migration cost. Date time-sensitive facts. Separate verified facts from inference.
-
-## Evidence rules
-
-Prefer primary sources. Cite the exact official page supporting each important claim. Search-result pages and generated summaries are discovery aids, not evidence. Use secondary sources only when primary evidence cannot answer a material question, and label the limitation.

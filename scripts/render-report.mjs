@@ -37,7 +37,7 @@ const REQUIRED_CUSTOM_LABELS = [
   "comparison", "comparisonDescription", "capability", "currentProject",
   "candidatesKicker", "candidates", "candidatesDescription", "overview",
   "comparisonWithProject", "dimension", "notableDesigns", "reusableLessons",
-  "summary", "sources", "officialAddress", "coverageNote", "saveMarkdown",
+  "summary", "sources", "officialAddress", "coverageNote", "exportPdf", "saveMarkdown",
   "copyMarkdown", "openOfficial", "unknownsKicker", "unknowns",
   "unknownsDescription", "used", "limited", "unavailable", "notCompared",
   "noCandidates", "noData", "saved", "copied", "saveFailed", "copyFailed",

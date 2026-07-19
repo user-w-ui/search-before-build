@@ -41,8 +41,10 @@ def validate() -> None:
 
     showcase_en = read_text("docs/index.html")
     showcase_zh = read_text("docs/zh/index.html")
-    assert 'href="./zh/"' in showcase_en
-    assert 'href="../"' in showcase_zh
+    assert 'href="./zh/index.html"' in showcase_en
+    assert 'href="../index.html"' in showcase_zh
+    assert 'href="./zh/"' not in showcase_en
+    assert 'href="../"' not in showcase_zh
     assert _embedded_language(showcase_en) == "en"
     assert _embedded_language(showcase_zh) == "zh-CN"
 
@@ -53,6 +55,12 @@ def validate() -> None:
         for forbidden in ("file://", "AppData", "C:\\\\Users", "<script src=", "<link href="):
             assert forbidden not in showcase, f"{path} contains non-portable content: {forbidden}"
         assert "const encodedReport" in showcase
+        assert 'id="export-pdf"' in showcase
+        assert "Export full PDF" in showcase
+        assert showcase.index('id="export-pdf"') < showcase.index('class="demo-language"')
+        assert 'id="print-capability-matrix"' in showcase
+        print_styles = showcase.split("@media print", 1)[1].split("</style>", 1)[0]
+        assert ".skip-link" in print_styles
         assert "Save Markdown" in showcase
         assert "保存 Markdown" in showcase
 
