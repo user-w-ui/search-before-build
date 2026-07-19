@@ -23,6 +23,35 @@ Start from a fingerprint containing:
 
 Search for the problem, workflow, inputs/outputs, and technical category—not only the proposed product name. If the core task or must-have capability is still too unclear for accurate research, let the calling Skill resolve it under that Skill's existing question budget. Do not create another clarification loop here.
 
+## Source coverage ledger
+
+Before the first external call, build an internal source coverage ledger for the ready-to-use, adaptable, reusable, and no-build paths. For each path, record the evidence needed, the routes selected from `search-sources.md`, and any route deliberately skipped:
+
+| Path | Evidence to seek | Typical routes |
+| --- | --- | --- |
+| Ready-to-use product | A product that solves the user's workflow directly | Web search, official product pages, app stores |
+| Adaptable project | An implementation that can be modified instead of rebuilt | GitHub and its primary project documentation |
+| Reusable component | A package, model, dataset, paper, server, or SDK that removes material implementation work | The matching language registry, Hugging Face, arXiv, or MCP Registry |
+| No-build workaround | A simpler existing workflow or combination of tools | Web search and official documentation |
+
+For every catalog route whose routing trigger matches the fingerprint, either query it or record a concrete fingerprint-based reason why its contents cannot affect the comparison. A bare `not necessary` or `irrelevant` is not a sufficient reason. GitHub does not substitute for package registries, model catalogs, paper indexes, app stores, or product Web research.
+
+Treat these fingerprint signals as strong route triggers:
+
+| Fingerprint signal | Route to query or specifically exclude |
+| --- | --- |
+| JavaScript, Node.js, npm package, CLI, or plugin | npm |
+| JVM, Java, Kotlin, or Android | Maven Central |
+| Rust implementation or dependency | crates.io |
+| Agent tool, connector, or MCP server | Official MCP Registry |
+| ML model, OCR, embeddings, training data, or local inference | Hugging Face Hub |
+| algorithm, academic evidence, benchmark, or literature workflow | arXiv |
+| cross-ecosystem identity, dependencies, adoption, or maintenance | Ecosyste.ms Packages |
+
+When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listing, or official service could satisfy the need, ordinary Web search is required unless unavailable. Use it alongside, not instead of, the matching specialized routes.
+
+Keep the ledger internal during research, then copy the attempted, successful, unavailable, and materially skipped routes with their reasons into the evidence package's search coverage.
+
 ## Workflow
 
 1. Read all of `search-sources.md`, then select only sources relevant to the fingerprint. Do not query every registry by default.

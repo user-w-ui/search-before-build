@@ -123,6 +123,21 @@ def validate() -> None:
         "and the current no-build workaround"
         in research_method
     )
+    assert "## Source coverage ledger" in research_method
+    assert "Before the first external call" in research_method
+    assert "ready-to-use, adaptable, reusable, and no-build paths" in research_method
+    assert "A bare `not necessary` or `irrelevant` is not a sufficient reason" in research_method
+    source_triggers = (
+        "JavaScript, Node.js, npm package, CLI, or plugin",
+        "JVM, Java, Kotlin, or Android",
+        "Rust implementation or dependency",
+        "Agent tool, connector, or MCP server",
+        "ML model, OCR, embeddings, training data, or local inference",
+        "algorithm, academic evidence, benchmark, or literature workflow",
+    )
+    for trigger in source_triggers:
+        assert trigger in research_method
+    assert "ordinary Web search is required unless unavailable" in research_method
     assert (
         "Do not infer functionality from a name, snippet, topic tag, directory name, Stars, "
         "or download count"
