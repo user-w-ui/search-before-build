@@ -168,6 +168,10 @@ claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
+## Built with Codex and GPT-5.6
+
+The 0.2.x workflow and report-viewer redesign was developed collaboratively in Codex using GPT-5.6. Codex helped inspect existing behavior, challenge architectural choices, implement and verify the skill contracts, build the HTML report and export workflow, and run cross-domain behavior tests. Key product decisions—including evidence-only research, single-owner recommendations, on-demand report saving, and broader source coverage—were made through iterative human review rather than accepted automatically. All generated changes were reviewed, tested, and released by the maintainer.
+
 ## Contributing
 
 Issues and pull requests are welcome, especially for commonly overlooked search platforms, false matches between similarly named but functionally different products, reuse cases that save meaningful time or tokens, and wording that is still too difficult for non-technical users.
