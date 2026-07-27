@@ -2,7 +2,7 @@
 
 ## Capability check
 
-Before GitHub research, use this order. A route is usable only after a relevant read-only call succeeds; names and descriptions are discovery hints, not proof of availability.
+Before GitHub research, use this order. A route is usable only after a relevant read-only call succeeds; names, installation state, registration state, and descriptions are discovery hints, not proof of availability.
 
 1. Inspect the tools already exposed in the current Agent session. Before concluding that GitHub access is unavailable, explicitly check the exposed tool list for each common route:
    - a GitHub plugin or app;
@@ -12,8 +12,11 @@ Before GitHub research, use this order. A route is usable only after a relevant 
    Look at tool names and descriptions. Common repository-search functions include `search_repositories`, `search_installed_repositories`, or similarly described GitHub repository search. Common content and metadata readers include `fetch`, `fetch_file`, `get_file_contents`, `get_repository`, or similarly described README/file/repository readers. Code-search functions such as `search`, `search_code`, or `code_search` are strongly preferred when exposed. These names are examples, not an exhaustive allowlist: do not treat an unfamiliar tool name as absence when its description provides the same GitHub operation.
 
    Try the exposed route with repository search and repository content or metadata reading needed for the current task. If the calls fail, require authorization that is unavailable, or cannot support the research, continue to step 2. If they succeed, use the route directly, record which integration supplied it, keep all calls read-only, and do not offer another server.
-2. When no exposed route works, check GitHub CLI availability with `gh --version` and existing authentication with `gh auth status`, then run a relevant read-only query. Suitable commands include `gh search repos`, `gh repo view`, `gh api` with its default `GET`, and `gh search code`. If any required check or query fails, continue to step 3. Do not start login, change authentication or configuration, or modify GitHub data during normal research.
-3. When neither route works, tell the user that no GitHub dedicated deep-retrieval route is currently usable, then offer the optional official MCP setup once.
+2. When the required GitHub operations are not already exposed, use the host tool-discovery mechanism before declaring the route absent. Search for GitHub repository search, repository/file reading, and code search capabilities. This discovery must cover both an installed GitHub plugin or app whose tools may be loaded lazily and a registered GitHub MCP server whose tools may not be preloaded into the prompt. Use the host's supported tool catalog, tool search, connector list, MCP server/tool list, or equivalent capability-discovery interface; do not infer availability by scanning filenames alone. A tool that is not pre-exposed does not mean not installed.
+
+   Inspect the discovered tool descriptions, load or select the relevant read-only tools when the host supports that operation, and make a representative read-only call. If a discovered route requires normal user authorization, surface that state accurately instead of reporting the integration as missing. If it cannot be loaded, authorization is unavailable, or the representative call fails, record the concrete state and continue to step 3. Do not report GitHub as unavailable before this discovery attempt.
+3. When no exposed or discovered plugin/app/MCP route works, check GitHub CLI availability with `gh --version` and existing authentication with `gh auth status`, then run a relevant read-only query. Suitable commands include `gh search repos`, `gh repo view`, `gh api` with its default `GET`, and `gh search code`. If any required check or query fails, continue to step 4. Do not start login, change authentication or configuration, or modify GitHub data during normal research.
+4. Only after checking pre-exposed tools, discovered plugin/app tools, registered MCP tools, and GitHub CLI, tell the user that no GitHub dedicated deep-retrieval route is currently usable, summarize the concrete result of each check, then offer the optional official MCP setup once.
 
 ## Offer the optional enhancement
 

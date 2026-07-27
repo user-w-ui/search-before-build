@@ -30,9 +30,10 @@ def validate() -> None:
     assert "api.github.com/search/repositories" in github_rules
     assert "Personal Access Token" in github_rules
     exposed_position = github_rules.index("tools already exposed")
+    discovery_position = github_rules.index("host tool-discovery mechanism")
     gh_position = github_rules.index("gh --version")
     offer_position = github_rules.index("offer the optional official MCP setup")
-    assert exposed_position < gh_position < offer_position
+    assert exposed_position < discovery_position < gh_position < offer_position
     assert "gh auth status" in github_rules
     assert "Do not scan plugin directories" not in github_rules
     assert "relevant read-only call succeeds" in github_rules
@@ -40,6 +41,14 @@ def validate() -> None:
     assert "If the calls fail" in github_rules
     assert "run a relevant read-only query" in github_rules
     assert "If any required check or query fails" in github_rules
+    assert "not already exposed" in github_rules
+    assert "host tool-discovery mechanism" in github_rules
+    assert "installed GitHub plugin or app" in github_rules
+    assert "registered GitHub MCP server" in github_rules
+    assert "not pre-exposed does not mean not installed" in github_rules
+    assert "Do not report GitHub as unavailable before this discovery attempt" in github_rules
+    assert "pre-exposed tools, discovered plugin/app tools, registered MCP tools, and GitHub CLI" in github_rules
+    assert "A missing pre-exposed tool is not evidence that the integration is absent" in research_method
     assert "enhancement intent, not installation consent" in github_rules
     assert "wait for explicit approval" in github_rules
     for exposed_route in (

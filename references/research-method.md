@@ -53,7 +53,7 @@ When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listin
 ## Workflow
 
 1. Read all of `search-sources.md`, then select only sources relevant to the fingerprint. Do not query every registry by default.
-2. Inspect the external routes available in the current session: live Web search, interactive browser, tools exposed by Skills/plugins, MCP services, CLIs, public APIs, and registries. Prefer specialized access when it provides deeper or more reliable evidence. Generic Web search is not a prerequisite.
+2. Inspect and, when the host supports it, discover the external routes available in the current session: live Web search, interactive browser, tools exposed or lazily loadable by Skills/plugins, registered MCP services, CLIs, public APIs, and registries. A missing pre-exposed tool is not evidence that the integration is absent. Prefer specialized access when it provides deeper or more reliable evidence. Generic Web search is not a prerequisite.
 3. For every GitHub-related search, read and follow all of `github-retrieval.md` for capability checks, fallback order, optional setup, consent rules, and coverage wording. Do not install or change configuration without explicit user approval.
 4. Discover the category by searching the problem, workflow, category terms, and synonyms. Search in Chinese and English when the target market is Chinese or unknown.
 5. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround. Keep weak candidates only long enough to explain exclusion.
