@@ -50,6 +50,10 @@ Ask the user to correct or confirm the summary before the necessity check or ext
 
 A later report must not introduce as its biggest unknown a material, foreseeable, user-answerable question that the clarification stage skipped. Report unknowns may remain when the user does not know the answer, the question budget was exhausted, the issue emerged only through research, or external evidence is insufficient.
 
+## Existing-project comparison
+
+`search-before-build-compare` reuses the intent model, `How to ask`, and pre-research confirmation above, with one adjustment for material that already exists. Read what is already built or written from the supplied plan, prototype, or repository, and never re-ask it. Whether to align the real need before searching is the user's choice, not a self-judgment: right after establishing the baseline, offer the choice once and let the user decide, regardless of how vague or complete the material looks. When the user opts in, clarify only the real need behind the project—the core problem, the single must-have capability, the intended user, and why existing alternatives fall short—to the depth that makes the search accurate, not to redesign or complete the plan, then confirm before researching. When the user opts out, build the fingerprint from the baseline and search directly. The necessity gates below and the Build/Adapt/Use existing/Stop decision stay with the calling Skill; comparison does not run its own necessity check.
+
 ## Necessity gates
 
 Judge these gates without a numeric score:
