@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/user-w-ui/search-before-build/schemas/pipeline-input.schema.json",
+  "title": "Search Before Build pipeline input",
+  "type": "object",
+  "required": ["query", "retrievals"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "query": { "type": "string", "minLength": 1 },
+    "fingerprint": {
+      "type": "object",
+      "properties": {
+        "mustHaveCapabilities": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "desiredOutcome": { "type": "string" },
+        "operatingMode": { "type": "string" },
+        "dealBreakers": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "retrievals": {
+      "type": "array",
+      "items": { "$ref": "./retrieval-envelope.schema.json" }
+    },
+    "topK": { "type": "integer", "minimum": 1, "maximum": 20 }
+  },
+  "additionalProperties": false
+}

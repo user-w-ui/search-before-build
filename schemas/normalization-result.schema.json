@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/user-w-ui/search-before-build/schemas/normalization-result.schema.json",
+  "title": "Normalization result",
+  "type": "object",
+  "required": ["requestId", "records", "rejected", "observedCapabilities", "batchWarnings"],
+  "properties": {
+    "requestId": { "type": "string" },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["recordId", "status", "identities", "text", "attributes", "provenance", "warnings"],
+        "properties": {
+          "recordId": { "type": "string" },
+          "status": { "enum": ["usable", "partial", "unusable"] },
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "identities": { "type": "array" },
+          "text": { "type": "object" },
+          "attributes": { "type": "object" },
+          "provenance": { "type": "object" },
+          "warnings": { "type": "array" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "rejected": { "type": "array" },
+    "observedCapabilities": { "type": "object" },
+    "batchWarnings": { "type": "array" }
+  },
+  "additionalProperties": false
+}

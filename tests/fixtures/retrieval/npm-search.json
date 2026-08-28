@@ -1,0 +1,21 @@
+[
+  {
+    "name": "webvector",
+    "description": "Provider-agnostic TypeScript web research with BM25 and reciprocal rank fusion.",
+    "version": "0.3.0",
+    "links": {
+      "npm": "https://www.npmjs.com/package/webvector",
+      "repository": "https://github.com/rthomas24/web-vector"
+    },
+    "downloads": 120
+  },
+  {
+    "name": "vector-gallery",
+    "description": "Static SVG icon gallery.",
+    "version": "2.0.0",
+    "links": {
+      "npm": "https://www.npmjs.com/package/vector-gallery"
+    },
+    "downloads": 5000
+  }
+]

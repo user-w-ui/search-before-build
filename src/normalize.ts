@@ -1,0 +1,448 @@
+import type {
+  NormalizationResult,
+  NormalizationWarning,
+  NormalizedRecord,
+  RecordIdentity,
+  RetrievalEnvelope,
+  SourceCategory,
+} from "./types.js";
+
+type UnknownObject = Record<string, unknown>;
+
+const KNOWN_ITEM_PATHS = [
+  "results",
+  "items",
+  "crates",
+  "hits",
+  "response.docs",
+  "message.items",
+  "servers",
+  "data.results",
+  "data.items",
+] as const;
+
+const TRACKING_PARAMS = new Set([
+  "fbclid",
+  "gclid",
+  "ref",
+  "ref_src",
+  "source",
+  "spm",
+]);
+
+function asObject(value: unknown): UnknownObject | undefined {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? (value as UnknownObject)
+    : undefined;
+}
+
+function getPath(value: unknown, path: string): unknown {
+  let current = value;
+  for (const part of path.split(".")) {
+    const object = asObject(current);
+    if (!object) return undefined;
+    current = object[part];
+  }
+  return current;
+}
+
+function firstString(value: unknown, paths: string[]): string | undefined {
+  for (const path of paths) {
+    const candidate = getPath(value, path);
+    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+    if (Array.isArray(candidate)) {
+      const strings = candidate.filter((item): item is string => typeof item === "string");
+      if (strings.length) return strings.join(" ").trim();
+    }
+  }
+  return undefined;
+}
+
+function firstNumber(value: unknown, paths: string[]): number | undefined {
+  for (const path of paths) {
+    const candidate = getPath(value, path);
+    if (typeof candidate === "number" && Number.isFinite(candidate)) return candidate;
+    if (typeof candidate === "string" && candidate.trim() && Number.isFinite(Number(candidate))) {
+      return Number(candidate);
+    }
+  }
+  return undefined;
+}
+
+function stableHash(value: string): string {
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+export function normalizeUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  let input = value.trim();
+  if (/^10\.\d{4,9}\//i.test(input)) input = `https://doi.org/${input}`;
+  try {
+    const url = new URL(input);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return undefined;
+    url.protocol = "https:";
+    url.hostname = url.hostname.toLowerCase();
+    url.hash = "";
+    for (const key of [...url.searchParams.keys()]) {
+      if (key.toLowerCase().startsWith("utm_") || TRACKING_PARAMS.has(key.toLowerCase())) {
+        url.searchParams.delete(key);
+      }
+    }
+    if (url.pathname.length > 1) url.pathname = url.pathname.replace(/\/+$/, "");
+    return url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
+function normalizeDate(value: unknown): string | undefined {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    const milliseconds = value < 10_000_000_000 ? value * 1000 : value;
+    const date = new Date(milliseconds);
+    return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+  }
+  if (typeof value === "string" && value.trim()) {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+  }
+  if (Array.isArray(value) && Array.isArray(value[0])) {
+    const parts = value[0] as unknown[];
+    const year = Number(parts[0]);
+    const month = Number(parts[1] ?? 1);
+    const day = Number(parts[2] ?? 1);
+    if (Number.isInteger(year) && year > 0) {
+      return new Date(Date.UTC(year, month - 1, day)).toISOString();
+    }
+  }
+  return undefined;
+}
+
+function decodeHtml(value: string): string {
+  return value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function decodeDuckDuckGoUrl(value: string): string {
+  const decoded = decodeHtml(value);
+  try {
+    const url = new URL(decoded, "https://duckduckgo.com");
+    return url.searchParams.get("uddg") ?? url.toString();
+  } catch {
+    return decoded;
+  }
+}
+
+interface LocatedItem {
+  value: unknown;
+  rawRef: string;
+  rank: number;
+}
+
+function parseAtom(xml: string): LocatedItem[] {
+  const entries = [...xml.matchAll(/<entry\b[^>]*>([\s\S]*?)<\/entry>/gi)];
+  return entries.map((match, index) => {
+    const body = match[1] ?? "";
+    const read = (tag: string) =>
+      decodeHtml(body.match(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"))?.[1] ?? "");
+    const link = body.match(/<link\b[^>]*href=["']([^"']+)["'][^>]*>/i)?.[1];
+    return {
+      value: {
+        title: read("title"),
+        summary: read("summary"),
+        id: read("id"),
+        published: read("published"),
+        updated: read("updated"),
+        url: link,
+      },
+      rawRef: `$.entry[${index}]`,
+      rank: index + 1,
+    };
+  });
+}
+
+function parseHtmlResults(html: string): LocatedItem[] {
+  const anchors = [...html.matchAll(/<a\b[^>]*class=["'][^"']*result__a[^"']*["'][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)];
+  if (anchors.length) {
+    return anchors.map((match, index) => {
+      const rest = html.slice((match.index ?? 0) + match[0].length, (match.index ?? 0) + match[0].length + 2500);
+      const snippet = rest.match(/class=["'][^"']*result__snippet[^"']*["'][^>]*>([\s\S]*?)<\//i)?.[1];
+      return {
+        value: {
+          title: decodeHtml(match[2] ?? ""),
+          url: decodeDuckDuckGoUrl(match[1] ?? ""),
+          snippet: snippet ? decodeHtml(snippet) : undefined,
+        },
+        rawRef: `$.html.results[${index}]`,
+        rank: index + 1,
+      };
+    });
+  }
+  const text = decodeHtml(html);
+  return text ? [{ value: { content: text }, rawRef: "$.html", rank: 1 }] : [];
+}
+
+function candidateSignals(value: unknown): number {
+  const object = asObject(value);
+  if (!object) return typeof value === "string" ? 1 : 0;
+  return ["title", "name", "full_name", "url", "html_url", "description", "snippet", "summary"]
+    .filter((key) => object[key] !== undefined).length;
+}
+
+function locateItems(payload: unknown): LocatedItem[] {
+  if (Array.isArray(payload)) {
+    return payload.map((value, index) => ({ value, rawRef: `$[${index}]`, rank: index + 1 }));
+  }
+  const object = asObject(payload);
+  if (!object) return [{ value: payload, rawRef: "$", rank: 1 }];
+  for (const path of KNOWN_ITEM_PATHS) {
+    const value = getPath(object, path);
+    if (!Array.isArray(value)) continue;
+    return value.map((item, index) => ({
+      value: path === "servers" ? (asObject(item)?.server ?? item) : item,
+      rawRef: `$.${path}[${index}]${path === "servers" ? ".server" : ""}`,
+      rank: index + 1,
+    }));
+  }
+  const queue: Array<{ value: unknown; path: string; depth: number }> = [{ value: object, path: "$", depth: 0 }];
+  while (queue.length) {
+    const current = queue.shift();
+    if (!current || current.depth >= 3) continue;
+    const currentObject = asObject(current.value);
+    if (!currentObject) continue;
+    for (const [key, value] of Object.entries(currentObject)) {
+      if (Array.isArray(value) && value.some((item) => candidateSignals(item) >= 2)) {
+        return value.map((item, index) => ({
+          value: item,
+          rawRef: `${current.path}.${key}[${index}]`,
+          rank: index + 1,
+        }));
+      }
+      if (asObject(value)) queue.push({ value, path: `${current.path}.${key}`, depth: current.depth + 1 });
+    }
+  }
+  return [{ value: object, rawRef: "$", rank: 1 }];
+}
+
+function parsePayload(payload: unknown): LocatedItem[] {
+  if (typeof payload !== "string") return locateItems(payload);
+  const trimmed = payload.trim();
+  if (!trimmed) return [];
+  try {
+    return locateItems(JSON.parse(trimmed));
+  } catch {
+    if (/<feed\b|<entry\b/i.test(trimmed)) return parseAtom(trimmed);
+    if (/<html\b|result__a/i.test(trimmed)) return parseHtmlResults(trimmed);
+    return [{ value: { content: trimmed }, rawRef: "$.text", rank: 1 }];
+  }
+}
+
+function providerName(envelope: RetrievalEnvelope): string | undefined {
+  return envelope.providerHint?.trim().toLowerCase() || undefined;
+}
+
+function inferKind(envelope: RetrievalEnvelope, item: unknown): SourceCategory | undefined {
+  if (envelope.categoryHint) return envelope.categoryHint;
+  const provider = providerName(envelope) ?? "";
+  if (/github/.test(provider) || firstString(item, ["full_name", "stargazers_url"])) return "repo";
+  if (/npm|crates|maven|ecosystem/.test(provider)) return "package";
+  if (/mcp/.test(provider)) return "mcp";
+  if (/arxiv|crossref|openalex/.test(provider)) return "paper";
+  if (/wikipedia/.test(provider)) return "wiki";
+  if (/hacker|algolia/.test(provider)) return "community";
+  return undefined;
+}
+
+function collectIdentities(
+  item: unknown,
+  kind: SourceCategory | undefined,
+  provider: string | undefined,
+  title: string | undefined,
+  url: string | undefined,
+): RecordIdentity[] {
+  const identities: RecordIdentity[] = [];
+  const seen = new Set<string>();
+  const add = (identity: RecordIdentity) => {
+    const key = `${identity.scheme}:${identity.value.toLowerCase()}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      identities.push(identity);
+    }
+  };
+  const purl = firstString(item, ["purl", "package.purl"]);
+  if (purl) add({ scheme: "purl", value: purl, confidence: "exact" });
+  const doi = firstString(item, ["DOI", "doi"]);
+  if (doi) add({ scheme: "doi", value: doi.toLowerCase(), confidence: "exact" });
+  const explicitId = firstString(item, ["id", "uuid", "server.name"]);
+  if (kind === "mcp" && (title || explicitId)) {
+    add({ scheme: "mcp", value: title ?? (explicitId as string), confidence: "exact" });
+  }
+  if (kind === "package" && title) {
+    const ecosystem = provider?.includes("crate")
+      ? "cargo"
+      : provider?.includes("maven")
+        ? "maven"
+        : provider?.includes("npm")
+          ? "npm"
+          : undefined;
+    if (ecosystem) add({ scheme: "purl", value: `pkg:${ecosystem}/${title}`, confidence: "derived" });
+  }
+  if (url) {
+    const github = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/i);
+    if (github) {
+      add({
+        scheme: "github",
+        value: `${github[1]}/${github[2]?.replace(/\.git$/i, "")}`.toLowerCase(),
+        confidence: "derived",
+      });
+    }
+    const arxiv = url.match(/arxiv\.org\/(?:abs|pdf)\/([^/?#]+)/i);
+    if (arxiv) add({ scheme: "arxiv", value: arxiv[1] as string, confidence: "derived" });
+    add({ scheme: "url", value: url, confidence: "derived" });
+  }
+  if (provider && explicitId) {
+    add({ scheme: "provider", value: `${provider}:${explicitId}`, confidence: "exact" });
+  }
+  return identities;
+}
+
+function projectItem(
+  located: LocatedItem,
+  envelope: RetrievalEnvelope,
+): NormalizedRecord {
+  const item = located.value;
+  const warnings: NormalizationWarning[] = [];
+  const provider = providerName(envelope);
+  const kind = inferKind(envelope, item);
+  const title = firstString(item, ["title", "name", "full_name", "display_name", "server.name"]);
+  const rawUrl = firstString(item, [
+    "url",
+    "html_url",
+    "link",
+    "repository_url",
+    "repository.url",
+    "links.repository",
+    "links.homepage",
+    "homepage",
+    "DOI",
+    "doi",
+  ]);
+  const url = normalizeUrl(rawUrl);
+  if (rawUrl && !url) warnings.push({ code: "invalid_url", message: `Could not normalize URL: ${rawUrl}`, rawRef: located.rawRef });
+  const snippet = firstString(item, ["snippet", "text", "extract"]);
+  const description = firstString(item, ["description", "summary", "content", "abstract"]);
+  const publishedRaw = getPath(item, "published") ?? getPath(item, "published_at") ?? getPath(item, "publish_date") ?? getPath(item, "published.date-parts");
+  const updatedRaw = getPath(item, "updated") ?? getPath(item, "updated_at") ?? getPath(item, "last_synced_at");
+  const publishedAt = normalizeDate(publishedRaw);
+  const updatedAt = normalizeDate(updatedRaw);
+  if (publishedRaw !== undefined && !publishedAt) warnings.push({ code: "invalid_date", message: "Could not parse published date.", rawRef: located.rawRef });
+  if (updatedRaw !== undefined && !updatedAt) warnings.push({ code: "invalid_date", message: "Could not parse updated date.", rawRef: located.rawRef });
+  const attributes: NormalizedRecord["attributes"] = {};
+  const attributePaths: Array<[string, string[]]> = [
+    ["stars", ["stars", "stargazers_count"]],
+    ["downloads", ["downloads", "downloads_count", "recent_downloads"]],
+    ["citations", ["cited_by_count", "citation_count"]],
+  ];
+  for (const [name, paths] of attributePaths) {
+    const number = firstNumber(item, paths);
+    if (number !== undefined) attributes[name] = number;
+  }
+  for (const [name, paths] of [
+    ["language", ["language"]],
+    ["ecosystem", ["ecosystem", "platform"]],
+    ["license", ["license.spdx_id", "license.name", "license"]],
+  ] as Array<[string, string[]]>) {
+    const value = firstString(item, paths);
+    if (value) attributes[name] = value;
+  }
+  const providerScore = firstNumber(item, ["score", "relevance_score"]);
+  const identities = collectIdentities(item, kind, provider, title, url);
+  if (!identities.length) warnings.push({ code: "missing_identity", message: "No stable identity was found; cross-source merging is disabled.", rawRef: located.rawRef });
+  if (!title && !snippet && !description) warnings.push({ code: "missing_text", message: "No searchable text was found.", rawRef: located.rawRef });
+  const hasText = Boolean(title || snippet || description);
+  const status = hasText && (url || identities.length) ? "usable" : hasText ? "partial" : "unusable";
+  if (status !== "usable") warnings.push({ code: "partial_item", message: `Record is ${status} and will use only available signals.`, rawRef: located.rawRef });
+  const identitySeed = identities[0] ? `${identities[0].scheme}:${identities[0].value}` : `${envelope.requestId}:${located.rawRef}`;
+  return {
+    recordId: `rec-${stableHash(identitySeed)}`,
+    status,
+    ...(kind ? { kind } : {}),
+    identities,
+    ...(title ? { title } : {}),
+    ...(url ? { url } : {}),
+    text: {
+      ...(snippet ? { snippet } : {}),
+      ...(description ? { description } : {}),
+    },
+    ...((publishedAt || updatedAt) ? { dates: { ...(publishedAt ? { publishedAt } : {}), ...(updatedAt ? { updatedAt } : {}) } } : {}),
+    attributes,
+    provenance: {
+      requestId: envelope.requestId,
+      ...(provider ? { provider } : {}),
+      providerRank: located.rank,
+      ...(providerScore !== undefined ? { providerScore } : {}),
+      rawRef: located.rawRef,
+    },
+    warnings,
+  };
+}
+
+export function normalizeRetrieval(envelope: RetrievalEnvelope): NormalizationResult {
+  if (!envelope || typeof envelope.requestId !== "string" || !envelope.requestId.trim()) {
+    throw new Error("Retrieval envelope requires a non-empty requestId.");
+  }
+  if (envelope.outcome === "error") {
+    return {
+      requestId: envelope.requestId,
+      records: [],
+      rejected: [],
+      observedCapabilities: {},
+      batchWarnings: [{
+        code: "retrieval_error",
+        message: `${envelope.error.kind}: ${envelope.error.message}`,
+      }],
+    };
+  }
+  const batchWarnings: NormalizationWarning[] = [];
+  const rejected: Array<{ rawRef: string; reason: string }> = [];
+  const located = parsePayload(envelope.payload);
+  if (!located.length) {
+    batchWarnings.push({ code: "unknown_shape", message: "Payload did not contain any usable item." });
+  }
+  const records: NormalizedRecord[] = [];
+  for (const item of located) {
+    try {
+      records.push(projectItem(item, envelope));
+    } catch (error) {
+      rejected.push({ rawRef: item.rawRef, reason: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  if (records.length === 1 && records[0]?.status === "unusable") {
+    batchWarnings.push({ code: "unknown_shape", message: "Payload shape was preserved but could not be projected into a candidate.", rawRef: records[0].provenance.rawRef });
+  }
+  return {
+    requestId: envelope.requestId,
+    records,
+    rejected,
+    observedCapabilities: {
+      multipleResults: records.length > 1,
+      providerScore: records.some((record) => record.provenance.providerScore !== undefined),
+      publishedDate: records.some((record) => record.dates?.publishedAt !== undefined),
+      stableIdentity: records.some((record) => record.identities.some((identity) => identity.scheme !== "provider")),
+      fullText: records.some((record) => Boolean(record.text.description && record.text.description.length > 500)),
+    },
+    batchWarnings,
+  };
+}

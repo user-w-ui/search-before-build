@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <id>http://arxiv.org/abs/2408.06643v1</id>
+    <updated>2024-08-13T00:00:00Z</updated>
+    <published>2024-08-13T00:00:00Z</published>
+    <title>BMX: Entropy-weighted lexical retrieval</title>
+    <summary>A lexical ranking method extending BM25 with query coverage.</summary>
+    <link href="https://arxiv.org/abs/2408.06643" rel="alternate" />
+  </entry>
+</feed>
