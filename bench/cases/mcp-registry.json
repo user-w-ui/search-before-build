@@ -1,0 +1,17 @@
+{
+  "id": "mcp-registry",
+  "query": "MCP server official registry repository evidence",
+  "fingerprint": {
+    "mustHaveCapabilities": ["MCP server", "registry", "repository evidence"]
+  },
+  "topK": 3,
+  "retrievals": [
+    {
+      "requestId": "mcp",
+      "providerHint": "official-mcp-registry",
+      "categoryHint": "mcp",
+      "fixture": "tests/fixtures/retrieval/mcp-registry.json"
+    }
+  ],
+  "relevantUrls": ["https://github.com/acme/research-kit"]
+}
