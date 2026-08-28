@@ -7,6 +7,7 @@ def validate() -> None:
     assess_meta, assess = read_skill("search-before-build-assess")
     compare_meta, compare = read_skill("search-before-build-compare")
     research_method = read_text("references/research-method.md")
+    decision_kernel = read_text("references/decision-kernel.md")
 
     assert {assess_meta["name"], compare_meta["name"]} == {
         "search-before-build-assess",
@@ -53,6 +54,14 @@ def validate() -> None:
     assert baseline_position < fingerprint_position < compare_research_position
 
     assert "normal research is read-only" in research_method.lower()
+    assert "references/decision-kernel.md" in assess
+    assert "references/decision-kernel.md" in compare
+    assert "decision-kernel.md" in research_method
+    assert "candidate_mention" in decision_kernel
+    assert "cannot prove that a capability is supported" in decision_kernel
+    assert "at most one targeted follow-up round" in decision_kernel
+    assert "operating-system temporary directory" in decision_kernel
+    assert "do not install dependencies during a research request" in decision_kernel.lower()
     assert "only exception" in research_method.lower()
     assert "github-retrieval.md" in research_method
     assert "search-sources.md" in research_method
