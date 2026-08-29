@@ -17,6 +17,7 @@ const KNOWN_ITEM_PATHS = [
   "response.docs",
   "message.items",
   "servers",
+  "notableCandidates",
   "data.results",
   "data.items",
 ] as const;
@@ -197,8 +198,15 @@ function parseHtmlResults(html: string): LocatedItem[] {
 function candidateSignals(value: unknown): number {
   const object = asObject(value);
   if (!object) return typeof value === "string" ? 1 : 0;
-  return ["title", "name", "full_name", "url", "html_url", "description", "snippet", "summary"]
+  return ["title", "name", "identity", "full_name", "url", "html_url", "repo", "description", "desc", "snippet", "summary"]
     .filter((key) => object[key] !== undefined).length;
+}
+
+function textFragments(value: unknown): string[] {
+  if (typeof value === "string") return value.trim() ? [value.trim()] : [];
+  if (Array.isArray(value)) return value.flatMap(textFragments);
+  const object = asObject(value);
+  return object ? Object.values(object).flatMap(textFragments) : [];
 }
 
 function locateItems(payload: unknown): LocatedItem[] {
@@ -285,7 +293,11 @@ function collectIdentities(
   if (purl) add({ scheme: "purl", value: purl, confidence: "exact" });
   const doi = firstString(item, ["DOI", "doi"]);
   if (doi) add({ scheme: "doi", value: doi.toLowerCase(), confidence: "exact" });
-  const explicitId = firstString(item, ["id", "uuid", "server.name"]);
+  const explicitId = firstString(item, ["id", "uuid", "identity", "server.name"]);
+  const repositoryIdentity = firstString(item, ["full_name", "identity"]);
+  if (kind === "repo" && repositoryIdentity?.includes("/")) {
+    add({ scheme: "github", value: repositoryIdentity.toLowerCase(), confidence: "derived" });
+  }
   if (kind === "mcp" && (title || explicitId)) {
     add({ scheme: "mcp", value: title ?? (explicitId as string), confidence: "exact" });
   }
@@ -326,13 +338,15 @@ function projectItem(
   const warnings: NormalizationWarning[] = [];
   const provider = providerName(envelope);
   const kind = inferKind(envelope, item);
-  const title = firstString(item, ["title", "name", "full_name", "display_name", "server.name"]);
+  const title = firstString(item, ["title", "name", "identity", "full_name", "display_name", "server.name"]);
   const rawUrl = firstString(item, [
     // html_url before url: GitHub search items expose both, and the API URL
     // (api.github.com/repos/...) neither reads well nor matches the github
     // identity extraction below.
     "html_url",
     "url",
+    "repo",
+    "repository",
     "link",
     "repository_url",
     "repository.url",
@@ -346,7 +360,13 @@ function projectItem(
   const url = normalizeUrl(rawUrl);
   if (rawUrl && !url) warnings.push({ code: "invalid_url", message: `Could not normalize URL: ${rawUrl}`, rawRef: located.rawRef });
   const snippet = firstString(item, ["snippet", "text", "extract"]);
-  const description = firstString(item, ["description", "summary", "content", "abstract"]);
+  const description = firstString(item, ["description", "desc", "findings", "finding", "summary", "content", "abstract"]);
+  const fragments = [
+    ...textFragments(getPath(item, "verified_capabilities")),
+    ...textFragments(getPath(item, "tools")),
+    ...textFragments(getPath(item, "transport")),
+    ...textFragments(getPath(item, "runtime")),
+  ];
   const publishedRaw = getPath(item, "published") ?? getPath(item, "published_at") ?? getPath(item, "publish_date") ?? getPath(item, "published.date-parts");
   const updatedRaw = getPath(item, "updated") ?? getPath(item, "updated_at") ?? getPath(item, "last_synced_at");
   const publishedAt = normalizeDate(publishedRaw);
@@ -374,8 +394,8 @@ function projectItem(
   const providerScore = firstNumber(item, ["score", "relevance_score"]);
   const identities = collectIdentities(item, kind, provider, title, url);
   if (!identities.length) warnings.push({ code: "missing_identity", message: "No stable identity was found; cross-source merging is disabled.", rawRef: located.rawRef });
-  if (!title && !snippet && !description) warnings.push({ code: "missing_text", message: "No searchable text was found.", rawRef: located.rawRef });
-  const hasText = Boolean(title || snippet || description);
+  if (!title && !snippet && !description && !fragments.length) warnings.push({ code: "missing_text", message: "No searchable text was found.", rawRef: located.rawRef });
+  const hasText = Boolean(title || snippet || description || fragments.length);
   const status = hasText && (url || identities.length) ? "usable" : hasText ? "partial" : "unusable";
   if (status !== "usable") warnings.push({ code: "partial_item", message: `Record is ${status} and will use only available signals.`, rawRef: located.rawRef });
   const identitySeed = identities[0] ? `${identities[0].scheme}:${identities[0].value}` : `${envelope.requestId}:${located.rawRef}`;
@@ -389,6 +409,7 @@ function projectItem(
     text: {
       ...(snippet ? { snippet } : {}),
       ...(description ? { description } : {}),
+      ...(fragments.length ? { fragments: [...new Set(fragments)] } : {}),
     },
     ...((publishedAt || updatedAt) ? { dates: { ...(publishedAt ? { publishedAt } : {}), ...(updatedAt ? { updatedAt } : {}) } } : {}),
     attributes,

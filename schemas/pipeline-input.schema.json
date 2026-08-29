@@ -12,6 +12,13 @@
       "type": "object",
       "properties": {
         "mustHaveCapabilities": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "capabilityAliases": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        },
         "desiredOutcome": { "type": "string" },
         "operatingMode": { "type": "string" },
         "dealBreakers": { "type": "array", "items": { "type": "string" } }

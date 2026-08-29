@@ -8,6 +8,7 @@ def validate() -> None:
     compare_meta, compare = read_skill("search-before-build-compare")
     research_method = read_text("references/research-method.md")
     decision_kernel = read_text("references/decision-kernel.md")
+    search_sources = read_text("references/search-sources.md")
 
     assert {assess_meta["name"], compare_meta["name"]} == {
         "search-before-build-assess",
@@ -147,6 +148,11 @@ def validate() -> None:
     for trigger in source_triggers:
         assert trigger in research_method
     assert "ordinary Web search is required unless unavailable" in research_method
+    assert "route-and-language audit" in research_method
+    assert "anonymous web fallback" in research_method.lower()
+    assert "html.duckduckgo.com" in search_sources
+    assert "https://huggingface.co/api/models?search=" in search_sources
+    assert "## Hacker News Algolia" in search_sources
     assert (
         "Do not infer functionality from a name, snippet, topic tag, directory name, Stars, "
         "or download count"

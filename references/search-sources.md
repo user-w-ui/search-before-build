@@ -5,6 +5,7 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 ## Contents
 
 - [Routing rule](#routing-rule)
+- [Anonymous Web fallback](#anonymous-web-fallback)
 - [GitHub](#github)
 - [npm](#npm)
 - [Ecosyste.ms Packages](#ecosystems-packages)
@@ -13,12 +14,14 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 - [crates.io](#cratesio)
 - [Hugging Face Hub](#hugging-face-hub)
 - [arXiv](#arxiv)
+- [Hacker News Algolia](#hacker-news-algolia)
 - [Adding a user-provided source](#adding-a-user-provided-source)
 
 ## Routing rule
 
 | Need | Prefer |
 | --- | --- |
+| Products, SaaS, app stores, or documentation when host Web search fails | Anonymous Web fallback |
 | Open-source repositories or code | GitHub |
 | JavaScript/Node packages | npm |
 | Cross-ecosystem package metadata and dependency signals | Ecosyste.ms |
@@ -27,10 +30,23 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 | Rust crates | crates.io |
 | Models, datasets, or Spaces | Hugging Face |
 | Research papers and preprints | arXiv |
+| Public demand, workflow discussion, or pain-point evidence | Hacker News Algolia |
 
 Use ordinary web search for products, SaaS, app stores, documentation, or discovery outside these catalogs. Use catalog results for discovery, then verify strong candidates from their primary project pages and implementation evidence.
 
-All commands below were successfully executed anonymously on 2026-07-12. Replace literal query values and URL-encode them. Respect rate limits and identify the client with a useful `User-Agent` for HTTP APIs.
+The catalog commands were originally verified anonymously on 2026-07-12; the anonymous Web, Hugging Face REST, and Hacker News routes were rechecked on 2026-08-29. Replace literal query values and URL-encode them. Respect rate limits and identify the client with a useful `User-Agent` for HTTP APIs.
+
+## Anonymous Web fallback
+
+**Main content:** Public Web results for products, documentation, commercial tools, and pages outside specialized catalogs.
+
+**Use when:** The host Web search tool is unavailable, errors, or returns an empty result for a query that is still material to the comparison. Do not call it when host Web search already returned usable discovery results.
+
+```bash
+curl -L -A "Mozilla/5.0 (compatible; search-before-build)" "https://html.duckduckgo.com/html/?q=openapi%20typescript%20client"
+```
+
+The response is HTML. Preserve it as the retrieval payload; the decision kernel extracts DuckDuckGo result links and snippets.
 
 ## GitHub
 
@@ -121,7 +137,13 @@ With the official Python client available:
 python -c "from huggingface_hub import HfApi; print([m.id for m in HfApi().list_models(search='whisper', author='openai', limit=3)])"
 ```
 
-Do not install `huggingface_hub` automatically during normal research. Fall back to the Hub's public web/API surface when neither official client is present.
+Without either client, use the anonymous REST API:
+
+```bash
+curl -L -H "User-Agent: search-before-build" "https://huggingface.co/api/models?search=whisper&limit=3&full=false"
+```
+
+Do not install `huggingface_hub` automatically during normal research.
 
 ## arXiv
 
@@ -136,6 +158,16 @@ curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://
 ```
 
 Wait at least three seconds between repeated calls, keep result pages small, and cache identical queries. Official manual: `https://info.arxiv.org/help/api/user-manual.html`.
+
+## Hacker News Algolia
+
+**Main content:** Hacker News stories and discussions that can reveal public demand, existing workflows, complaints, and already-known alternatives.
+
+**Use when:** Demand evidence or real user discussion could materially change the necessity check, especially for consumer workflows. Treat discussion as demand evidence, not as proof of candidate functionality.
+
+```bash
+curl -L -H "User-Agent: search-before-build" "https://hn.algolia.com/api/v1/search?query=read%20later&tags=story&hitsPerPage=3"
+```
 
 ## Adding a user-provided source
 

@@ -46,6 +46,7 @@ Treat these fingerprint signals as strong route triggers:
 | Agent tool, connector, or MCP server | Official MCP Registry |
 | ML model, OCR, embeddings, training data, or local inference | Hugging Face Hub |
 | algorithm, academic evidence, benchmark, or literature workflow | arXiv |
+| public demand, consumer workflow, or pain-point discussion could change necessity | Hacker News Algolia |
 | cross-ecosystem identity, dependencies, adoption, or maintenance | Ecosyste.ms Packages |
 
 When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listing, or official service could satisfy the need, ordinary Web search is required unless unavailable. Use it alongside, not instead of, the matching specialized routes.
@@ -61,7 +62,8 @@ When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listin
 7. Deeply verify the strongest candidates using primary project pages and implementation evidence. Do not infer functionality from a name, snippet, topic tag, directory name, Stars, or download count.
 8. Read and follow all of `decision-kernel.md`. When the packaged kernel is available, use it to normalize, merge, rank, and expose gaps. Treat `candidate_mention` as a discovery signal, never as verified capability support.
 9. Compare verified behavior at the same product or technical layer using the stable support enums below.
-10. Stop expanding when the ready-made, adaptable, reusable, and no-build paths have representative evidence for the caller and further candidates are near-duplicates. Record coverage limits.
+10. Before stopping, perform a route-and-language audit. For every matched route trigger, confirm that the route was queried or record a concrete fingerprint-based exclusion. When Chinese or an unknown market requires bilingual discovery, confirm that both Chinese and English queries were attempted. If host Web search errored or returned empty results for a material query, retry it once through the Anonymous Web fallback in `search-sources.md`. Host Web search failure does not justify skipping a matching anonymous catalog route.
+11. Stop expanding when the ready-made, adaptable, reusable, and no-build paths have representative evidence for the caller and further candidates are near-duplicates. Record coverage limits.
 
 If generic Web search is unavailable but one or more specialized routes work, continue. In the search coverage, state that generic Web search was unavailable, name the specialized routes used, and explain the resulting coverage limits.
 

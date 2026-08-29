@@ -94,6 +94,7 @@ export interface NormalizationResult {
 
 export interface FunctionalFingerprint {
   mustHaveCapabilities?: string[];
+  capabilityAliases?: Record<string, string[]>;
   desiredOutcome?: string;
   operatingMode?: string;
   dealBreakers?: string[];

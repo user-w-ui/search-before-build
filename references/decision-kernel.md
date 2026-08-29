@@ -30,6 +30,9 @@ Write one temporary JSON file under the operating-system temporary directory. Do
   "query": "the confirmed research question",
   "fingerprint": {
     "mustHaveCapabilities": ["one concrete capability"],
+    "capabilityAliases": {
+      "one concrete capability": ["short evidence phrase", "另一种直接说法"]
+    },
     "desiredOutcome": "the expected outcome",
     "operatingMode": "CLI, plugin, hosted, local, or another confirmed mode"
   },
@@ -54,6 +57,8 @@ Write one temporary JSON file under the operating-system temporary directory. Do
 ```
 
 When the tool exposes its raw JSON or text result, preserve that result as `payload`. When it does not, create the smallest directly observed object containing only fields such as `title`, `url`, and `snippet`. Do not invent missing dates, scores, identifiers, or capabilities.
+
+For each must-have capability, add a small `capabilityAliases` list containing only short phrases that express the same requirement and are likely to appear in evidence. Include Chinese and English forms when the search is bilingual. Aliases improve deterministic lexical matching; they are not evidence that a candidate supports the capability.
 
 Use a distinct `requestId` for each tool call. Set `providerHint` and `categoryHint` from the route that was actually used, not from guesses about the result.
 

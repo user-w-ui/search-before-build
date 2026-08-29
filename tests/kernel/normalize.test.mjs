@@ -93,6 +93,59 @@ test("prefers html_url over the API url and falls back to links.npm", () => {
   assert.equal(npm.records[0].url, "https://www.npmjs.com/package/solo");
 });
 
+test("projects the field shapes captured by the real A/B benchmark", () => {
+  const web = normalizeRetrieval({
+    requestId: "web-findings",
+    providerHint: "host-web",
+    categoryHint: "web",
+    outcome: "success",
+    payload: {
+      url: "https://example.com/docs",
+      findings: "Runs offline and checks generated output for staleness.",
+    },
+  });
+  assert.equal(web.records[0].status, "usable");
+  assert.equal(web.records[0].text.description, "Runs offline and checks generated output for staleness.");
+  assert.ok(!web.batchWarnings.some((warning) => warning.code === "unknown_shape"));
+
+  const registry = normalizeRetrieval({
+    requestId: "mcp-notable-candidates",
+    providerHint: "official-mcp-registry",
+    categoryHint: "mcp",
+    outcome: "success",
+    payload: {
+      query: "fetch",
+      notableCandidates: [{
+        name: "ai.example/fetch",
+        desc: "Fetch and read web page content.",
+        repo: "https://github.com/example/fetch-mcp",
+        transport: "stdio",
+      }],
+    },
+  });
+  assert.equal(registry.records.length, 1);
+  assert.equal(registry.records[0].url, "https://github.com/example/fetch-mcp");
+  assert.equal(registry.records[0].text.description, "Fetch and read web page content.");
+  assert.deepEqual(registry.records[0].text.fragments, ["stdio"]);
+
+  const verified = normalizeRetrieval({
+    requestId: "verified-capabilities",
+    providerHint: "github",
+    categoryHint: "repo",
+    outcome: "success",
+    payload: {
+      identity: "example/offline-asr",
+      url: "https://github.com/example/offline-asr",
+      description: "Offline speech recognition.",
+      verified_capabilities: "CPU inference; timestamps; no Internet connection",
+    },
+  });
+  assert.equal(verified.records[0].title, "example/offline-asr");
+  assert.deepEqual(verified.records[0].text.fragments, [
+    "CPU inference; timestamps; no Internet connection",
+  ]);
+});
+
 test("unknown and failed payloads degrade observably instead of throwing", () => {
   const unknown = normalizeRetrieval({
     requestId: "unknown-1",

@@ -62,6 +62,39 @@ test("uses capability coverage to keep complementary candidates in top-k", () =>
   assert.deepEqual(artifact.evidence.missingCapabilities, []);
 });
 
+test("matches natural-language must-haves through explicit lexical aliases", () => {
+  const artifact = runPipeline({
+    generatedAt: "2026-08-29T00:00:00Z",
+    query: "本地离线中文语音转文字，CPU 运行，带时间戳，数据不上传",
+    fingerprint: {
+      mustHaveCapabilities: ["带时间戳的文字稿", "数据不出本机", "纯 CPU 可运行"],
+      capabilityAliases: {
+        "带时间戳的文字稿": ["timestamp", "时间戳"],
+        "数据不出本机": ["offline", "无需联网", "不上传"],
+        "纯 CPU 可运行": ["CPU inference", "device=cpu"],
+      },
+    },
+    retrievals: [{
+      requestId: "github-asr",
+      providerHint: "github",
+      categoryHint: "repo",
+      outcome: "success",
+      payload: {
+        identity: "example/offline-asr",
+        url: "https://github.com/example/offline-asr",
+        description: "Offline speech recognition toolkit.",
+        verified_capabilities: "CPU inference; timestamps; no Internet connection",
+      },
+    }],
+  });
+  assert.deepEqual(artifact.evidence.missingCapabilities, []);
+  assert.deepEqual(artifact.candidates[0].matchedCapabilities, [
+    "带时间戳的文字稿",
+    "数据不出本机",
+    "纯 CPU 可运行",
+  ]);
+});
+
 test("keeps running when one retrieval fails", async () => {
   const artifact = runPipeline({
     generatedAt: "2026-08-28T00:00:00Z",

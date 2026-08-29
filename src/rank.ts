@@ -181,15 +181,19 @@ function minMax(values: number[]): number[] {
   return values.map((value) => (value - min) / (max - min));
 }
 
-function capabilityMention(text: string, capability: string): boolean {
+function phraseMention(text: string, phrase: string): boolean {
   const normalizedText = text.toLowerCase().normalize("NFKC");
-  const normalizedCapability = capability.toLowerCase().normalize("NFKC").trim();
-  if (!normalizedCapability) return false;
-  if (normalizedText.includes(normalizedCapability)) return true;
-  const terms = [...new Set(tokenize(normalizedCapability))];
+  const normalizedPhrase = phrase.toLowerCase().normalize("NFKC").trim();
+  if (!normalizedPhrase) return false;
+  if (normalizedText.includes(normalizedPhrase)) return true;
+  const terms = [...new Set(tokenize(normalizedPhrase))];
   if (!terms.length) return false;
   const present = new Set(tokenize(normalizedText));
   return terms.filter((term) => present.has(term)).length / terms.length >= 0.6;
+}
+
+function capabilityMention(text: string, capability: string, aliases: string[]): boolean {
+  return [capability, ...aliases].some((phrase) => phraseMention(text, phrase));
 }
 
 function tokenJaccard(a: string, b: string): number {
@@ -271,7 +275,9 @@ export function rankCandidates(
   });
   const rrfScores = minMax(rrfRaw);
   drafts.forEach((candidate, index) => {
-    candidate.matchedCapabilities = capabilities.filter((capability) => capabilityMention(candidate.text, capability));
+    candidate.matchedCapabilities = capabilities.filter((capability) =>
+      capabilityMention(candidate.text, capability, fingerprint.capabilityAliases?.[capability] ?? []),
+    );
     candidate.lexical = lexicalScores[index] ?? 0;
     candidate.rrf = rrfScores[index] ?? 0;
     candidate.evidence = evidenceQuality(candidate);
