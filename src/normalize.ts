@@ -328,13 +328,17 @@ function projectItem(
   const kind = inferKind(envelope, item);
   const title = firstString(item, ["title", "name", "full_name", "display_name", "server.name"]);
   const rawUrl = firstString(item, [
-    "url",
+    // html_url before url: GitHub search items expose both, and the API URL
+    // (api.github.com/repos/...) neither reads well nor matches the github
+    // identity extraction below.
     "html_url",
+    "url",
     "link",
     "repository_url",
     "repository.url",
     "links.repository",
     "links.homepage",
+    "links.npm",
     "homepage",
     "DOI",
     "doi",

@@ -58,6 +58,41 @@ test("normalizes Atom XML and DuckDuckGo HTML with zero parser dependencies", as
   assert.equal(html.records[0].url, "https://example.com/agent-search");
 });
 
+test("prefers html_url over the API url and falls back to links.npm", () => {
+  const github = normalizeRetrieval({
+    requestId: "gh-2",
+    providerHint: "github",
+    categoryHint: "repo",
+    outcome: "success",
+    payload: {
+      items: [{
+        id: 1,
+        full_name: "acme/tool",
+        html_url: "https://github.com/acme/tool",
+        url: "https://api.github.com/repos/acme/tool",
+        description: "A tool.",
+      }],
+    },
+  });
+  assert.equal(github.records[0].url, "https://github.com/acme/tool");
+  assert.ok(github.records[0].identities.some(
+    (identity) => identity.scheme === "github" && identity.value === "acme/tool",
+  ));
+
+  const npm = normalizeRetrieval({
+    requestId: "npm-2",
+    providerHint: "npm",
+    categoryHint: "package",
+    outcome: "success",
+    payload: [{
+      name: "solo",
+      description: "Solo package.",
+      links: { npm: "https://www.npmjs.com/package/solo" },
+    }],
+  });
+  assert.equal(npm.records[0].url, "https://www.npmjs.com/package/solo");
+});
+
 test("unknown and failed payloads degrade observably instead of throwing", () => {
   const unknown = normalizeRetrieval({
     requestId: "unknown-1",
