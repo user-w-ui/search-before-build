@@ -7,7 +7,7 @@
 
 **Before you start vibe coding, make sure the idea is actually worth building.**
 
-A low-dependency research and decision plugin for Codex and Claude Code. It combines guided problem framing with a deterministic candidate pipeline that can normalize uneven retrieval results, merge duplicate evidence, rank alternatives, and explain what the search covered before the agent makes a recommendation.
+A pre-build research plugin for Codex and Claude Code: clarify your real needs, discover and aggregate similar projects and alternatives across platforms, and get a clear recommendation before you start building—use an existing tool, adapt a close match, or build from scratch.
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
