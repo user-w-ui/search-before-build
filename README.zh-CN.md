@@ -8,7 +8,7 @@
 
 **在开始 vibe coding 之前，先确认这东西真的值得做。**
 
-一个面向 Codex / Claude Code 的低依赖检索决策插件：既帮你说清问题、判断开发必要性，也用确定性的候选处理管线整合参差不齐的检索结果、合并重复证据、排序备选方案，并在 Agent 给出建议前解释这次搜索覆盖了什么。
+一个面向 Codex / Claude Code 的开工前调研插件：先帮你理清真实需求，再跨平台搜索、聚合相似项目与替代方案，并在你动手实现想法之前给出一份明确的建议——直接用现成的、基于现有方案改改，还是真的值得从头写。
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
