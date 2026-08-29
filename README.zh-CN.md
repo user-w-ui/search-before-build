@@ -202,7 +202,9 @@ claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
-benchmark 分两层：离线 smoke cases（`npm run benchmark:offline`）防止归一化、排序、去重和指标管线回归；真实场景成对对比（5 个任务、同模型同预算双臂运行）显示插件在检索广度、证据密度和一手核验率上相较普通 Web 搜索有大幅提升，代价是更多工具调用。详见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
+## Benchmark
+
+真实场景成对对比（5 个任务、同模型同预算双臂运行）显示插件在检索广度、证据密度和一手核验率上相较普通 Web 搜索有大幅提升。详见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
 
 ## 致谢
 

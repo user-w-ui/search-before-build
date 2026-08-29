@@ -201,7 +201,9 @@ claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
-The benchmark has two layers: offline smoke cases (`npm run benchmark:offline`) that guard normalization, ranking, deduplication, and metric plumbing against regressions, and a real-scenario paired comparison (5 tasks, same model and tool budget, bare agent vs. plugin) showing a substantial improvement over ordinary web search in retrieval breadth, evidence density, and primary-source verification—at the cost of more tool calls. See [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md) for details.
+## Benchmark
+
+A real-scenario paired comparison (5 tasks, same model and tool budget, bare agent vs. plugin) shows a substantial improvement over ordinary web search in retrieval breadth, evidence density, and primary-source verification. See [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md) for details.
 
 ## Acknowledgements
 
