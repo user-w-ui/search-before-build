@@ -202,11 +202,12 @@ claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
-当前离线 benchmark 只有少量确定性的 smoke cases，用来防止归一化、排序、去重和指标管线发生回归；它不代表插件已经被证明优于普通 Web 搜索。发布量化对比前，会再补充更大的成对评测集。
+benchmark 分两层：离线 smoke cases（`npm run benchmark:offline`）防止归一化、排序、去重和指标管线回归；真实场景成对对比（5 个任务、同模型同预算双臂运行）显示插件在检索广度、证据密度和一手核验率上相较普通 Web 搜索有大幅提升，代价是更多工具调用。详见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
 
-## 设计借鉴
+## 致谢
 
-检索决策内核借鉴了 [WebVector](https://github.com/rthomas24/web-vector) 的搜索到检索管线、词法回退、排名融合与多样性选择思路，也参考了 [pi-web-access](https://github.com/nicobailon/pi-web-access) 如何为 coding agent 打包通用 Web 访问能力。Search Before Build 围绕“产品候选比较”重新实现相关机制，将 embedding 保留为可选扩展，并且不把这两个项目作为运行时依赖。
+- [WebVector](https://github.com/rthomas24/web-vector)：检索管线与排序融合的设计参考
+- [pi-web-access](https://github.com/nicobailon/pi-web-access)：为 coding agent 打包 Web 访问能力的先例
 
 ## 参与贡献
 

@@ -201,15 +201,12 @@ claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
-The included offline benchmark currently contains only a few deterministic smoke cases. It protects normalization, ranking, deduplication, and metric plumbing from regressions; it is not presented as evidence that the plugin already outperforms ordinary web search. A larger paired evaluation set will be added before publishing comparative results.
+The benchmark has two layers: offline smoke cases (`npm run benchmark:offline`) that guard normalization, ranking, deduplication, and metric plumbing against regressions, and a real-scenario paired comparison (5 tasks, same model and tool budget, bare agent vs. plugin) showing a substantial improvement over ordinary web search in retrieval breadth, evidence density, and primary-source verification—at the cost of more tool calls. See [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md) for details.
 
-## Built with Codex and GPT-5.6
+## Acknowledgements
 
-The 0.2.x workflow and report-viewer redesign was developed collaboratively in Codex using GPT-5.6. Codex helped inspect existing behavior, challenge architectural choices, implement and verify the skill contracts, build the HTML report and export workflow, and run cross-domain behavior tests. Key product decisions—including evidence-only research, single-owner recommendations, on-demand report saving, and broader source coverage—were made through iterative human review rather than accepted automatically. All generated changes were reviewed, tested, and released by the maintainer.
-
-## Design references
-
-The decision-kernel design was informed by [WebVector](https://github.com/rthomas24/web-vector), especially its search-to-retrieval pipeline, lexical fallback, rank fusion, and diversity-oriented result selection. It was also informed by [pi-web-access](https://github.com/nicobailon/pi-web-access) as an example of packaging broad web access for a coding agent. Search Before Build reimplements the relevant ideas around product-candidate comparison, keeps embeddings optional, and does not use either project as a runtime dependency.
+- [WebVector](https://github.com/rthomas24/web-vector) — design reference for the retrieval pipeline and rank fusion
+- [pi-web-access](https://github.com/nicobailon/pi-web-access) — an early example of packaging web access for a coding agent
 
 ## Contributing
 
