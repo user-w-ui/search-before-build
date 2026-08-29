@@ -5,8 +5,8 @@ Use the shared viewer to present completed assessments and comparisons without w
 ## Lifecycle
 
 1. Read `report-template.md` and prepare the report payload below after the final recommendation exists.
-2. Resolve the OS temp directory, create `<temp>/search-before-build/`, and write the payload to `report-input.json` there.
-3. Run `node <package-root>/scripts/render-report.mjs --input <payload-path> --consume-input`. Use the package root that contains `scripts/`; do not assume the user's current project contains the renderer. The script validates the payload and atomically overwrites `<temp>/search-before-build/latest.html`.
+2. Resolve the OS temp directory and mint a **fresh, unique run directory** for this research request: `<temp>/search-before-build/runs/<run-id>/`. Build `<run-id>` once as a UTC timestamp plus a short random suffix (e.g. `20260829T122007-a3f9`; on Unix `date -u +%Y%m%dT%H%M%S` plus four random hex digits, on Windows PowerShell `Get-Date -Format yyyyMMddTHHmmss` plus `Get-Random` hex). Write the payload to `<run-dir>/report-input.json`. Never reuse a fixed filename across requests: concurrent sessions share the temp directory.
+3. Run `node <package-root>/scripts/render-report.mjs --input <run-dir>/report-input.json --output <run-dir>/brief.html --consume-input`. Use the package root that contains `scripts/`; do not assume the user's current project contains the renderer. Passing `--output` is required: without it the script falls back to the legacy single-session path `<temp>/search-before-build/latest.html`, which concurrent sessions overwrite. The script validates the payload and atomically writes the output file.
 4. Open the returned HTML path when the host supports opening local files. Otherwise return its absolute path so the user can open it.
 5. Keep the recommendation in the conversation as well. The viewer supplements the answer; it must not be the only place where the final decision appears.
 

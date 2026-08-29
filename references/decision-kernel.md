@@ -78,4 +78,4 @@ If `evidence.needsFollowUp` is true and a missing must-have capability could cha
 
 The existing report schema remains authoritative. Translate verified candidate evidence into `report-template.md`; do not send the kernel artifact directly to the report viewer.
 
-Reuse fixed temporary paths such as `<temp>/search-before-build/kernel-input.json` and `kernel-output.json` so normal research does not accumulate project files.
+Use a fresh run directory under the operating-system temporary directory for every research request: `<temp>/search-before-build/runs/<run-id>/`, where `<run-id>` combines a UTC timestamp and a short random suffix (the minting pattern is described in `report-viewer.md`). Keep `kernel-input.json`, `kernel-output.json`, and any raw payload scratch files inside that run directory. Never reuse a fixed filename across research requests: concurrent sessions share the temp directory and would overwrite each other's files. This keeps normal research from accumulating project files while staying safe under concurrency.
