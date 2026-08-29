@@ -1,0 +1,17 @@
+{
+  "id": "build-decision",
+  "query": "build decision pipeline capability evidence",
+  "fingerprint": {
+    "mustHaveCapabilities": ["build decision", "capability evidence"]
+  },
+  "topK": 3,
+  "retrievals": [
+    {
+      "requestId": "web",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "fixture": "tests/fixtures/retrieval/web-search.json"
+    }
+  ],
+  "relevantUrls": ["https://example.com/search-before-build"]
+}

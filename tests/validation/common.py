@@ -33,6 +33,8 @@ def assert_legacy_name_removed() -> None:
         if ".git" in path.parts or not path.is_file():
             continue
         relative = path.relative_to(ROOT).as_posix()
+        if relative.startswith("bench/results/"):
+            continue
         assert not any(name in relative for name in LEGACY_NAMES), relative
         if path.suffix.lower() in {".md", ".json", ".mjs", ".py"}:
             text = path.read_text(encoding="utf-8")

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/user-w-ui/search-before-build/schemas/retrieval-envelope.schema.json",
+  "title": "Retrieval envelope",
+  "type": "object",
+  "required": ["requestId", "outcome"],
+  "properties": {
+    "requestId": { "type": "string", "minLength": 1 },
+    "providerHint": { "type": "string" },
+    "categoryHint": {
+      "enum": ["web", "repo", "package", "mcp", "model", "paper", "community", "wiki", "page"]
+    },
+    "query": { "type": "string" },
+    "receivedAt": { "type": "string", "format": "date-time" },
+    "outcome": { "enum": ["success", "error"] },
+    "payload": {},
+    "error": {
+      "type": "object",
+      "required": ["kind", "message"],
+      "properties": {
+        "kind": { "enum": ["timeout", "rate_limit", "auth", "network", "tool", "unknown"] },
+        "message": { "type": "string" },
+        "retryAfterMs": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "success" } } },
+      "then": { "required": ["payload"] },
+      "else": { "required": ["error"] }
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,3 +1,6 @@
 .npmrc
 __pycache__/
 *.py[cod]
+node_modules/
+tests/.tmp-cli-*/
+bench/results/*.json

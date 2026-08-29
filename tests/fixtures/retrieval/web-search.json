@@ -1,0 +1,17 @@
+{
+  "results": [
+    {
+      "title": "Search Before Build decision pipeline",
+      "url": "https://example.com/search-before-build?utm_source=test#overview",
+      "content": "A build decision pipeline that ranks reusable projects and checks capability evidence.",
+      "score": 0.91,
+      "published_at": "2026-08-20"
+    },
+    {
+      "title": "Generic project planner",
+      "url": "https://example.org/planner",
+      "content": "A basic checklist application.",
+      "score": 0.72
+    }
+  ]
+}

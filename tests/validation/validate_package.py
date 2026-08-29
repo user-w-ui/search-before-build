@@ -36,8 +36,26 @@ def validate() -> None:
     assert package["bin"] == {"search-before-build": "bin/install.mjs"}
     assert package["version"] == claude_manifest["version"] == codex_manifest["version"]
     assert package["scripts"]["prepublishOnly"] == "node scripts/verify-release.mjs"
+    assert package["scripts"]["build"] == "tsc -p tsconfig.json"
+    assert package["scripts"]["benchmark:offline"] == "npm run build && node bench/run-offline.mjs"
+    assert package.get("dependencies", {}) == {}, "The decision kernel must keep zero runtime dependencies"
+    assert set(package["devDependencies"]) == {"@types/node", "typescript"}
     assert {"codex-plugin", "plugin", "claude code"} <= set(package["keywords"])
     assert (ROOT / "LICENSE").is_file()
+
+    for path in (
+        "src/cli.ts",
+        "src/normalize.ts",
+        "src/pipeline.ts",
+        "src/rank.ts",
+        "src/types.ts",
+        "schemas/retrieval-envelope.schema.json",
+        "schemas/pipeline-input.schema.json",
+        "schemas/normalization-result.schema.json",
+        "schemas/decision-support.schema.json",
+        "references/decision-kernel.md",
+    ):
+        assert (ROOT / path).is_file(), f"Missing decision-kernel resource: {path}"
 
     installer = read_text("bin/install.mjs")
     assert '"plugin", "marketplace", "add"' in installer

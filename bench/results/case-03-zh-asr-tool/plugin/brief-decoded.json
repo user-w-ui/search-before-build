@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "language": "zh-CN",
+  "mode": "assess",
+  "topic": "本地离线中文语音转文字工具（带时间戳 + 会议纪要）值不值得自己做",
+  "projectName": "本地离线中文语音转文字工具（自建设想）",
+  "generatedAt": "2026-08-29T07:23:00Z",
+  "recommendation": {
+    "value": "Use existing",
+    "reason": "已有多个成熟开源方案能在纯 CPU 的 Windows 上离线完成中文带时间戳转写且数据不出本机，并覆盖图形界面与会议纪要；从零自建既不更便宜也不更安全，必要性不足。",
+    "reusableOption": "SmartSub / 妙幕 —— Windows 图形界面安装包，内置 FunASR / sherpa-onnx / whisper.cpp 本地引擎，纯 CPU 可用，文件不出本机；会议纪要可叠加本地 Ollama 大模型。",
+    "biggestUnknown": "用户电脑的具体 CPU 与内存（影响模型选型与速度，虽可接受慢）；以及在『开箱即用图形界面(SmartSub)』『最佳中文准确率(FunASR/Paraformer 命令行)』『一站式会议纪要(AudioNotes)』三者间的优先级。"
+  },
+  "fingerprint": [
+    {
+      "label": "主要使用者与场景",
+      "value": "个人自用，偶尔帮同事；处理中文录音与会议音频，公司有保密要求"
+    },
+    {
+      "label": "核心任务",
+      "value": "把中文音频离线转成带时间戳的文字稿，最好再自动整理会议纪要"
+    },
+    {
+      "label": "输入与输出",
+      "value": "输入：中文录音/会议音频；输出：带时间戳的文字稿(SRT/纯文本)，可选会议纪要"
+    },
+    {
+      "label": "运行模式",
+      "value": "本地桌面应用或命令行/脚本，纯 CPU，Windows，离线可用"
+    },
+    {
+      "label": "必须具备的能力",
+      "value": "本地离线中文语音转文字并输出时间戳；音频数据不离开本机"
+    },
+    {
+      "label": "可接受与不可接受",
+      "value": "可接受转写慢、可接受命令行(有详细教程)；不可接受上传音频到第三方服务器；偏好图形界面"
+    },
+    {
+      "label": "自用还是公开产品",
+      "value": "主要自用，非公开产品"
+    }
+  ],
+  "coverage": [
+    {
+      "label": "GitHub",
+      "status": "used",
+      "detail": "通过匿名 GitHub REST API 检索与 README 原文核查了 FunASR、SmartSub/妙幕、FunClip、AudioNotes、sherpa-onnx、whisper.cpp、Buzz 等仓库；未使用 GitHub 专属深度检索工具，结果主要来自公开 API 或网页索引，可能遗漏较新、低曝光或仅在代码内部出现的项目。"
+    },
+    {
+      "label": "通用网页检索",
+      "status": "unavailable",
+      "detail": "宿主 WebSearch 对 FunASR、whisper.cpp/Buzz 等查询均返回空结果，不可用。"
+    },
+    {
+      "label": "匿名网页兜底",
+      "status": "used",
+      "detail": "通过 DuckDuckGo HTML 兜底完成中英文发现，确认 FunASR/SenseVoice/Paraformer、whisper.cpp、sherpa-onnx、SmartSub 为本地离线中文 ASR 主流选项。"
+    },
+    {
+      "label": "Hugging Face 模型库",
+      "status": "limited",
+      "detail": "通过 FunASR README 间接确认 Paraformer-zh、SenseVoiceSmall 模型；未单独枚举 Hub 全量模型。"
+    },
+    {
+      "label": "Hacker News 需求证据",
+      "status": "unavailable",
+      "detail": "Hacker News Algolia 对离线中文 ASR 需求查询无返回，未获得公开讨论需求证据。"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "本地离线中文语音转写（带时间戳）",
+      "current": {
+        "status": "unsupported",
+        "note": "自建设想尚未实现，需从零搭建 ASR 流水线"
+      },
+      "candidates": {
+        "smartsub": {
+          "status": "native",
+          "note": "内置 FunASR/sherpa-onnx/whisper.cpp，输出带时间戳 SRT"
+        },
+        "funasr": {
+          "status": "native",
+          "note": "Paraformer-zh 提供时间戳；SenseVoiceSmall 多语种"
+        },
+        "funclip": {
+          "status": "native",
+          "note": "Paraformer-Large 集成时间戳，输出 SRT"
+        },
+        "audionotes": {
+          "status": "partial",
+          "note": "默认 Fun-ASR-Nano 需 GPU；可切换 CPU 模型；时间戳经 FunASR"
+        },
+        "sherpa-onnx": {
+          "status": "native",
+          "note": "Zipformer/Paraformer/Whisper + VAD，支持时间戳"
+        }
+      }
+    },
+    {
+      "name": "音频数据不离开本机（保密）",
+      "current": {
+        "status": "unsupported",
+        "note": "尚未实现"
+      },
+      "candidates": {
+        "smartsub": {
+          "status": "native",
+          "note": "明确『本地处理，文件不出本机』"
+        },
+        "funasr": {
+          "status": "native",
+          "note": "本地推理，不上传"
+        },
+        "funclip": {
+          "status": "native",
+          "note": "本地推理"
+        },
+        "audionotes": {
+          "status": "native",
+          "note": "本地 FunASR + 本地 Ollama"
+        },
+        "sherpa-onnx": {
+          "status": "native",
+          "note": "完全离线，onnxruntime 本地推理"
+        }
+      }
+    },
+    {
+      "name": "纯 CPU（无 GPU）Windows 可用",
+      "current": {
+        "status": "unsupported",
+        "note": "尚未实现"
+      },
+      "candidates": {
+        "smartsub": {
+          "status": "native",
+          "note": "GPU 加速带 CPU 回退；Windows x64 安装包"
+        },
+        "funasr": {
+          "status": "partial",
+          "note": "SenseVoiceSmall/Paraformer 可 CPU；Fun-ASR-Nano 需 device=cuda(GPU)"
+        },
+        "funclip": {
+          "status": "native",
+          "note": "可在 CPU 运行，pip 安装"
+        },
+        "audionotes": {
+          "status": "partial",
+          "note": "默认 ASR 需 GPU；Docker 需 12GB+ 内存；Windows 上较重"
+        },
+        "sherpa-onnx": {
+          "status": "native",
+          "note": "onnxruntime CPU，原生支持 Windows"
+        }
+      }
+    },
+    {
+      "name": "图形界面（非编程用户友好）",
+      "current": {
+        "status": "unsupported",
+        "note": "尚未实现"
+      },
+      "candidates": {
+        "smartsub": {
+          "status": "native",
+          "note": "Electron 桌面应用，提供安装包"
+        },
+        "funasr": {
+          "status": "unsupported",
+          "note": "为库/工具包，无自带 GUI"
+        },
+        "funclip": {
+          "status": "native",
+          "note": "Gradio 网页界面"
+        },
+        "audionotes": {
+          "status": "native",
+          "note": "网页界面"
+        },
+        "sherpa-onnx": {
+          "status": "unsupported",
+          "note": "引擎/CLI，无官方 GUI"
+        }
+      }
+    },
+    {
+      "name": "自动会议纪要",
+      "current": {
+        "status": "unsupported",
+        "note": "尚未实现"
+      },
+      "candidates": {
+        "smartsub": {
+          "status": "extensible",
+          "note": "支持 AI 字幕精修；完整纪要需叠加本地 LLM"
+        },
+        "funasr": {
+          "status": "extensible",
+          "note": "输出文字稿后交本地 LLM 整理"
+        },
+        "funclip": {
+          "status": "extensible",
+          "note": "LLM 辅助剪辑；非完整纪要"
+        },
+        "audionotes": {
+          "status": "native",
+          "note": "本地 Ollama 生成会议纪要/笔记/问答，此为其强项"
+        },
+        "sherpa-onnx": {
+          "status": "extensible",
+          "note": "文字稿交本地 LLM 整理"
+        }
+      }
+    }
+  ],
+  "competitors": [
+    {
+      "id": "smartsub",
+      "name": "SmartSub / 妙幕",
+      "url": "https://github.com/luyu0279/SmartSub",
+      "category": "开箱即用桌面产品",
+      "overview": "基于 Electron 的桌面端字幕/转写工具，提供 Windows x64 安装包，面向不想折腾命令行的普通用户。内置 FunASR、whisper.cpp、sherpa-onnx 等本地引擎，强调本地处理、文件不出本机，GPU 加速并带 CPU 回退，MIT 协议。",
+      "comparison": [
+        {
+          "dimension": "核心工作流",
+          "candidate": "导入音频 → 选本地引擎 → 生成带时间戳字幕/文字稿，界面操作",
+          "current": "需从零搭建 ASR 流水线与界面"
+        },
+        {
+          "dimension": "运行模式",
+          "candidate": "本地桌面应用，纯 CPU 可用，Windows 安装包",
+          "current": "设想为本地工具，尚未实现"
+        },
+        {
+          "dimension": "数据与部署约束",
+          "candidate": "本地处理，文件不出本机，满足保密要求",
+          "current": "目标同为不上传，需自证实现"
+        },
+        {
+          "dimension": "维护与成熟度",
+          "candidate": "活跃开源项目，MIT 协议，多引擎可选",
+          "current": "自建需长期自行维护"
+        },
+        {
+          "dimension": "主要优势",
+          "candidate": "图形界面 + 安装包 + 多本地引擎 + CPU 回退",
+          "current": "无"
+        },
+        {
+          "dimension": "主要局限",
+          "candidate": "会议纪要需额外叠加本地 LLM；非一站式纪要工具",
+          "current": "—"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "多本地引擎可切换",
+          "detail": "FunASR / whisper.cpp / sherpa-onnx 可在界面切换，兼顾中文准确率与通用性"
+        },
+        {
+          "title": "GPU 加速 + CPU 回退",
+          "detail": "有 GPU 用 GPU，无 GPU 回退 CPU，契合用户纯 CPU 环境"
+        }
+      ],
+      "reusableLessons": [
+        "直接复用其安装包即可满足图形界面 + 本地转写 + 数据不出本机，几乎零编程成本",
+        "会议纪要能力不完整，需在其文字稿基础上叠加本地 Ollama 大模型补足"
+      ],
+      "summary": "对这位偏好图形界面、纯 CPU、要保密的用户，SmartSub 几乎逐项命中，是最省力的复用选项。",
+      "coverageNote": "证据来自匿名 GitHub REST API 与 README 原文核查；未使用 GitHub 专属深度检索工具。",
+      "sources": []
+    },
+    {
+      "id": "funasr",
+      "name": "FunASR",
+      "url": "https://github.com/modelscope/FunASR",
+      "category": "可复用组件 / 工具包",
+      "overview": "阿里达摩院/modelscope 的端到端语音识别工具包，Python 库。Paraformer-zh 提供离线中文 ASR 与时间戳，SenseVoiceSmall 在 CPU 上可达约 17 倍实时，配套 fsmn-vad、ct-punc 标点恢复、cam++ 说话人分离。MIT 协议。",
+      "comparison": [
+        {
+          "dimension": "核心工作流",
+          "candidate": "Python 调用流水线：VAD → Paraformer/SenseVoice → 标点 → 分离",
+          "current": "需自行实现同等流水线"
+        },
+        {
+          "dimension": "运行模式",
+          "candidate": "本地 Python，pip install funasr，CPU 可用",
+          "current": "设想本地，尚未实现"
+        },
+        {
+          "dimension": "数据与部署约束",
+          "candidate": "本地推理，不上传",
+          "current": "目标相同"
+        },
+        {
+          "dimension": "维护与成熟度",
+          "candidate": "官方维护、中文准确率领先的开源方案",
+          "current": "自建难以匹敌其模型质量"
+        },
+        {
+          "dimension": "主要优势",
+          "candidate": "中文识别准确率与时间戳质量高，组件齐全",
+          "current": "无"
+        },
+        {
+          "dimension": "主要局限",
+          "candidate": "无自带 GUI；旗舰 Fun-ASR-Nano 需 GPU",
+          "current": "—"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "Paraformer-zh 带时间戳",
+          "detail": "大规模中文离线模型直接输出句级时间戳，适合会议稿对齐"
+        },
+        {
+          "title": "SenseVoiceSmall CPU 友好",
+          "detail": "小模型在纯 CPU 上仍达约 17 倍实时，契合无 GPU 约束"
+        }
+      ],
+      "reusableLessons": [
+        "追求最佳中文准确率时，直接用 FunASR 的 Paraformer/SenseVoice，不必自训模型",
+        "无 GUI，需配合 FunClip 或自写脚本/界面，适合愿跟教程敲命令的用户"
+      ],
+      "summary": "若把『中文准确率』置于『开箱即用』之上，FunASR 是最该复用的引擎，但仍需配界面或脚本。",
+      "coverageNote": "证据来自匿名 GitHub REST API 与 README 原文核查。",
+      "sources": []
+    },
+    {
+      "id": "funclip",
+      "name": "FunClip",
+      "url": "https://github.com/modelscope/FunClip",
+      "category": "可改造项目（带界面）",
+      "overview": "基于 FunASR/Paraformer-Large 的 Gradio 网页应用，集成时间戳、SRT 输出、说话人分离与 LLM 辅助剪辑。pip 安装依赖后本地运行，CPU 可用。适合想要界面又想要 FunASR 中文准确率的用户。",
+      "comparison": [
+        {
+          "dimension": "核心工作流",
+          "candidate": "网页 UI 上传/选音频 → Paraformer 转写 → 时间戳/SRT/剪辑",
+          "current": "需自建界面与转写"
+        },
+        {
+          "dimension": "运行模式",
+          "candidate": "本地 Gradio 网页，CPU 可用",
+          "current": "设想本地，尚未实现"
+        },
+        {
+          "dimension": "数据与部署约束",
+          "candidate": "本地推理，不上传",
+          "current": "目标相同"
+        },
+        {
+          "dimension": "维护与成熟度",
+          "candidate": "官方示例项目，活跃",
+          "current": "自建成本更高"
+        },
+        {
+          "dimension": "主要优势",
+          "candidate": "既有 FunASR 准确率，又有 Gradio 界面与时间戳",
+          "current": "无"
+        },
+        {
+          "dimension": "主要局限",
+          "candidate": "定位是剪辑工具，非完整会议纪要；需 Python 环境",
+          "current": "—"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "Paraformer-Large 集成时间戳",
+          "detail": "转写同时给出句级时间戳并导出 SRT，免去二次对齐"
+        },
+        {
+          "title": "LLM 辅助剪辑",
+          "detail": "可基于文字稿用 LLM 选段剪辑，离用户『纪要』需求最近"
+        }
+      ],
+      "reusableLessons": [
+        "想要界面又想要 FunASR 中文准确率，可直接跑 FunClip，省去自建界面",
+        "会议纪要仍需在文字稿上另接本地 LLM，FunClip 自身不产出完整纪要"
+      ],
+      "summary": "FunClip 是『FunASR 准确率 + 网页界面 + 时间戳』的折中复用项，适合能跟教程装 Python 的用户。",
+      "coverageNote": "证据来自匿名 GitHub REST API 与 README 原文核查。",
+      "sources": []
+    },
+    {
+      "id": "audionotes",
+      "name": "AudioNotes",
+      "url": "https://github.com/harx2024/AudioNotes",
+      "category": "一站式会议纪要方案",
+      "overview": "本地 FunASR + 本地 Ollama 大模型的一站式音频笔记工具，定位会议纪要/笔记/问答。默认 ASR 为 FunAudioLLM/Fun-ASR-Nano-2512（需 GPU）配 qwen3.5:2b，ASR 模型可切换；Docker 部署，建议 12GB+ 内存。",
+      "comparison": [
+        {
+          "dimension": "核心工作流",
+          "candidate": "音频 → 本地 ASR 转写 → 本地 LLM 生成纪要/笔记/问答",
+          "current": "需自建 ASR+LLM 全链路"
+        },
+        {
+          "dimension": "运行模式",
+          "candidate": "本地 Docker 网页应用",
+          "current": "设想本地，尚未实现"
+        },
+        {
+          "dimension": "数据与部署约束",
+          "candidate": "本地 FunASR + 本地 Ollama，不上传",
+          "current": "目标相同"
+        },
+        {
+          "dimension": "维护与成熟度",
+          "candidate": "开源，会议纪要为其核心卖点",
+          "current": "自建 LLM 整理链路成本高"
+        },
+        {
+          "dimension": "主要优势",
+          "candidate": "开箱即用的会议纪要，端到端本地",
+          "current": "无"
+        },
+        {
+          "dimension": "主要局限",
+          "candidate": "默认 ASR 需 GPU；Docker 12GB+ 内存；Windows 上偏重",
+          "current": "—"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "ASR 模型可切换",
+          "detail": "可将默认 GPU 模型换为 CPU 友好的 FunASR 模型以适配无 GPU 环境"
+        },
+        {
+          "title": "本地 LLM 生成纪要",
+          "detail": "用 qwen3.5:2b 等本地模型整理会议纪要，全程不出本机"
+        }
+      ],
+      "reusableLessons": [
+        "若『会议纪要』是首要诉求，AudioNotes 是最贴近的一站式方案，但需把默认 ASR 换成 CPU 模型",
+        "Docker + 12GB 内存对纯 CPU 普通机偏重，需评估机器配置后再用"
+      ],
+      "summary": "AudioNotes 是唯一把『会议纪要』做成核心的端到端本地方案，但默认依赖 GPU 且较重，需改造才适配用户纯 CPU 环境。",
+      "coverageNote": "证据来自匿名 GitHub REST API 与 README 原文核查。",
+      "sources": []
+    },
+    {
+      "id": "sherpa-onnx",
+      "name": "sherpa-onnx",
+      "url": "https://github.com/k2-fsa/sherpa-onnx",
+      "category": "可复用引擎（C++/Python/CLI）",
+      "overview": "next-gen Kaldi 团队的离线推理引擎，基于 onnxruntime，原生支持 Windows 与纯 CPU。集成 VAD、说话人分离与 ASR，可加载 Zipformer/Paraformer/Whisper 等模型，提供 C++/Python/CLI 接口。Apache-2.0，约 1.4 万 star。",
+      "comparison": [
+        {
+          "dimension": "核心工作流",
+          "candidate": "CLI/Python 调用：VAD → ASR → 分离，输出带时间戳结果",
+          "current": "需自行实现同等引擎"
+        },
+        {
+          "dimension": "运行模式",
+          "candidate": "本地 onnxruntime，纯 CPU，Windows 原生",
+          "current": "设想本地，尚未实现"
+        },
+        {
+          "dimension": "数据与部署约束",
+          "candidate": "完全离线，不上传",
+          "current": "目标相同"
+        },
+        {
+          "dimension": "维护与成熟度",
+          "candidate": "活跃维护，跨平台部署经验丰富",
+          "current": "自建引擎成本极高"
+        },
+        {
+          "dimension": "主要优势",
+          "candidate": "纯 CPU + Windows 原生 + 全离线，部署轻量",
+          "current": "无"
+        },
+        {
+          "dimension": "主要局限",
+          "candidate": "无官方 GUI，偏底层引擎，需命令行或二次封装",
+          "current": "—"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "onnxruntime CPU 推理",
+          "detail": "无需 GPU/Python 重依赖，纯 CPU 在 Windows 上即可跑，部署最轻"
+        },
+        {
+          "title": "VAD + 分离 + ASR 一体",
+          "detail": "一条链路覆盖会议所需的分段、分人与转写"
+        }
+      ],
+      "reusableLessons": [
+        "追求部署轻量与纯 CPU 稳定时，可用 sherpa-onnx 作引擎，再配简单脚本/界面",
+        "无 GUI，对非编程用户不友好，需包一层界面或借助 SmartSub 这类已集成它的产品"
+      ],
+      "summary": "sherpa-onnx 是纯 CPU/Windows 上最轻量的离线引擎，适合做底层，但无界面，需配合上层应用。",
+      "coverageNote": "证据来自匿名 GitHub REST API 与 README/仓库元数据核查。",
+      "sources": []
+    }
+  ],
+  "unknowns": [
+    "用户电脑的具体 CPU 型号与内存大小：影响选 SenseVoiceSmall/Paraformer 还是更小模型，以及转写速度（虽可接受慢）",
+    "在『开箱即用图形界面(SmartSub)』『最佳中文准确率(FunASR/FunClip 命令行)』『一站式会议纪要(AudioNotes)』三者间的优先级未明确，会在两个都成立的现有方案间影响首选",
+    "AudioNotes 默认 ASR 需 GPU 且 Docker 较重，在用户纯 CPU 机器上能否流畅运行尚未实测"
+  ],
+  "labels": {}
+}

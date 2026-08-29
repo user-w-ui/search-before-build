@@ -7,6 +7,8 @@ def validate() -> None:
     assess_meta, assess = read_skill("search-before-build-assess")
     compare_meta, compare = read_skill("search-before-build-compare")
     research_method = read_text("references/research-method.md")
+    decision_kernel = read_text("references/decision-kernel.md")
+    search_sources = read_text("references/search-sources.md")
 
     assert {assess_meta["name"], compare_meta["name"]} == {
         "search-before-build-assess",
@@ -53,6 +55,14 @@ def validate() -> None:
     assert baseline_position < fingerprint_position < compare_research_position
 
     assert "normal research is read-only" in research_method.lower()
+    assert "references/decision-kernel.md" in assess
+    assert "references/decision-kernel.md" in compare
+    assert "decision-kernel.md" in research_method
+    assert "candidate_mention" in decision_kernel
+    assert "cannot prove that a capability is supported" in decision_kernel
+    assert "at most one targeted follow-up round" in decision_kernel
+    assert "operating-system temporary directory" in decision_kernel
+    assert "do not install dependencies during a research request" in decision_kernel.lower()
     assert "only exception" in research_method.lower()
     assert "github-retrieval.md" in research_method
     assert "search-sources.md" in research_method
@@ -138,6 +148,11 @@ def validate() -> None:
     for trigger in source_triggers:
         assert trigger in research_method
     assert "ordinary Web search is required unless unavailable" in research_method
+    assert "route-and-language audit" in research_method
+    assert "anonymous web fallback" in research_method.lower()
+    assert "html.duckduckgo.com" in search_sources
+    assert "https://huggingface.co/api/models?search=" in search_sources
+    assert "## Hacker News Algolia" in search_sources
     assert (
         "Do not infer functionality from a name, snippet, topic tag, directory name, Stars, "
         "or download count"

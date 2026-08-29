@@ -8,7 +8,7 @@
 
 **在开始 vibe coding 之前，先确认这东西真的值得做。**
 
-一个对新手友好的 Codex / Claude Code 的轻量插件：帮你说清问题、判断开发必要性，并认真寻找已经存在的产品、开源项目和可复用组件。
+一个面向 Codex / Claude Code 的低依赖检索决策插件：既帮你说清问题、判断开发必要性，也用确定性的候选处理管线整合参差不齐的检索结果、合并重复证据、排序备选方案，并在 Agent 给出建议前解释这次搜索覆盖了什么。
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
@@ -80,6 +80,37 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 | 算法、论文或学术先例 | arXiv |
 
 SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索和官方页面补充。目标市场不明确时中英文同时检索。Stars、下载量只辅助判断成熟度，不代替功能匹配，也不会仅因名称相似就认定为竞品。
+
+### 确定性的检索决策内核
+
+第一版增加了一个小型 TypeScript 内核，把不应该依赖提示词临场发挥的环节固化下来：
+
+```text
+参差不齐的工具返回
+          │
+          ▼
+渐进式归一化 → 稳定身份去重 → BM25F + RRF 排序
+                                          │
+                                          ▼
+                         多样性 / 能力覆盖选择 → 可追踪产物
+```
+
+- 接受根数组、嵌套 JSON、Atom/XML、HTML 片段、纯文本及失败的检索请求。可选字段缺失只会降低可信度，不会让整批结果失效。
+- 用 URL、GitHub、软件包、DOI、arXiv、MCP 和来源自身的身份信息合并观察结果，不要求所有检索工具实现一份理想化的固定返回契约。
+- 组合中英文词法匹配、倒数排名融合与轻量多样性选择；不依赖运行时 npm 包、embedding 模型或向量数据库。
+- 输出规范化候选、评分特征、告警、来源覆盖和选择轨迹。内核只提供决策支持；技能仍负责核验一手来源，并拥有最终 Build / Adapt / Use existing / Stop 建议的解释权。
+
+这个边界既保证第一版主路径容易跑通，也让检索行为变得可测试、可检查。若本地内核不可用，或某类返回暂时无法归一化，技能会继续使用原有的证据优先工作流。
+
+本地开发时可以构建内核，并用一份管线输入文件直接运行：
+
+```bash
+npm install
+npm run build
+node dist/cli.js run --input ./pipeline-input.json --output ./decision-support.json
+```
+
+JSON 契约位于 [`schemas/`](./schemas/)，具有代表性的异构返回样例位于 [`tests/fixtures/retrieval/`](./tests/fixtures/retrieval/)。
 
 ### 可选的 GitHub 深度检索
 
@@ -165,9 +196,20 @@ claude --plugin-dir /path/to/search-before-build
 **验证插件**
 
 ```bash
+npm test
+npm run benchmark:offline
 claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
+
+## Benchmark
+
+真实场景成对对比（5 个任务、同模型同预算双臂运行）显示插件在检索广度、证据密度和一手核验率上相较普通 Web 搜索有大幅提升。详见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
+
+## 致谢
+
+- [WebVector](https://github.com/rthomas24/web-vector)：检索管线与排序融合的设计参考
+- [pi-web-access](https://github.com/nicobailon/pi-web-access)：为 coding agent 打包 Web 访问能力的先例
 
 ## 参与贡献
 

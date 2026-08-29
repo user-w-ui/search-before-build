@@ -4,7 +4,7 @@ This is an internal workflow for `search-before-build-assess` and `search-before
 
 ## Boundaries
 
-Normal research is read-only: do not create, edit, or delete files. The only exception is the GitHub MCP setup flow in `github-retrieval.md`, which may download the official binary and update the current Agent's MCP configuration only after explicit user approval.
+Normal research is read-only with respect to the user's project: do not create, edit, or delete project files. The local decision kernel may overwrite its fixed input and output files under the operating-system temporary directory as described in `decision-kernel.md`. The only exception outside those temporary files is the GitHub MCP setup flow in `github-retrieval.md`, which may download the official binary and update the current Agent's MCP configuration only after explicit user approval.
 
 Research must produce an evidence package before the caller makes a final recommendation. Do not put a Build, Adapt, Use existing, or Stop verdict in the evidence package. Do not save competitor reports or render the viewer; the calling Skill owns presentation and optional persistence.
 
@@ -46,6 +46,7 @@ Treat these fingerprint signals as strong route triggers:
 | Agent tool, connector, or MCP server | Official MCP Registry |
 | ML model, OCR, embeddings, training data, or local inference | Hugging Face Hub |
 | algorithm, academic evidence, benchmark, or literature workflow | arXiv |
+| public demand, consumer workflow, or pain-point discussion could change necessity | Hacker News Algolia |
 | cross-ecosystem identity, dependencies, adoption, or maintenance | Ecosyste.ms Packages |
 
 When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listing, or official service could satisfy the need, ordinary Web search is required unless unavailable. Use it alongside, not instead of, the matching specialized routes.
@@ -59,8 +60,10 @@ When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listin
 5. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround. Keep weak candidates only long enough to explain exclusion.
 6. Narrow by functional fit: prioritize the same user, situation, core task, operating mode, and must-have capability. Popularity is only a maturity signal and tie-breaker.
 7. Deeply verify the strongest candidates using primary project pages and implementation evidence. Do not infer functionality from a name, snippet, topic tag, directory name, Stars, or download count.
-8. Compare verified behavior at the same product or technical layer using the stable support enums below.
-9. Stop expanding when the ready-made, adaptable, reusable, and no-build paths have representative evidence for the caller and further candidates are near-duplicates. Record coverage limits.
+8. Read and follow all of `decision-kernel.md`. When the packaged kernel is available, use it to normalize, merge, rank, and expose gaps. Treat `candidate_mention` as a discovery signal, never as verified capability support.
+9. Compare verified behavior at the same product or technical layer using the stable support enums below.
+10. Before stopping, perform a route-and-language audit. For every matched route trigger, confirm that the route was queried or record a concrete fingerprint-based exclusion. When Chinese or an unknown market requires bilingual discovery, confirm that both Chinese and English queries were attempted. If host Web search errored or returned empty results for a material query, retry it once through the Anonymous Web fallback in `search-sources.md`. Host Web search failure does not justify skipping a matching anonymous catalog route.
+11. Stop expanding when the ready-made, adaptable, reusable, and no-build paths have representative evidence for the caller and further candidates are near-duplicates. Record coverage limits.
 
 If generic Web search is unavailable but one or more specialized routes work, continue. In the search coverage, state that generic Web search was unavailable, name the specialized routes used, and explain the resulting coverage limits.
 

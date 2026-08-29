@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "query": "read-it-later app that automatically categorizes saved web articles and sends a daily digest resurfacing unread items, synced across phone and laptop, for personal use",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "automatic categorization of saved links",
+      "daily digest resurfacing unread items",
+      "sync across phone and laptop"
+    ],
+    "capabilityAliases": {
+      "automatic categorization of saved links": ["auto tag", "auto-tagging", "automatic tagging", "AI suggestions", "auto-suggested tags", "categorize", "auto categorize"],
+      "daily digest resurfacing unread items": ["daily digest", "daily review", "resurface", "remind to read", "reminder", "reading reminder"],
+      "sync across phone and laptop": ["sync", "cross-device", "ios android desktop", "phone and laptop", "local-first sync"]
+    },
+    "desiredOutcome": "saved links land already sorted into categories, with a daily nudge that picks a few unread items to read",
+    "operatingMode": "hosted service plus mobile and desktop/laptop apps; personal use; non-programmer; cloud reading of links acceptable"
+  },
+  "retrievals": [
+    {"requestId":"github-1","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"items":[
+      {"full_name":"omnivore-app/omnivore","description":"Omnivore is a complete, open source read-it-later solution for people who like reading.","stars":16224,"archived":false,"pushed_at":"2026-08-28T17:17:04Z","homepage":"","topics":["bookmarks","logseq","productivity","read-it-later","reader","reading"]},
+      {"full_name":"ncarlier/readflow","description":"readflow is a news-reading (or read-it-later) solution focused on versatility and simplicity","stars":0,"archived":false,"pushed_at":"2026-08-21T13:08:35Z"},
+      {"full_name":"wallabag/wallabag","description":"web application allowing you to save web pages for later reading","stars":0,"archived":false,"pushed_at":"2026-01-01T00:00:00Z"},
+      {"full_name":"DominikPieper/obsidian-ReadItLater","description":"Obsidian ReadItLater plugin","stars":0,"archived":false,"pushed_at":"2026-06-30T03:44:14Z"}
+    ]}},
+    {"requestId":"hn-1","providerHint":"anonymous-web","categoryHint":"discussion","outcome":"success","payload":{"hits":[
+      {"title":"Omnivore – free, open source, read-it-later App","points":309,"url":"https://omnivore.app/"},
+      {"title":"Show HN: DoubleMemory – more efficient local-first read-it-later app","points":162,"url":"https://doublememory.com"},
+      {"title":"The Secret Power of Read It Later Apps","points":153,"url":"https://medium.com/better-humans/the-secret-power-of-read-it-later-apps"},
+      {"title":"Pocket Released (Formerly Read It Later)","points":142,"url":"http://getpocket.com/"}
+    ]}},
+    {"requestId":"web-readwise","providerHint":"anonymous-web","categoryHint":"web","outcome":"success","payload":{"title":"Readwise Reader","url":"https://readwise.io/read","snippet":"Reader syncs across web, iOS, Android; Daily Review resurfaces highlights; tagging manual; $9.99/mo annual or $12.99/mo monthly"}},
+    {"requestId":"web-raindrop","providerHint":"anonymous-web","categoryHint":"web","outcome":"success","payload":{"title":"Raindrop.io","url":"https://raindrop.io","snippet":"bookmark manager; AI suggestions pre-fill collection/tag (Pro); reminders on bookmarks; sync all devices; free tier unlimited"}},
+    {"requestId":"web-instapaper","providerHint":"anonymous-web","categoryHint":"web","outcome":"success","payload":{"title":"Instapaper","url":"https://www.instapaper.com/premium","snippet":"folders only; no auto tagging; no daily digest; sync web/iOS/Android free; premium $5.99/mo"}},
+    {"requestId":"web-pocket","providerHint":"anonymous-web","categoryHint":"web","outcome":"success","payload":{"title":"Pocket","url":"https://getpocket.com","snippet":"Pocket shut down / phased out by Mozilla 2026; web, Android, iOS, macOS apps and extensions discontinued"}},
+    {"requestId":"web-raindrop-price","providerHint":"anonymous-web","categoryHint":"web","outcome":"success","payload":{"title":"Raindrop Pro price","url":"https://raindrop.io/pro","snippet":"Pro about $3.54/month (~$28-38/year); Stella AI Pro-only beta; auto tag suggestions Pro-only"}}
+  ],
+  "topK": 5
+}

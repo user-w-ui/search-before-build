@@ -1,0 +1,25 @@
+{
+  "total_count": 2,
+  "items": [
+    {
+      "id": 101,
+      "full_name": "rthomas24/web-vector",
+      "html_url": "https://github.com/rthomas24/web-vector",
+      "description": "TypeScript web research for AI agents with BM25, rank fusion and cited passages.",
+      "stargazers_count": 4,
+      "language": "TypeScript",
+      "license": { "spdx_id": "MIT" },
+      "updated_at": "2026-08-23T03:10:43Z"
+    },
+    {
+      "id": 102,
+      "full_name": "example/vector-gallery",
+      "html_url": "https://github.com/example/vector-gallery",
+      "description": "A browser gallery for SVG illustrations.",
+      "stargazers_count": 50,
+      "language": "JavaScript",
+      "license": { "spdx_id": "Apache-2.0" },
+      "updated_at": "2026-07-01T00:00:00Z"
+    }
+  ]
+}

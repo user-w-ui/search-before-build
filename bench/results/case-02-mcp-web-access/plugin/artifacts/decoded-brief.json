@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "language": "en",
+  "mode": "assess",
+  "topic": "Local MCP server for web search + page fetch in Claude Code",
+  "projectName": "Your planned local web-access MCP server (unbuilt)",
+  "generatedAt": "2026-08-29T07:26:44Z",
+  "recommendation": {
+    "value": "Use existing",
+    "reason": "Multiple official, mature, locally-runnable stdio MCP servers already expose exactly the must-have capability (web search + web page fetch) to Claude Code with the user's own or a free-tier API key. Tavily MCP, Brave Search MCP, and several no-key servers cover the full need; the user's real driver (control, own key, predictable behavior) is satisfied without new code, and Claude Code also ships built-in web tools. Building from scratch adds no capability these servers and the built-in tools do not already provide.",
+    "reusableOption": "Tavily MCP (tavily-ai/tavily-mcp) — official, Claude Code-native `claude mcp add` instructions, free 1000-credit/month tier, own key, broadest toolset (search/extract/map/crawl). If zero-cost/no-key is preferred, use @zhafron/mcp-web-search instead.",
+    "biggestUnknown": "Whether the user wants zero-cost/no-API-key search (scraping-based: @zhafron/mcp-web-search or nickclyde/duckduckgo-mcp-server, variable quality/rate-limits) versus a higher-quality API-backed search with a free tier (Tavily or Brave, requires registering a key). This preference was explicitly left open."
+  },
+  "fingerprint": [
+    {
+      "label": "Agent / client",
+      "value": "Claude Code on a personal laptop"
+    },
+    {
+      "label": "Core need",
+      "value": "Look up web content mid-task via a self-hosted MCP server the user controls"
+    },
+    {
+      "label": "Operating mode",
+      "value": "Local stdio MCP server, personal use"
+    },
+    {
+      "label": "Must-have capabilities",
+      "value": "Web search + web page fetch; own or free-tier API key"
+    },
+    {
+      "label": "Real driver",
+      "value": "Control, own key, predictable behavior — a preference, not a proven capability gap"
+    },
+    {
+      "label": "Baseline already present",
+      "value": "Claude Code has built-in web search and web-fetch tools"
+    }
+  ],
+  "coverage": [
+    {
+      "label": "Official MCP Registry",
+      "status": "used",
+      "detail": "Queried fetch, brave, tavily, serper; returned published servers with transports, env vars, and repo identities."
+    },
+    {
+      "label": "npm",
+      "status": "used",
+      "detail": "Searched 'mcp web search', 'tavily mcp', 'mcp server fetch'; returned package names, versions, licenses, and repo links."
+    },
+    {
+      "label": "GitHub",
+      "status": "limited",
+      "detail": "Anonymous REST search + README fetch only; no dedicated deep-retrieval tool and no authenticated gh CLI. No GitHub-specific deep-retrieval tool was used; results come mainly from the public API or web index and may miss newer, low-visibility, or code-internal-only projects."
+    },
+    {
+      "label": "Host Web search",
+      "status": "unavailable",
+      "detail": "Host Web search returned empty for material queries. Fell back to anonymous DuckDuckGo HTML and specialized catalog routes (MCP Registry, npm, GitHub REST, official pricing pages). Coverage is therefore catalog- and primary-source-driven rather than general-web-driven."
+    },
+    {
+      "label": "Pricing / official pages",
+      "status": "used",
+      "detail": "Fetched Brave Search API pricing and Tavily pricing pages to verify free-tier terms (2026-08-29)."
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Web search",
+      "current": {
+        "status": "unsupported",
+        "note": "Not built; would need to implement a search backend."
+      },
+      "candidates": {
+        "tavily-mcp": {
+          "status": "native",
+          "note": "search tool, API-backed"
+        },
+        "brave-search-mcp": {
+          "status": "native",
+          "note": "brave_web_search plus local/video/image/news verticals"
+        },
+        "zhafron-mcp-web-search": {
+          "status": "native",
+          "note": "search_web with DuckDuckGo/Bing/SearXNG fallback"
+        },
+        "duckduckgo-mcp-server": {
+          "status": "native",
+          "note": "DuckDuckGo search"
+        },
+        "official-fetch": {
+          "status": "unsupported",
+          "note": "Page fetch only; no search"
+        }
+      }
+    },
+    {
+      "name": "Web page fetch / read",
+      "current": {
+        "status": "unsupported",
+        "note": "Not built."
+      },
+      "candidates": {
+        "tavily-mcp": {
+          "status": "native",
+          "note": "extract tool returns page content"
+        },
+        "brave-search-mcp": {
+          "status": "unsupported",
+          "note": "Search only; no fetch/extract tool"
+        },
+        "zhafron-mcp-web-search": {
+          "status": "native",
+          "note": "fetch_url supports HTML/PDF/text/markdown/JSON"
+        },
+        "duckduckgo-mcp-server": {
+          "status": "native",
+          "note": "content fetching and parsing"
+        },
+        "official-fetch": {
+          "status": "native",
+          "note": "fetch converts HTML to markdown, paginated"
+        }
+      }
+    },
+    {
+      "name": "Local stdio MCP server",
+      "current": {
+        "status": "unsupported",
+        "note": "Not built."
+      },
+      "candidates": {
+        "tavily-mcp": {
+          "status": "native",
+          "note": "stdio local (or hosted remote)"
+        },
+        "brave-search-mcp": {
+          "status": "native",
+          "note": "STDIO default in v2.x"
+        },
+        "zhafron-mcp-web-search": {
+          "status": "native",
+          "note": "stdio, Node 18+"
+        },
+        "duckduckgo-mcp-server": {
+          "status": "native",
+          "note": "stdio via uvx"
+        },
+        "official-fetch": {
+          "status": "native",
+          "note": "stdio via uvx"
+        }
+      }
+    },
+    {
+      "name": "Own / free-tier API key",
+      "current": {
+        "status": "unsupported",
+        "note": "Not built."
+      },
+      "candidates": {
+        "tavily-mcp": {
+          "status": "native",
+          "note": "own TAVILY_API_KEY; free 1000 credits/month, no card"
+        },
+        "brave-search-mcp": {
+          "status": "native",
+          "note": "own BRAVE_API_KEY; ~1000 free searches via $5/month credit"
+        },
+        "zhafron-mcp-web-search": {
+          "status": "native",
+          "note": "no key required"
+        },
+        "duckduckgo-mcp-server": {
+          "status": "native",
+          "note": "no key required"
+        },
+        "official-fetch": {
+          "status": "native",
+          "note": "no key required"
+        }
+      }
+    }
+  ],
+  "competitors": [
+    {
+      "id": "tavily-mcp",
+      "name": "Tavily MCP",
+      "url": "https://github.com/tavily-ai/tavily-mcp",
+      "category": "Ready-to-use official MCP server",
+      "overview": "Official Tavily MCP server (TypeScript/npm) exposing search, extract, map, and crawl tools; runs as a local stdio server or a hosted remote, with explicit Claude Code setup instructions and a free tier.",
+      "comparison": [
+        {
+          "dimension": "Operating mode",
+          "candidate": "Local stdio (or hosted remote at mcp.tavily.com); Claude Code `claude mcp add` documented",
+          "current": "Planned local stdio server, unbuilt"
+        },
+        {
+          "dimension": "Search + fetch",
+          "candidate": "Native: search, extract (page content), map, crawl",
+          "current": "Would need to implement both"
+        },
+        {
+          "dimension": "API key / cost",
+          "candidate": "Own TAVILY_API_KEY; free Researcher plan 1000 credits/month, no credit card",
+          "current": "User wants own/free-tier key"
+        },
+        {
+          "dimension": "Maturity",
+          "candidate": "Official, maintained, npm tavily-mcp v0.2.22",
+          "current": "New build, no maintenance base"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "Search + extract + map + crawl in one server",
+          "detail": "Covers both must-have capabilities (search and page read) plus site mapping/crawling without a second server."
+        },
+        {
+          "title": "Claude Code-native setup",
+          "detail": "README gives the exact `claude mcp add` command, so adoption is one command."
+        }
+      ],
+      "reusableLessons": [
+        "Use a single API key env var (TAVILY_API_KEY) and expose focused tools (search/extract/map/crawl) rather than a generic fetch.",
+        "Offer a hosted remote transport alongside stdio so users can skip local install if they prefer."
+      ],
+      "summary": "An official, Claude Code-native server that already delivers search + page read with a free tier and the user's own key — the unbuilt project's exact target, with no code to write.",
+      "coverageNote": "Verified from official README and tavily.com/pricing (2026-08-29).",
+      "sources": [
+        {
+          "label": "Tavily pricing",
+          "url": "https://tavily.com/pricing"
+        },
+        {
+          "label": "npm package",
+          "url": "https://www.npmjs.com/package/tavily-mcp"
+        }
+      ]
+    },
+    {
+      "id": "brave-search-mcp",
+      "name": "Brave Search MCP",
+      "url": "https://github.com/brave/brave-search-mcp-server",
+      "category": "Ready-to-use official MCP server",
+      "overview": "Official Brave Search MCP server (TypeScript/npm, @brave/brave-search-mcp-server) exposing web, local, video, image, and news search over the Brave Search API; stdio by default, own API key.",
+      "comparison": [
+        {
+          "dimension": "Operating mode",
+          "candidate": "STDIO by default (v2.x); own BRAVE_API_KEY",
+          "current": "Planned local stdio server, unbuilt"
+        },
+        {
+          "dimension": "Search + fetch",
+          "candidate": "Native search; no page-fetch/extract tool",
+          "current": "Would need search + fetch"
+        },
+        {
+          "dimension": "API key / cost",
+          "candidate": "Own BRAVE_API_KEY; no separate free tier, each paid plan includes $5/month credit (~1000 searches)",
+          "current": "User wants own/free-tier key"
+        },
+        {
+          "dimension": "Maturity",
+          "candidate": "Official, maintained, npm v2.1.3",
+          "current": "New build, no maintenance base"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "Typed search verticals",
+          "detail": "Separate tools for web/local/video/image/news search let the agent request a precise result type."
+        }
+      ],
+      "reusableLessons": [
+        "Split search verticals into distinct tools so the agent can request the right result type.",
+        "Pair with the official Fetch server to add the page reading Brave lacks."
+      ],
+      "summary": "Covers web search with an own-key, free-ish tier but not page reading — it would need a companion fetch server to match the full need.",
+      "coverageNote": "Verified from official README and api-dashboard.search.brave.com/documentation/pricing (2026-08-29).",
+      "sources": [
+        {
+          "label": "Brave Search API pricing",
+          "url": "https://api-dashboard.search.brave.com/documentation/pricing"
+        },
+        {
+          "label": "npm package",
+          "url": "https://www.npmjs.com/package/@brave/brave-search-mcp-server"
+        }
+      ]
+    },
+    {
+      "id": "zhafron-mcp-web-search",
+      "name": "@zhafron/mcp-web-search",
+      "url": "https://github.com/tickernelz/mcp-web-search",
+      "category": "Ready-to-use community MCP server",
+      "overview": "Community Node stdio MCP server providing multi-provider web search (DuckDuckGo/Bing/SearXNG with automatic fallback) and URL content extraction, with no API key required and built-in SSRF protection.",
+      "comparison": [
+        {
+          "dimension": "Operating mode",
+          "candidate": "Node 18+ stdio; Claude Code config provided",
+          "current": "Planned local stdio server, unbuilt"
+        },
+        {
+          "dimension": "Search + fetch",
+          "candidate": "Native: search_web + fetch_url (HTML/PDF/text/markdown/JSON)",
+          "current": "Would need to implement both"
+        },
+        {
+          "dimension": "API key / cost",
+          "candidate": "No API key required (free providers)",
+          "current": "User wants own/free-tier key"
+        },
+        {
+          "dimension": "Maturity",
+          "candidate": "Community project, npm v1.3.0",
+          "current": "New build, no maintenance base"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "Multi-provider fallback with no key",
+          "detail": "Automatically falls back across DuckDuckGo/Bing/SearXNG, removing the API-key requirement entirely."
+        },
+        {
+          "title": "SSRF protection on fetch_url",
+          "detail": "Guards the local server against server-side request forgery when fetching agent-supplied URLs."
+        }
+      ],
+      "reusableLessons": [
+        "Ship a keyless default by scraping free engines with automatic provider fallback.",
+        "Always include SSRF protection on any fetch tool that follows agent-supplied URLs."
+      ],
+      "summary": "The strongest zero-cost, zero-key option — both must-have capabilities with no registration — at the cost of scraping-based reliability.",
+      "coverageNote": "Verified from official README (2026-08-29); scraping-based providers may rate-limit or break.",
+      "sources": [
+        {
+          "label": "npm package",
+          "url": "https://www.npmjs.com/package/@zhafron/mcp-web-search"
+        }
+      ]
+    },
+    {
+      "id": "duckduckgo-mcp-server",
+      "name": "duckduckgo-mcp-server",
+      "url": "https://github.com/nickclyde/duckduckgo-mcp-server",
+      "category": "Ready-to-use community MCP server",
+      "overview": "Community Python stdio MCP server (uvx) providing DuckDuckGo web search plus content fetching and parsing, with built-in rate limiting and no API key.",
+      "comparison": [
+        {
+          "dimension": "Operating mode",
+          "candidate": "Python stdio via uvx; Claude Desktop config provided",
+          "current": "Planned local stdio server, unbuilt"
+        },
+        {
+          "dimension": "Search + fetch",
+          "candidate": "Native: DuckDuckGo search + content fetch/parse",
+          "current": "Would need to implement both"
+        },
+        {
+          "dimension": "API key / cost",
+          "candidate": "No API key required",
+          "current": "User wants own/free-tier key"
+        },
+        {
+          "dimension": "Maturity",
+          "candidate": "Community project, ~1.4k stars",
+          "current": "New build, no maintenance base"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "Built-in rate limiting",
+          "detail": "Throttles DuckDuckGo requests to avoid blocks without an API key."
+        }
+      ],
+      "reusableLessons": [
+        "Add rate limiting when scraping a free engine to stay within its unwritten limits."
+      ],
+      "summary": "A minimal no-key Python alternative covering both capabilities — simpler than @zhafron but single-engine.",
+      "coverageNote": "Verified from official README (2026-08-29).",
+      "sources": []
+    },
+    {
+      "id": "official-fetch",
+      "name": "Fetch (reference MCP server)",
+      "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch",
+      "category": "Ready-to-use official reference server (page fetch only)",
+      "overview": "Official MCP reference Fetch server (Python, mcp-server-fetch) providing a fetch tool that retrieves a URL and converts HTML to markdown; stdio, no API key. Covers page reading only, not search.",
+      "comparison": [
+        {
+          "dimension": "Operating mode",
+          "candidate": "Python stdio via uvx; no key",
+          "current": "Planned local stdio server, unbuilt"
+        },
+        {
+          "dimension": "Search + fetch",
+          "candidate": "Native page fetch only; no web search",
+          "current": "Would need search + fetch"
+        },
+        {
+          "dimension": "API key / cost",
+          "candidate": "No API key required",
+          "current": "User wants own/free-tier key"
+        },
+        {
+          "dimension": "Maturity",
+          "candidate": "Official reference implementation",
+          "current": "New build, no maintenance base"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "HTML to markdown with pagination",
+          "detail": "fetch(url, max_length, start_index) returns clean markdown and supports paging long pages to fit context windows."
+        }
+      ],
+      "reusableLessons": [
+        "Convert fetched HTML to markdown and paginate long content to fit agent context windows.",
+        "This server can reach local/internal IPs — restrict that for untrusted input."
+      ],
+      "summary": "The official baseline for the page-read half of the need; pair it with a search server if you split the two capabilities.",
+      "coverageNote": "Verified from official README (2026-08-29).",
+      "sources": []
+    }
+  ],
+  "unknowns": [
+    "Whether the user prefers zero-cost/no-key scraping search (lower, variable quality) vs. an API-backed search with a free tier (higher quality, requires registering a key).",
+    "Whether Claude Code's built-in web tools already meet the user's day-to-day needs, making even an MCP server optional.",
+    "Long-term reliability and rate-limits of scraping-based no-key servers (DuckDuckGo/Bing) under regular agent use."
+  ],
+  "labels": {}
+}

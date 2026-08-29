@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/user-w-ui/search-before-build/schemas/decision-support.schema.json",
+  "title": "Decision support artifact",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "query", "candidates", "coverage", "evidence", "retrieval", "metrics", "trace"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "query": { "type": "string" },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "rank", "title", "identities", "sourceCategories", "matchedCapabilities", "evidenceRefs", "features", "explanations", "observationCount"],
+        "additionalProperties": true
+      }
+    },
+    "coverage": { "type": "array" },
+    "evidence": {
+      "type": "object",
+      "required": ["level", "basis", "missingCapabilities", "sourceCategories", "needsFollowUp", "suggestedQueries"],
+      "properties": {
+        "level": { "enum": ["strong", "weak", "none"] },
+        "basis": { "const": "heuristic_candidate_coverage" },
+        "missingCapabilities": { "type": "array", "items": { "type": "string" } },
+        "sourceCategories": { "type": "array", "items": { "type": "string" } },
+        "needsFollowUp": { "type": "boolean" },
+        "suggestedQueries": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "retrieval": { "type": "object" },
+    "metrics": { "type": "object" },
+    "trace": { "type": "array" }
+  },
+  "additionalProperties": false
+}

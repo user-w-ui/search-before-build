@@ -7,7 +7,7 @@
 
 **Before you start vibe coding, make sure the idea is actually worth building.**
 
-A lightweight, beginner-friendly plugin for Codex and Claude Code. It helps you clarify the problem, decide whether development is necessary, and seriously look for existing products, open-source projects, and reusable components.
+A low-dependency research and decision plugin for Codex and Claude Code. It combines guided problem framing with a deterministic candidate pipeline that can normalize uneven retrieval results, merge duplicate evidence, rank alternatives, and explain what the search covered before the agent makes a recommendation.
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
@@ -79,6 +79,37 @@ The plugin first determines what it needs to find, then chooses where to look. I
 | Algorithms, papers, or academic precedents | arXiv |
 
 For SaaS products, commercial tools, app-store listings, and other solutions outside those catalogs, it supplements the research with web search and official product pages. When the target market is unclear, it searches in both Chinese and English. Stars and download counts help assess maturity, but never replace functional matching, and similar names alone are not treated as evidence that two products compete.
+
+### A deterministic decision kernel
+
+The first version includes a small TypeScript kernel for the parts that should not depend on prompt wording:
+
+```text
+uneven tool output
+       │
+       ▼
+progressive normalization → stable-identity deduplication → BM25F + RRF ranking
+                                                               │
+                                                               ▼
+                                    diversity / capability coverage → traceable artifact
+```
+
+- Accepts raw arrays, nested JSON, Atom/XML, HTML snippets, plain text, and failed retrieval envelopes. Missing optional fields reduce confidence instead of invalidating the whole result.
+- Uses URL, GitHub, package, DOI, arXiv, MCP, and provider identities to merge observations without requiring every search tool to implement one rigid response contract.
+- Combines bilingual lexical matching, reciprocal-rank fusion, and lightweight diversity selection. It has no runtime package dependency, embedding model, or vector database.
+- Records normalized candidates, score features, warnings, source coverage, and selection traces. The kernel provides decision support; the skill still verifies primary sources and owns the final Build / Adapt / Use existing / Stop recommendation.
+
+This boundary keeps the happy path easy to run while making retrieval behavior testable and inspectable. If the local kernel is unavailable or a payload cannot be normalized, the skills continue with the existing evidence-first workflow.
+
+For local development, build the kernel and run it against a pipeline input file:
+
+```bash
+npm install
+npm run build
+node dist/cli.js run --input ./pipeline-input.json --output ./decision-support.json
+```
+
+The JSON contracts are documented in [`schemas/`](./schemas/). Representative heterogeneous payloads live in [`tests/fixtures/retrieval/`](./tests/fixtures/retrieval/).
 
 ### Optional in-depth GitHub search
 
@@ -164,13 +195,20 @@ claude --plugin-dir /path/to/search-before-build
 **Validate the plugin**
 
 ```bash
+npm test
+npm run benchmark:offline
 claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
 
-## Built with Codex and GPT-5.6
+## Benchmark
 
-The 0.2.x workflow and report-viewer redesign was developed collaboratively in Codex using GPT-5.6. Codex helped inspect existing behavior, challenge architectural choices, implement and verify the skill contracts, build the HTML report and export workflow, and run cross-domain behavior tests. Key product decisions—including evidence-only research, single-owner recommendations, on-demand report saving, and broader source coverage—were made through iterative human review rather than accepted automatically. All generated changes were reviewed, tested, and released by the maintainer.
+A real-scenario paired comparison (5 tasks, same model and tool budget, bare agent vs. plugin) shows a substantial improvement over ordinary web search in retrieval breadth, evidence density, and primary-source verification. See [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md) for details.
+
+## Acknowledgements
+
+- [WebVector](https://github.com/rthomas24/web-vector) — design reference for the retrieval pipeline and rank fusion
+- [pi-web-access](https://github.com/nicobailon/pi-web-access) — an early example of packaging web access for a coding agent
 
 ## Contributing
 

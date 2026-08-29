@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T07:22:55.119Z",
+  "query": "本地离线中文语音转文字（带时间戳）开源方案，CPU 即可运行，数据不外传，最好还能生成会议纪要",
+  "candidates": [
+    {
+      "id": "url:https://html.duckduckgo.com/html?q=%e6%9c%ac%e5%9c%b0%e7%a6%bb%e7%ba%bf%e4%b8%ad%e6%96%87%e8%af%ad%e9%9f%b3%e8%bd%ac%e6%96%87%e5%ad%97+%e5%bc%80%e6%ba%90",
+      "rank": 1,
+      "title": "DuckDuckGo: 本地离线中文语音转文字 开源",
+      "url": "https://html.duckduckgo.com/html?q=%E6%9C%AC%E5%9C%B0%E7%A6%BB%E7%BA%BF%E4%B8%AD%E6%96%87%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97+%E5%BC%80%E6%BA%90",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://html.duckduckgo.com/html?q=%E6%9C%AC%E5%9C%B0%E7%A6%BB%E7%BA%BF%E4%B8%AD%E6%96%87%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97+%E5%BC%80%E6%BA%90",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "本地离线中文语音转文字并输出时间戳",
+        "音频数据不离开本机"
+      ],
+      "evidenceRefs": [
+        "https://html.duckduckgo.com/html?q=%E6%9C%AC%E5%9C%B0%E7%A6%BB%E7%BA%BF%E4%B8%AD%E6%96%87%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97+%E5%BC%80%E6%BA%90",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.965
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "Mentions: 本地离线中文语音转文字并输出时间戳, 音频数据不离开本机."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:luyu0279/smartsub",
+      "rank": 2,
+      "title": "SmartSub / 妙幕",
+      "url": "https://github.com/luyu0279/SmartSub",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "luyu0279/smartsub",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/luyu0279/SmartSub",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "本地离线中文语音转文字并输出时间戳",
+        "音频数据不离开本机"
+      ],
+      "evidenceRefs": [
+        "https://github.com/luyu0279/SmartSub",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.1689,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.4398
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 本地离线中文语音转文字并输出时间戳, 音频数据不离开本机."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:chidiwilliams/buzz",
+      "rank": 3,
+      "title": "Buzz",
+      "url": "https://github.com/chidiwilliams/buzz",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "chidiwilliams/buzz",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/chidiwilliams/buzz",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "本地离线中文语音转文字并输出时间戳"
+      ],
+      "evidenceRefs": [
+        "https://github.com/chidiwilliams/buzz",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.0452,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.3594
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 本地离线中文语音转文字并输出时间戳."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:k2-fsa/sherpa-onnx",
+      "rank": 4,
+      "title": "sherpa-onnx",
+      "url": "https://github.com/k2-fsa/sherpa-onnx",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "k2-fsa/sherpa-onnx",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/k2-fsa/sherpa-onnx",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "本地离线中文语音转文字并输出时间戳"
+      ],
+      "evidenceRefs": [
+        "https://github.com/k2-fsa/sherpa-onnx",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.0555,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.3661
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 本地离线中文语音转文字并输出时间戳."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:harx2024/audionotes",
+      "rank": 5,
+      "title": "AudioNotes",
+      "url": "https://github.com/harx2024/AudioNotes",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "harx2024/audionotes",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/harx2024/AudioNotes",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/harx2024/AudioNotes",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.0151,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.3398
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "本地离线中文语音转文字并输出时间戳",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://html.duckduckgo.com/html?q=%e6%9c%ac%e5%9c%b0%e7%a6%bb%e7%ba%bf%e4%b8%ad%e6%96%87%e8%af%ad%e9%9f%b3%e8%bd%ac%e6%96%87%e5%ad%97+%e5%bc%80%e6%ba%90",
+        "github:luyu0279/smartsub",
+        "github:chidiwilliams/buzz",
+        "github:k2-fsa/sherpa-onnx"
+      ]
+    },
+    {
+      "capability": "音频数据不离开本机",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://html.duckduckgo.com/html?q=%e6%9c%ac%e5%9c%b0%e7%a6%bb%e7%ba%bf%e4%b8%ad%e6%96%87%e8%af%ad%e9%9f%b3%e8%bd%ac%e6%96%87%e5%ad%97+%e5%bc%80%e6%ba%90",
+        "github:luyu0279/smartsub"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "strong",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [],
+    "sourceCategories": [
+      "web",
+      "repo"
+    ],
+    "needsFollowUp": false,
+    "suggestedQueries": []
+  },
+  "retrieval": {
+    "requests": 11,
+    "failedRequests": 2,
+    "normalizedRecords": 9,
+    "rejectedRecords": 0,
+    "warnings": [
+      {
+        "code": "retrieval_error",
+        "message": "empty: host WebSearch returned no snippets for FunASR and whisper.cpp/Buzz queries"
+      },
+      {
+        "code": "retrieval_error",
+        "message": "no-results: Hacker News Algolia returned no output for offline Chinese ASR demand queries"
+      }
+    ]
+  },
+  "metrics": {
+    "uniqueCandidates": 9,
+    "returnedCandidates": 5,
+    "duplicateObservationsMerged": 0
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "9 records from 11 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "0 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "9 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "5 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "0 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

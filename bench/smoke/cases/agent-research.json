@@ -1,0 +1,23 @@
+{
+  "id": "agent-research",
+  "query": "TypeScript web research BM25 rank fusion",
+  "fingerprint": {
+    "mustHaveCapabilities": ["TypeScript", "BM25", "rank fusion"]
+  },
+  "topK": 5,
+  "retrievals": [
+    {
+      "requestId": "github",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "fixture": "tests/fixtures/retrieval/github-search.json"
+    },
+    {
+      "requestId": "npm",
+      "providerHint": "npm",
+      "categoryHint": "package",
+      "fixture": "tests/fixtures/retrieval/npm-search.json"
+    }
+  ],
+  "relevantUrls": ["https://github.com/rthomas24/web-vector"]
+}

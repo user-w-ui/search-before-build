@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T05:08:43.237Z",
+  "query": "Standalone Rust CLI for blazing-fast local code search: fast regex over large codebases respecting .gitignore; plus fuzzy and structural AST search",
+  "candidates": [
+    {
+      "id": "purl:pkg:cargo/ignore",
+      "rank": 1,
+      "title": "ripgrep",
+      "url": "https://github.com/BurntSushi/ripgrep",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "purl",
+          "value": "pkg:cargo/ignore",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "github",
+          "value": "burntsushi/ripgrep",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/BurntSushi/ripgrep",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/BurntSushi/ripgrep/tree/master/crates/ignore",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo",
+        "package"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/BurntSushi/ripgrep",
+        "$",
+        "https://github.com/BurntSushi/ripgrep/tree/master/crates/ignore"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.98
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:probelabs/probe",
+      "rank": 2,
+      "title": "probe",
+      "url": "https://github.com/probelabs/probe",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "probelabs/probe",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/probelabs/probe",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/probelabs/probe",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.7421,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.5623
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:ast-grep/ast-grep",
+      "rank": 3,
+      "title": "ast-grep",
+      "url": "https://github.com/ast-grep/ast-grep",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "ast-grep/ast-grep",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/ast-grep/ast-grep",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/ast-grep/ast-grep",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.7015,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.536
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "purl:pkg:cargo/nucleo-matcher",
+      "rank": 4,
+      "title": "nucleo-matcher",
+      "url": "https://github.com/helix-editor/nucleo",
+      "kind": "package",
+      "identities": [
+        {
+          "scheme": "purl",
+          "value": "pkg:cargo/nucleo-matcher",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "github",
+          "value": "helix-editor/nucleo",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/helix-editor/nucleo",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "package"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/helix-editor/nucleo",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.1247,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.161
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:comby-tools/comby",
+      "rank": 5,
+      "title": "comby",
+      "url": "https://github.com/comby-tools/comby",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "comby-tools/comby",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/comby-tools/comby",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/comby-tools/comby",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.1068,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.1494
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "fast regex search over large codebases",
+      "status": "missing",
+      "candidateIds": []
+    },
+    {
+      "capability": "respect .gitignore",
+      "status": "missing",
+      "candidateIds": []
+    }
+  ],
+  "evidence": {
+    "level": "weak",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [
+      "fast regex search over large codebases",
+      "respect .gitignore"
+    ],
+    "sourceCategories": [
+      "repo",
+      "package"
+    ],
+    "needsFollowUp": true,
+    "suggestedQueries": [
+      "Standalone Rust CLI for blazing-fast local code search: fast regex over large codebases respecting .gitignore; plus fuzzy and structural AST search fast regex search over large codebases",
+      "Standalone Rust CLI for blazing-fast local code search: fast regex over large codebases respecting .gitignore; plus fuzzy and structural AST search respect .gitignore"
+    ]
+  },
+  "retrieval": {
+    "requests": 7,
+    "failedRequests": 0,
+    "normalizedRecords": 7,
+    "rejectedRecords": 0,
+    "warnings": []
+  },
+  "metrics": {
+    "uniqueCandidates": 6,
+    "returnedCandidates": 5,
+    "duplicateObservationsMerged": 1
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "7 records from 7 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "1 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "6 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "5 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "2 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

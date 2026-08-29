@@ -1,0 +1,24 @@
+{
+  "servers": [
+    {
+      "server": {
+        "name": "io.github.acme/research-kit",
+        "description": "MCP server for searching the official registry and verifying repository evidence.",
+        "version": "1.2.0",
+        "repository": {
+          "url": "https://github.com/acme/research-kit"
+        }
+      }
+    },
+    {
+      "server": {
+        "name": "io.github.acme/calendar-kit",
+        "description": "MCP calendar connector.",
+        "version": "1.0.0",
+        "repository": {
+          "url": "https://github.com/acme/calendar-kit"
+        }
+      }
+    }
+  ]
+}

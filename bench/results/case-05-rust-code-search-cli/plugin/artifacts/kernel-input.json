@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "query": "Standalone Rust CLI for blazing-fast local code search: fast regex over large codebases respecting .gitignore; plus fuzzy and structural AST search",
+  "fingerprint": {
+    "mustHaveCapabilities": ["fast regex search over large codebases", "respect .gitignore"],
+    "desiredOutcome": "One standalone CLI with regex plus fuzzy and structural search",
+    "operatingMode": "CLI, local, standalone binary"
+  },
+  "retrievals": [
+    {"requestId":"c-astgrep","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"title":"ast-grep","url":"https://github.com/ast-grep/ast-grep","snippet":"CLI tool for code structural search, lint and rewriting. Written in Rust. Parallel Rust. Syntax-aware grep/sed. Structural search and replace via AST patterns. No plain regex grep mode. No fuzzy matching.","stars":15685,"lang":"Rust"}},
+    {"requestId":"c-ripgrep","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"title":"ripgrep","url":"https://github.com/BurntSushi/ripgrep","snippet":"Line-oriented search tool that recursively searches directories for regex patterns. Respects .gitignore. Blazing fast Rust. No fuzzy matching. No structural AST search. Published as library crates ignore and grep-searcher.","stars":49000,"lang":"Rust"}},
+    {"requestId":"c-nucleo","providerHint":"crates.io","categoryHint":"package","outcome":"success","payload":{"title":"nucleo-matcher","url":"https://github.com/helix-editor/nucleo","snippet":"Plug and play high performance fuzzy matcher library crate. Faster than fzf, skim, fuzzy-matcher. Used by helix-editor. Library not a CLI. Fuzzy matching only, no regex, no structural search.","stars":1200,"lang":"Rust"}},
+    {"requestId":"c-comby","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"title":"comby","url":"https://github.com/comby-tools/comby","snippet":"Code rewrite tool for structural search and replace supporting many languages. Written in OCaml. No regex grep mode. No fuzzy matching.","stars":2671,"lang":"OCaml"}},
+    {"requestId":"c-probe","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"title":"probe","url":"https://github.com/probelabs/probe","snippet":"AI-friendly semantic code search engine for large codebases. Combines ripgrep. Rust. Semantic/embedding search focus.","stars":696,"lang":"Rust"}},
+    {"requestId":"c-fuzzymatcher","providerHint":"crates.io","categoryHint":"package","outcome":"success","payload":{"title":"fuzzy-matcher","url":"https://crates.io/crates/fuzzy-matcher","snippet":"Fuzzy Matching Library crate. Older, slower than nucleo. No regex, no structural search.","stars":0,"lang":"Rust"}},
+    {"requestId":"c-ignore","providerHint":"crates.io","categoryHint":"package","outcome":"success","payload":{"title":"ignore","url":"https://github.com/BurntSushi/ripgrep/tree/master/crates/ignore","snippet":"Fast library for efficiently matching ignore files such as .gitignore against file paths. Part of ripgrep. 164M downloads.","stars":0,"lang":"Rust"}}
+  ],
+  "topK": 5
+}
