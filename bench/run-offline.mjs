@@ -30,14 +30,14 @@ async function loadCase(path) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const names = (await readdir(resolve("bench/cases")))
+  const names = (await readdir(resolve("bench/smoke/cases")))
     .filter((name) => name.endsWith(".json"))
     .filter((name) => !options.case || name.includes(options.case))
     .sort();
   if (!names.length) throw new Error("No benchmark cases matched.");
   const results = [];
   for (const name of names) {
-    const testCase = await loadCase(resolve("bench/cases", name));
+    const testCase = await loadCase(resolve("bench/smoke/cases", name));
     const artifact = runPipeline({
       generatedAt: "2026-08-28T00:00:00Z",
       query: testCase.query,

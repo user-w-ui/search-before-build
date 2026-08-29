@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "query": "本地离线中文语音转文字（带时间戳）开源方案，CPU 即可运行，数据不外传，最好还能生成会议纪要",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "本地离线中文语音转文字并输出时间戳",
+      "音频数据不离开本机"
+    ],
+    "capabilityAliases": {
+      "本地离线中文语音转文字并输出时间戳": [
+        "offline Chinese ASR",
+        "语音识别 时间戳",
+        "Paraformer",
+        "SenseVoice",
+        "whisper.cpp",
+        "sherpa-onnx",
+        "本地转写"
+      ],
+      "音频数据不离开本机": [
+        "local processing",
+        "离线",
+        "不上传",
+        "数据不出本机",
+        "privacy"
+      ]
+    },
+    "desiredOutcome": "在纯 CPU 的 Windows 电脑上，把中文录音/会议音频离线转成带时间戳的文字稿，并尽量自动整理会议纪要",
+    "operatingMode": "本地桌面应用或本地命令行/脚本，纯 CPU，Windows"
+  },
+  "retrievals": [
+    {
+      "requestId": "github-funasr",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "FunASR",
+        "url": "https://github.com/modelscope/FunASR",
+        "snippet": "FunASR: A Fundamental End-to-End Speech Recognition Toolkit. Paraformer-zh large offline ASR with timestamps; SenseVoiceSmall CPU-viable (~17x realtime) multilingual; fsmn-vad + ct-punc + cam++ speaker diarization; pip install funasr; Fun-ASR-Nano needs device=cuda (GPU).",
+        "stars": "high",
+        "license": "MIT",
+        "language": "Python"
+      }
+    },
+    {
+      "requestId": "github-smartsub",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "SmartSub / 妙幕",
+        "url": "https://github.com/luyu0279/SmartSub",
+        "snippet": "Electron desktop app, Windows x64 installer. Local engines: FunASR, whisper.cpp, sherpa-onnx. 本地处理，文件不出本机. GPU accel with CPU fallback. AI subtitle refinement. MIT.",
+        "category": "Ready-to-use desktop product"
+      }
+    },
+    {
+      "requestId": "github-funclip",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "FunClip",
+        "url": "https://github.com/modelscope/FunClip",
+        "snippet": "Gradio web UI. Paraformer-Large with integrated timestamps. SRT output. Speaker diarization. LLM-assisted clipping. pip install -r requirements.txt. Runs on CPU.",
+        "category": "Adaptable project with UI"
+      }
+    },
+    {
+      "requestId": "github-audionotes",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "AudioNotes",
+        "url": "https://github.com/harx2024/AudioNotes",
+        "snippet": "Local FunASR + Ollama. Docker (12GB+ RAM). Default ASR FunAudioLLM/Fun-ASR-Nano-2512 (GPU) + qwen3.5:2b. ASR_MODEL switchable to CPU models. Meeting/notes/Q&A use case. Generates notes via local LLM.",
+        "category": "No-build meeting-minutes bundle"
+      }
+    },
+    {
+      "requestId": "github-sherpa-onnx",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "sherpa-onnx",
+        "url": "https://github.com/k2-fsa/sherpa-onnx",
+        "snippet": "Next-gen Kaldi + onnxruntime. Offline, Windows, CPU. Speaker diarization + VAD + ASR. Zipformer/Paraformer/Whisper models. C++/Python/CLI. 14471 stars. Apache-2.0.",
+        "stars": 14471,
+        "license": "Apache-2.0"
+      }
+    },
+    {
+      "requestId": "github-whispercpp",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "whisper.cpp",
+        "url": "https://github.com/ggerganov/whisper.cpp",
+        "snippet": "C/C++ port of Whisper. Pure CPU, no GPU needed. Timestamps + SRT. Chinese weaker than Paraformer/SenseVoice. MIT.",
+        "license": "MIT"
+      }
+    },
+    {
+      "requestId": "github-buzz",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "Buzz",
+        "url": "https://github.com/chidiwilliams/buzz",
+        "snippet": "Whisper-based desktop GUI for Windows/Mac/Linux. Live + file transcription. Offline with local Whisper. Chinese accuracy limited by Whisper.",
+        "category": "Ready-to-use desktop product"
+      }
+    },
+    {
+      "requestId": "github-meeting-minutes",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "title": "meeting-minutes offline local search",
+        "url": "https://api.github.com/search/repositories?q=meeting+minutes+transcription+offline+local",
+        "snippet": "Returned: Tingji (听记), meeting-transcriber, jkinco-listen-open — local/offline meeting transcription + minutes bundles.",
+        "category": "No-build meeting bundles"
+      }
+    },
+    {
+      "requestId": "web-funasr-ddg",
+      "providerHint": "anonymous-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "title": "DuckDuckGo: 本地离线中文语音转文字 开源",
+        "url": "https://html.duckduckgo.com/html/?q=%E6%9C%AC%E5%9C%B0%E7%A6%BB%E7%BA%BF%E4%B8%AD%E6%96%87%E8%AF%AD%E9%9F%B3%E8%BD%AC%E6%96%87%E5%AD%97+%E5%BC%80%E6%BA%90",
+        "snippet": "FunASR, SenseVoice, Paraformer, whisper.cpp, sherpa-onnx, SmartSub/妙幕 appear as leading local/offline Chinese ASR options; cloud services (讯飞/通义听悟) require upload."
+      }
+    },
+    {
+      "requestId": "host-web-funasr",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "error",
+      "error": { "kind": "empty", "message": "host WebSearch returned no snippets for FunASR and whisper.cpp/Buzz queries" }
+    },
+    {
+      "requestId": "hn-demand",
+      "providerHint": "hackernews",
+      "categoryHint": "discussion",
+      "outcome": "error",
+      "error": { "kind": "no-results", "message": "Hacker News Algolia returned no output for offline Chinese ASR demand queries" }
+    }
+  ],
+  "topK": 5
+}

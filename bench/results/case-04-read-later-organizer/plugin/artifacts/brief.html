@@ -1,0 +1,2167 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Search Before Build</title>
+    <style>
+      :root {
+        --paper: #f3f4ef;
+        --paper-raised: rgba(255, 255, 252, 0.82);
+        --ink: #101916;
+        --muted: #61706a;
+        --faint: #8a9691;
+        --line: rgba(20, 49, 40, 0.12);
+        --line-strong: rgba(20, 49, 40, 0.22);
+        --night: #081713;
+        --night-raised: #10231d;
+        --mint: #65e6b4;
+        --mint-deep: #067a57;
+        --amber: #f2ae4a;
+        --rose: #e97972;
+        --blue: #79aef8;
+        --shadow: 0 24px 80px rgba(15, 39, 31, 0.1);
+        --shadow-soft: 0 12px 32px rgba(15, 39, 31, 0.07);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --max: 1180px;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      html[data-theme="dark"] {
+        --paper: #07100d;
+        --paper-raised: rgba(15, 29, 24, 0.84);
+        --ink: #e9f2ed;
+        --muted: #9db0a8;
+        --faint: #73867e;
+        --line: rgba(202, 238, 224, 0.12);
+        --line-strong: rgba(202, 238, 224, 0.22);
+        --night: #020806;
+        --night-raised: #0c1c17;
+        --mint-deep: #65e6b4;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+        --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(circle at 8% 0%, rgba(101, 230, 180, 0.12), transparent 30rem),
+          radial-gradient(circle at 92% 18%, rgba(121, 174, 248, 0.09), transparent 26rem),
+          var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 15px;
+        line-height: 1.65;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 42px 42px;
+        opacity: 0.22;
+        mask-image: linear-gradient(to bottom, black, transparent 58%);
+        content: "";
+        pointer-events: none;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      a:focus-visible,
+      button:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid rgba(101, 230, 180, 0.55);
+        outline-offset: 3px;
+      }
+
+      .skip-link {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 100;
+        padding: 10px 14px;
+        transform: translateY(-160%);
+        border-radius: 10px;
+        background: var(--ink);
+        color: var(--paper);
+        transition: transform 180ms ease;
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .shell {
+        width: min(calc(100% - 40px), var(--max));
+        margin: 0 auto;
+      }
+
+      .masthead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 90px;
+        gap: 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        font-size: 13px;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        position: relative;
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line-strong);
+        border-radius: 50%;
+        background: var(--paper-raised);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .brand-mark::before,
+      .brand-mark::after {
+        position: absolute;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .brand-mark::before {
+        inset: 7px;
+        background: var(--mint);
+        box-shadow: 0 0 24px rgba(101, 230, 180, 0.45);
+      }
+
+      .brand-mark::after {
+        width: 7px;
+        height: 7px;
+        top: 1px;
+        right: 2px;
+        background: var(--amber);
+        border: 3px solid var(--paper);
+      }
+
+      .mast-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .export-button {
+        white-space: nowrap;
+      }
+
+      .mode-chip,
+      .icon-button {
+        border: 1px solid var(--line);
+        background: var(--paper-raised);
+        backdrop-filter: blur(16px);
+      }
+
+      .mode-chip {
+        padding: 7px 12px;
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .icon-button {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        place-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+
+      .icon-button:hover {
+        transform: translateY(-2px);
+        border-color: var(--line-strong);
+      }
+
+      .theme-symbol {
+        width: 16px;
+        height: 16px;
+        border: 1.8px solid currentColor;
+        border-radius: 50%;
+        box-shadow: inset -5px -3px 0 -2px var(--paper-raised);
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(270px, 0.72fr);
+        min-height: 520px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-xl);
+        background:
+          radial-gradient(circle at 74% 5%, rgba(101, 230, 180, 0.22), transparent 25rem),
+          radial-gradient(circle at 4% 100%, rgba(121, 174, 248, 0.13), transparent 24rem),
+          var(--night);
+        color: #eff8f3;
+        box-shadow: 0 30px 100px rgba(4, 20, 15, 0.25);
+      }
+
+      .hero::after {
+        position: absolute;
+        width: 440px;
+        height: 440px;
+        top: -220px;
+        right: -180px;
+        border: 1px solid rgba(101, 230, 180, 0.18);
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 46px rgba(101, 230, 180, 0.035),
+          0 0 0 98px rgba(101, 230, 180, 0.02);
+        content: "";
+        pointer-events: none;
+      }
+
+      .hero-main {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-width: 0;
+        padding: clamp(34px, 6vw, 70px);
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 26px;
+        color: #a7beb5;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 28px;
+        height: 1px;
+        background: var(--mint);
+        content: "";
+      }
+
+      .topic {
+        max-width: 770px;
+        margin: 0;
+        font-size: clamp(30px, 5vw, 62px);
+        font-weight: 620;
+        letter-spacing: -0.045em;
+        line-height: 1.02;
+      }
+
+      .project-line {
+        margin: 18px 0 0;
+        color: #9cb0a8;
+        font-size: 14px;
+      }
+
+      .decision-block {
+        margin-top: 64px;
+      }
+
+      .decision-label {
+        margin: 0 0 8px;
+        color: #8fa59c;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .decision {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 0;
+        color: var(--mint);
+        font-size: clamp(42px, 7vw, 82px);
+        font-weight: 760;
+        letter-spacing: -0.055em;
+        line-height: 0.95;
+      }
+
+      .decision-dot {
+        width: 13px;
+        height: 13px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 0 7px rgba(101, 230, 180, 0.1), 0 0 34px currentColor;
+      }
+
+      .decision[data-value="stop"] {
+        color: var(--rose);
+      }
+
+      .decision[data-value="use-existing"] {
+        color: var(--blue);
+      }
+
+      .decision[data-value="adapt"] {
+        color: var(--amber);
+      }
+
+      .reason {
+        max-width: 750px;
+        margin: 24px 0 0;
+        color: #cfddd7;
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.55;
+      }
+
+      .hero-aside {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid rgba(226, 245, 237, 0.1);
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .hero-note {
+        display: flex;
+        min-height: 50%;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 38px;
+      }
+
+      .hero-note + .hero-note {
+        border-top: 1px solid rgba(226, 245, 237, 0.1);
+      }
+
+      .note-number {
+        color: #668078;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .note-label {
+        margin: 28px 0 10px;
+        color: #8fa59c;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .note-value {
+        margin: 0;
+        color: #edf6f1;
+        font-size: 17px;
+        font-weight: 550;
+        line-height: 1.5;
+      }
+
+      .meta-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 4px 0;
+        color: var(--faint);
+        font-size: 12px;
+      }
+
+      .meta-line strong {
+        color: var(--muted);
+        font-weight: 650;
+      }
+
+      .section {
+        padding-top: 100px;
+        scroll-margin-top: 30px;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.68fr) minmax(0, 1.32fr);
+        align-items: end;
+        gap: 40px;
+        margin-bottom: 34px;
+      }
+
+      .section-kicker {
+        margin: 0 0 8px;
+        color: var(--mint-deep);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 650;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+      }
+
+      .section-description {
+        max-width: 640px;
+        margin: 0;
+        justify-self: end;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .context-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(16px);
+      }
+
+      .context-item {
+        min-height: 148px;
+        padding: 28px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .context-item:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .context-label {
+        margin: 0 0 24px;
+        color: var(--faint);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .context-value {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 540;
+        line-height: 1.5;
+      }
+
+      .coverage-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .coverage-card {
+        position: relative;
+        min-height: 145px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(16px);
+      }
+
+      .coverage-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .coverage-name {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .coverage-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 780;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .coverage-status::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--mint-deep);
+        content: "";
+      }
+
+      .coverage-status[data-status="limited"]::before {
+        background: var(--amber);
+      }
+
+      .coverage-status[data-status="unavailable"]::before {
+        background: var(--rose);
+      }
+
+      .coverage-detail {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .matrix-shell {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow);
+      }
+
+      .matrix-scroll {
+        overflow-x: auto;
+      }
+
+      .print-matrix {
+        display: none;
+      }
+
+      .matrix {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+
+      .matrix th,
+      .matrix td {
+        padding: 20px 22px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .matrix th:last-child,
+      .matrix td:last-child {
+        border-right: 0;
+      }
+
+      .matrix tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .matrix thead th {
+        background: color-mix(in srgb, var(--paper) 82%, transparent);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 780;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .matrix thead th:first-child,
+      .matrix tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        min-width: 220px;
+        background: var(--paper-raised);
+      }
+
+      .matrix thead th:first-child {
+        z-index: 2;
+        background: var(--paper);
+      }
+
+      .capability-name {
+        font-weight: 680;
+      }
+
+      .support-cell {
+        min-width: 180px;
+      }
+
+      .support-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 4px 9px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 760;
+        white-space: nowrap;
+      }
+
+      .support-badge[data-status="native"] {
+        border-color: rgba(6, 122, 87, 0.2);
+        background: rgba(101, 230, 180, 0.14);
+        color: var(--mint-deep);
+      }
+
+      .support-badge[data-status="partial"] {
+        border-color: rgba(242, 174, 74, 0.24);
+        background: rgba(242, 174, 74, 0.13);
+        color: color-mix(in srgb, var(--amber) 72%, var(--ink));
+      }
+
+      .support-badge[data-status="extensible"] {
+        border-color: rgba(121, 174, 248, 0.24);
+        background: rgba(121, 174, 248, 0.13);
+        color: color-mix(in srgb, var(--blue) 72%, var(--ink));
+      }
+
+      .support-badge[data-status="unsupported"] {
+        border-color: rgba(233, 121, 114, 0.24);
+        background: rgba(233, 121, 114, 0.12);
+        color: color-mix(in srgb, var(--rose) 72%, var(--ink));
+      }
+
+      .support-badge[data-status="unverified"] {
+        border-color: var(--line);
+        background: rgba(127, 143, 136, 0.08);
+        color: var(--faint);
+      }
+
+      .cell-note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .candidate-stack {
+        display: grid;
+        gap: 28px;
+      }
+
+      .candidate-card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .candidate-header {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 20px;
+        padding: 30px 32px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .candidate-index {
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 15px;
+        background: linear-gradient(145deg, rgba(101, 230, 180, 0.15), rgba(121, 174, 248, 0.08));
+        color: var(--mint-deep);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .candidate-title {
+        margin: 0;
+        font-size: clamp(23px, 3vw, 32px);
+        font-weight: 670;
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+      }
+
+      .candidate-category {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .candidate-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 9px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 39px;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 13px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        border-color: var(--line-strong);
+        color: var(--ink);
+      }
+
+      .button-primary {
+        border-color: var(--night);
+        background: var(--night);
+        color: #eff8f3;
+      }
+
+      .button-primary:hover {
+        border-color: var(--night-raised);
+        background: var(--night-raised);
+        color: #eff8f3;
+      }
+
+      html[data-theme="dark"] .button-primary {
+        border-color: var(--mint);
+        background: var(--mint);
+        color: #052017;
+      }
+
+      html[data-theme="dark"] .button-primary:hover {
+        border-color: #83edc4;
+        background: #83edc4;
+        color: #052017;
+      }
+
+      .candidate-overview {
+        max-width: 860px;
+        margin: 0;
+        padding: 34px 32px;
+        color: var(--ink);
+        font-size: 17px;
+        line-height: 1.7;
+      }
+
+      .candidate-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1.42fr) minmax(260px, 0.58fr);
+        border-top: 1px solid var(--line);
+      }
+
+      .candidate-main {
+        min-width: 0;
+        padding: 32px;
+      }
+
+      .candidate-side {
+        padding: 32px;
+        border-left: 1px solid var(--line);
+        background: color-mix(in srgb, var(--paper) 54%, transparent);
+      }
+
+      .content-block + .content-block {
+        margin-top: 38px;
+      }
+
+      .content-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 17px;
+        font-size: 14px;
+        font-weight: 790;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .content-title::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--mint-deep);
+        content: "";
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .comparison-table th {
+        color: var(--faint);
+        font-size: 12px;
+        font-weight: 780;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .comparison-table td:first-child {
+        width: 24%;
+        color: var(--ink);
+        font-weight: 680;
+      }
+
+      .design-list,
+      .lesson-list,
+      .source-list,
+      .unknown-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .design-item {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 12px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .design-item:last-child {
+        border-bottom: 0;
+      }
+
+      .design-number {
+        color: var(--faint);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 11px;
+      }
+
+      .design-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+
+      .design-item p,
+      .lesson-list li,
+      .source-list li {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .lesson-list li {
+        position: relative;
+        padding: 0 0 13px 18px;
+      }
+
+      .lesson-list li::before {
+        position: absolute;
+        top: 0.68em;
+        left: 0;
+        width: 7px;
+        height: 1px;
+        background: var(--mint-deep);
+        content: "";
+      }
+
+      .summary-quote {
+        margin: 0;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--paper-raised);
+        font-size: 16px;
+        font-weight: 590;
+        line-height: 1.55;
+      }
+
+      .summary-quote::before {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--mint-deep);
+        font-family: Georgia, serif;
+        font-size: 38px;
+        line-height: 0.7;
+        content: "“";
+      }
+
+      .source-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .source-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--paper-raised);
+        transition: border-color 180ms ease, transform 180ms ease;
+      }
+
+      .source-link:hover {
+        transform: translateX(2px);
+        border-color: var(--line-strong);
+      }
+
+      .source-link::after {
+        color: var(--faint);
+        content: "↗";
+      }
+
+      .coverage-note {
+        margin: 0 0 14px;
+        padding: 12px 14px;
+        border-left: 2px solid var(--amber);
+        background: rgba(242, 174, 74, 0.08);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .unknown-panel {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--night);
+        color: #edf6f1;
+        box-shadow: var(--shadow);
+      }
+
+      .unknown-list {
+        counter-reset: unknown;
+      }
+
+      .unknown-list li {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr);
+        align-items: center;
+        min-height: 88px;
+        padding: 18px 28px;
+        border-bottom: 1px solid rgba(230, 246, 239, 0.1);
+        counter-increment: unknown;
+      }
+
+      .unknown-list li:last-child {
+        border-bottom: 0;
+      }
+
+      .unknown-list li::before {
+        color: #6e887e;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 11px;
+        content: "0" counter(unknown);
+      }
+
+      .empty-state {
+        padding: 40px;
+        border: 1px dashed var(--line-strong);
+        border-radius: var(--radius-lg);
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .footer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        margin-top: 100px;
+        padding: 30px 0 46px;
+        border-top: 1px solid var(--line);
+        color: var(--faint);
+        font-size: 12px;
+      }
+
+      .footer strong {
+        color: var(--muted);
+      }
+
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        z-index: 90;
+        max-width: min(380px, calc(100vw - 44px));
+        padding: 13px 17px;
+        transform: translateY(140%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: var(--night-raised);
+        color: #edf6f1;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        font-size: 13px;
+        opacity: 0;
+        transition: transform 320ms var(--ease), opacity 320ms ease;
+      }
+
+      .toast[data-visible="true"] {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .reveal {
+        animation: reveal 680ms var(--ease) both;
+      }
+
+      .reveal-delay {
+        animation-delay: 90ms;
+      }
+
+      @keyframes reveal {
+        from {
+          transform: translateY(18px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      html[lang^="en"] body {
+        font-size: 16px;
+      }
+
+      html[lang^="en"] .topic {
+        max-width: 840px;
+        font-size: clamp(30px, 4.4vw, 54px);
+        letter-spacing: -0.04em;
+        line-height: 1.04;
+      }
+
+      html[lang^="en"] .section-kicker {
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .section-description {
+        font-size: 17px;
+      }
+
+      html[lang^="en"] .matrix thead th {
+        font-size: 13px;
+        letter-spacing: 0.06em;
+      }
+
+      html[lang^="en"] .capability-name {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      html[lang^="en"] .support-badge {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .cell-note {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      html[lang^="en"] .candidate-category,
+      html[lang^="en"] .button {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .content-title {
+        font-size: 15px;
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .comparison-table {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .comparison-table th {
+        font-size: 13px;
+        letter-spacing: 0.05em;
+      }
+
+      html[lang^="en"] .design-item strong,
+      html[lang^="en"] .design-item p,
+      html[lang^="en"] .lesson-list li,
+      html[lang^="en"] .source-list li {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .summary-quote {
+        font-size: 17px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-aside {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 0;
+          border-left: 1px solid rgba(226, 245, 237, 0.1);
+        }
+
+        .coverage-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .candidate-body {
+          grid-template-columns: 1fr;
+        }
+
+        .candidate-side {
+          border-top: 1px solid var(--line);
+          border-left: 0;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(calc(100% - 24px), var(--max));
+        }
+
+        .masthead {
+          min-height: 72px;
+        }
+
+        .brand span:last-child,
+        .mode-chip {
+          display: none;
+        }
+
+        .hero-main {
+          padding: 34px 24px 42px;
+        }
+
+        .hero-aside,
+        .context-grid,
+        .section-head {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .decision-block {
+          margin-top: 52px;
+        }
+
+        .meta-line {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .section {
+          padding-top: 76px;
+        }
+
+        .section-description {
+          justify-self: start;
+        }
+
+        .context-item,
+        .context-item:nth-child(2n) {
+          border-right: 0;
+        }
+
+        .coverage-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .candidate-header {
+          grid-template-columns: auto minmax(0, 1fr);
+          padding: 24px;
+        }
+
+        .candidate-actions {
+          grid-column: 1 / -1;
+          justify-content: flex-start;
+        }
+
+        .candidate-overview,
+        .candidate-main,
+        .candidate-side {
+          padding: 26px 24px;
+        }
+
+        .comparison-table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .footer {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 12mm;
+        }
+
+        :root {
+          --paper: #fff;
+          --paper-raised: #fff;
+          --ink: #111;
+          --muted: #555;
+          --faint: #777;
+          --line: #ddd;
+          --line-strong: #bbb;
+          --shadow: none;
+          --shadow-soft: none;
+        }
+
+        body {
+          background: #fff;
+          font-size: 10pt;
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+
+        body::before,
+        .skip-link,
+        .mast-actions,
+        .candidate-actions,
+        .toast {
+          display: none !important;
+        }
+
+        .shell {
+          width: 100%;
+          max-width: none;
+        }
+
+        .masthead {
+          min-height: 0;
+          margin-bottom: 8mm;
+        }
+
+        .hero {
+          grid-template-columns: minmax(0, 1.45fr) minmax(54mm, 0.75fr);
+          min-height: 0;
+          box-shadow: none;
+        }
+
+        .hero-main {
+          padding: 12mm;
+        }
+
+        .hero-aside {
+          display: flex;
+          grid-template-columns: none;
+          border-top: 0;
+          border-left: 1px solid rgba(226, 245, 237, 0.1);
+        }
+
+        .hero-note {
+          padding: 8mm;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .topic {
+          font-size: 27pt;
+        }
+
+        .decision-block {
+          margin-top: 14mm;
+        }
+
+        .decision {
+          font-size: 38pt;
+        }
+
+        .reason {
+          font-size: 11pt;
+        }
+
+        .meta-line {
+          padding-top: 4mm;
+        }
+
+        .section {
+          padding-top: 12mm;
+        }
+
+        .section-head {
+          grid-template-columns: minmax(52mm, 0.68fr) minmax(0, 1.32fr);
+          gap: 8mm;
+          margin-bottom: 6mm;
+          break-after: avoid;
+        }
+
+        .section-title {
+          font-size: 24pt;
+        }
+
+        .context-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          box-shadow: none;
+        }
+
+        .coverage-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .matrix-shell {
+          display: none;
+        }
+
+        .print-matrix {
+          display: block;
+        }
+
+        .print-matrix-group {
+          break-inside: auto;
+        }
+
+        .print-matrix-group + .print-matrix-group {
+          break-before: page;
+        }
+
+        .print-matrix-heading {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 6mm;
+          margin: 0 0 5mm;
+          break-after: avoid;
+        }
+
+        .print-matrix-heading h3 {
+          margin: 0;
+          font-size: 17pt;
+        }
+
+        .print-matrix-heading span {
+          color: var(--muted);
+          font-size: 9pt;
+        }
+
+        .print-matrix-table {
+          width: 100%;
+          border: 1px solid var(--line);
+          border-collapse: collapse;
+          table-layout: fixed;
+        }
+
+        .print-matrix-table thead {
+          display: table-header-group;
+        }
+
+        .print-matrix-table th,
+        .print-matrix-table td {
+          padding: 3.5mm;
+          border-right: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+          text-align: left;
+          vertical-align: top;
+          overflow-wrap: anywhere;
+        }
+
+        .print-matrix-table th {
+          background: #f3f4ef;
+          color: var(--muted);
+          font-size: 8.5pt;
+          text-transform: uppercase;
+        }
+
+        .print-matrix-table th:first-child,
+        .print-matrix-table td:first-child {
+          width: 27%;
+        }
+
+        .print-matrix-table th:last-child,
+        .print-matrix-table td:last-child {
+          border-right: 0;
+        }
+
+        .print-matrix-table tr:last-child td {
+          border-bottom: 0;
+        }
+
+        .print-matrix-table tr,
+        .comparison-table tr,
+        .design-item,
+        .lesson-list li,
+        .source-list li,
+        .unknown-list li {
+          break-inside: avoid;
+        }
+
+        .print-matrix .support-cell {
+          min-width: 0;
+        }
+
+        .candidate-stack {
+          display: block;
+        }
+
+        .candidate-card {
+          overflow: visible;
+          break-inside: auto;
+          box-shadow: none;
+        }
+
+        .candidate-card + .candidate-card {
+          margin-top: 0;
+          break-before: page;
+        }
+
+        .candidate-header,
+        .candidate-overview,
+        .content-title {
+          break-after: avoid;
+        }
+
+        .candidate-body {
+          display: block;
+        }
+
+        .candidate-side {
+          border-top: 1px solid var(--line);
+          border-left: 0;
+        }
+
+        .comparison-table {
+          display: table;
+          overflow: visible;
+        }
+
+        .comparison-table thead {
+          display: table-header-group;
+        }
+
+        .reveal {
+          animation: none;
+        }
+
+        .hero,
+        .unknown-panel {
+          break-inside: avoid;
+        }
+
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" id="skip-link" href="#main">Skip to content</a>
+    <header class="shell masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Search Before Build</span>
+      </div>
+      <div class="mast-actions">
+        <button class="button button-primary export-button" id="export-pdf" type="button"></button>
+        <span class="mode-chip" id="mode-chip"></span>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+          <span class="theme-symbol" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="shell" id="main">
+      <section class="hero reveal" aria-labelledby="report-topic">
+        <div class="hero-main">
+          <div>
+            <p class="eyebrow" id="hero-eyebrow"></p>
+            <h1 class="topic" id="report-topic"></h1>
+            <p class="project-line" id="project-line"></p>
+          </div>
+          <div class="decision-block">
+            <p class="decision-label" id="decision-label"></p>
+            <p class="decision" id="decision"><span class="decision-dot" aria-hidden="true"></span><span id="decision-value"></span></p>
+            <p class="reason" id="decision-reason"></p>
+          </div>
+        </div>
+        <aside class="hero-aside">
+          <div class="hero-note">
+            <span class="note-number">01</span>
+            <div>
+              <p class="note-label" id="reuse-label"></p>
+              <p class="note-value" id="reuse-value"></p>
+            </div>
+          </div>
+          <div class="hero-note">
+            <span class="note-number">02</span>
+            <div>
+              <p class="note-label" id="unknown-label"></p>
+              <p class="note-value" id="unknown-value"></p>
+            </div>
+          </div>
+        </aside>
+      </section>
+      <div class="meta-line reveal reveal-delay">
+        <span id="generated-line"></span>
+        <span id="temporary-line"></span>
+      </div>
+
+      <section class="section" id="context-section" aria-labelledby="context-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="context-kicker"></p>
+            <h2 class="section-title" id="context-title"></h2>
+          </div>
+          <p class="section-description" id="context-description"></p>
+        </header>
+        <div class="context-grid" id="fingerprint-grid"></div>
+      </section>
+
+      <section class="section" id="coverage-section" aria-labelledby="coverage-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="coverage-kicker"></p>
+            <h2 class="section-title" id="coverage-title"></h2>
+          </div>
+          <p class="section-description" id="coverage-description"></p>
+        </header>
+        <div class="coverage-grid" id="coverage-grid"></div>
+      </section>
+
+      <section class="section" id="matrix-section" aria-labelledby="matrix-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="matrix-kicker"></p>
+            <h2 class="section-title" id="matrix-title"></h2>
+          </div>
+          <p class="section-description" id="matrix-description"></p>
+        </header>
+        <div class="matrix-shell">
+          <div class="matrix-scroll">
+            <table class="matrix" id="capability-matrix"></table>
+          </div>
+        </div>
+        <div class="print-matrix" id="print-capability-matrix" aria-hidden="true"></div>
+      </section>
+
+      <section class="section" id="candidates-section" aria-labelledby="candidates-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="candidates-kicker"></p>
+            <h2 class="section-title" id="candidates-title"></h2>
+          </div>
+          <p class="section-description" id="candidates-description"></p>
+        </header>
+        <div class="candidate-stack" id="candidate-stack"></div>
+      </section>
+
+      <section class="section" id="unknowns-section" aria-labelledby="unknowns-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="unknowns-kicker"></p>
+            <h2 class="section-title" id="unknowns-title"></h2>
+          </div>
+          <p class="section-description" id="unknowns-description"></p>
+        </header>
+        <div class="unknown-panel"><ol class="unknown-list" id="unknown-list"></ol></div>
+      </section>
+    </main>
+
+    <footer class="shell footer">
+      <span id="footer-notice"></span>
+      <strong>Search Before Build</strong>
+    </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (() => {
+        "use strict";
+
+        const encodedReport = "eyJzY2hlbWFWZXJzaW9uIjoxLCJsYW5ndWFnZSI6ImVuIiwibW9kZSI6ImFzc2VzcyIsInRvcGljIjoiUmVhZC1sYXRlciBvcmdhbml6ZXIgd2l0aCBhdXRvLWNhdGVnb3JpemF0aW9uIGFuZCBhIGRhaWx5IHVucmVhZCBkaWdlc3QiLCJwcm9qZWN0TmFtZSI6IlBlcnNvbmFsIHJlYWQtbGF0ZXIgb3JnYW5pemVyIChhdXRvLXNvcnQgKyBkYWlseSBkaWdlc3QpIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTA4LTI5VDA4OjQzOjA2WiIsInJlY29tbWVuZGF0aW9uIjp7InZhbHVlIjoiQWRhcHQiLCJyZWFzb24iOiJFeGlzdGluZyBhcHBzIGFscmVhZHkgY292ZXIgYXV0by10YWdnaW5nLCByZW1pbmRlcnMsIGFuZCBjcm9zcy1kZXZpY2Ugc3luYyBjaGVhcGx5OyB0aGUgb25lIHJlYWwgZ2FwIChhIGN1cmF0ZWQgZGFpbHkgZGlnZXN0IG9mIHVucmVhZCBpdGVtcykgaXMgc21hbGwgZW5vdWdoIHRvIGJyaWRnZSB3aXRoIGEgbm8tY29kZSBsYXllciBvbiB0b3Agb2YgUmFpbmRyb3AuaW8sIHdoaWNoIGlzIGZhciBjaGVhcGVyIGFuZCBzYWZlciB0aGFuIGEgbm9uLXByb2dyYW1tZXIgYnVpbGRpbmcgYSBjdXN0b20gY3Jvc3MtcGxhdGZvcm0gYXBwIHdpdGggQUkgY2F0ZWdvcml6YXRpb24gYW5kIHB1c2ggbm90aWZpY2F0aW9ucy4iLCJyZXVzYWJsZU9wdGlvbiI6IlJhaW5kcm9wLmlvIOKAlCB1c2UgaXQgYXMgdGhlIGJhY2tib25lIChhdXRvLXN1Z2dlc3RlZCB0YWdzICsgcmVtaW5kZXJzICsgc3luYyksIHRoZW4gYWRkIGEgdGhpbiBzY2hlZHVsZWQtZGlnZXN0IGF1dG9tYXRpb24gZm9yIHRoZSBkYWlseSAncGljayAzIHRvIHJlYWQnIG51ZGdlLiIsImJpZ2dlc3RVbmtub3duIjoiV2hldGhlciBSYWluZHJvcC5pbydzIGludGVyYWN0aXZlIEFJIHRhZyBzdWdnZXN0aW9ucyBhbmQgcGVyLWJvb2ttYXJrIHJlbWluZGVycyB3aWxsIGZlZWwgYXV0b21hdGljIGFuZCBkaWdlc3QtbGlrZSBlbm91Z2ggZm9yIHlvdSDigJQgb25seSB0cnlpbmcgaXQgKGZyZWUsIHRoZW4gUHJvIGF0IH4kMy41NC9tbykgY2FuIGFuc3dlciB0aGF0LiJ9LCJmaW5nZXJwcmludCI6W3sibGFiZWwiOiJQcmltYXJ5IHRhc2siLCJ2YWx1ZSI6IlNhdmUgd2ViIGxpbmtzIG9uY2UsIGhhdmUgdGhlbSBhdXRvLXNvcnRlZCBpbnRvIGNhdGVnb3JpZXMsIGFuZCBnZXQgYSBkYWlseSBudWRnZSB0byByZWFkIGEgZmV3IHVucmVhZCBvbmVzIn0seyJsYWJlbCI6Ik11c3QtaGF2ZSBjYXBhYmlsaXRpZXMiLCJ2YWx1ZSI6IkF1dG9tYXRpYyBjYXRlZ29yaXphdGlvbjsgZGFpbHkgZGlnZXN0IG9mIHVucmVhZCBpdGVtczsgcGhvbmUgKyBsYXB0b3Agc3luYyJ9LHsibGFiZWwiOiJPcGVyYXRpbmcgbW9kZSIsInZhbHVlIjoiSG9zdGVkIHNlcnZpY2Ugd2l0aCBtb2JpbGUgYW5kIGRlc2t0b3AgYXBwczsgcGVyc29uYWwgdXNlOyBub24tcHJvZ3JhbW1lcjsgY2xvdWQgbWF5IHJlYWQgc2F2ZWQgbGlua3MifSx7ImxhYmVsIjoiQ29uc3RyYWludHMiLCJ2YWx1ZSI6IkZyZWUgcHJlZmVycmVkLCBhIGZldyBkb2xsYXJzL21vbnRoIGFjY2VwdGFibGU7IGNvbnZlbmllbmNlIG92ZXIgcHJpdmFjeTsgcGVyc29uYWwgdXNlIChtYXkgc2hhcmUgd2l0aCBmcmllbmRzIGxhdGVyKSJ9XSwiY292ZXJhZ2UiOlt7ImxhYmVsIjoiV2ViIHNlYXJjaCAocHJvZHVjdHMpIiwic3RhdHVzIjoibGltaXRlZCIsImRldGFpbCI6Ikhvc3QgV2ViIHNlYXJjaCByZXR1cm5lZCBlbXB0eTsgdXNlZCBhbm9ueW1vdXMgRHVja0R1Y2tHbyBmYWxsYmFjayBwbHVzIG9mZmljaWFsIHByb2R1Y3QgcGFnZXMgKFJlYWR3aXNlIFJlYWRlciwgUmFpbmRyb3AuaW8sIEluc3RhcGFwZXIsIFBvY2tldCkuIn0seyJsYWJlbCI6IkdpdEh1YiIsInN0YXR1cyI6InVzZWQiLCJkZXRhaWwiOiJQdWJsaWMgUkVTVCBBUEkgc2VhcmNoZWQgJ3JlYWQgaXQgbGF0ZXInOyBpbnNwZWN0ZWQgb21uaXZvcmUtYXBwL29tbml2b3JlLCBuY2FybGllci9yZWFkZmxvdywgd2FsbGFiYWcgUkVBRE1Fcy4gTm8gZGVkaWNhdGVkIGRlZXAtcmV0cmlldmFsIHRvb2wgb3IgYXV0aGVudGljYXRlZCBnaCBDTEkgd2FzIGF2YWlsYWJsZS4ifSx7ImxhYmVsIjoiSGFja2VyIE5ld3MiLCJzdGF0dXMiOiJ1c2VkIiwiZGV0YWlsIjoiQWxnb2xpYSBzZWFyY2ggZm9yIGRlbWFuZCBhbmQga25vd24tYWx0ZXJuYXRpdmUgZGlzY3Vzc2lvbi4ifV0sImNhcGFiaWxpdGllcyI6W3sibmFtZSI6IkF1dG9tYXRpYyBjYXRlZ29yaXphdGlvbiBvZiBzYXZlZCBsaW5rcyIsImN1cnJlbnQiOnsic3RhdHVzIjoibmF0aXZlIiwibm90ZSI6IkNvcmUgZ29hbCBvZiB0aGUgcHJvcG9zZWQgYXBwOiBsaW5rcyBsYW5kIGFscmVhZHkgc29ydGVkLiJ9LCJjYW5kaWRhdGVzIjp7InJhaW5kcm9wIjp7InN0YXR1cyI6InBhcnRpYWwiLCJub3RlIjoiQUkgc3VnZ2VzdHMgY29sbGVjdGlvbiArIHRhZ3MgYXQgc2F2ZSB0aW1lIGFuZCB2aWEgU3RlbGxhLCBidXQgeW91IHJldmlldy9hcHByb3ZlOyBQcm8tb25seSwgYmV0YS4gTm90IHNpbGVudCBhdXRvLXRhZ2dpbmcuIn0sInJlYWR3aXNlIjp7InN0YXR1cyI6InVuc3VwcG9ydGVkIiwibm90ZSI6IlRhZ2dpbmcgaXMgbWFudWFsOyBubyBhdXRvLWNhdGVnb3JpemF0aW9uIGZvdW5kIGluIGRvY3MuIn0sImluc3RhcGFwZXIiOnsic3RhdHVzIjoidW5zdXBwb3J0ZWQiLCJub3RlIjoiRm9sZGVycyBvbmx5OyBubyB0YWdnaW5nLCBtYW51YWwgb3IgYXV0b21hdGljLiJ9LCJvbW5pdm9yZSI6eyJzdGF0dXMiOiJ1bnN1cHBvcnRlZCIsIm5vdGUiOiJNYW51YWwgbGFiZWxzIG9ubHk7IG5vIGF1dG8tdGFnZ2luZy4ifX19LHsibmFtZSI6IkRhaWx5IGRpZ2VzdCByZXN1cmZhY2luZyB1bnJlYWQgaXRlbXMiLCJjdXJyZW50Ijp7InN0YXR1cyI6Im5hdGl2ZSIsIm5vdGUiOiJDb3JlIGdvYWw6IGEgZGFpbHkgJ2hlcmUgYXJlIDMgdGhpbmdzIHlvdSBzYXZlZCwgcGljayBvbmUnIGRpZ2VzdC4ifSwiY2FuZGlkYXRlcyI6eyJyYWluZHJvcCI6eyJzdGF0dXMiOiJwYXJ0aWFsIiwibm90ZSI6IlBlci1ib29rbWFyayByZW1pbmRlcnMvbm90aWZpY2F0aW9ucyBleGlzdCwgYnV0IG5vIGN1cmF0ZWQgZGFpbHkgZGlnZXN0IHRoYXQgcGlja3MgdW5yZWFkIGl0ZW1zIHRvIHJlYWQuIn0sInJlYWR3aXNlIjp7InN0YXR1cyI6InBhcnRpYWwiLCJub3RlIjoiRGFpbHkgUmV2aWV3IHJlc3VyZmFjZXMgcGFzdCBoaWdobGlnaHRzIHlvdSBhbHJlYWR5IG1hZGUsIG5vdCB1bnJlYWQgc2F2ZWQgYXJ0aWNsZXMg4oCUIGEgbWF0ZXJpYWwgZ2FwLiJ9LCJpbnN0YXBhcGVyIjp7InN0YXR1cyI6InVuc3VwcG9ydGVkIiwibm90ZSI6Ik5vIGRpZ2VzdCBvciByZWFkLXJlbWluZGVyIGZlYXR1cmUuIn0sIm9tbml2b3JlIjp7InN0YXR1cyI6InVuc3VwcG9ydGVkIiwibm90ZSI6Ik5vIGRpZ2VzdCBmZWF0dXJlIGluIFJFQURNRS4ifX19LHsibmFtZSI6IlN5bmMgYWNyb3NzIHBob25lIGFuZCBsYXB0b3AiLCJjdXJyZW50Ijp7InN0YXR1cyI6Im5hdGl2ZSIsIm5vdGUiOiJSZXF1aXJlZDogd29ya3Mgb24gcGhvbmUgYW5kIGxhcHRvcCwgc3RheXMgaW4gc3luYy4ifSwiY2FuZGlkYXRlcyI6eyJyYWluZHJvcCI6eyJzdGF0dXMiOiJuYXRpdmUiLCJub3RlIjoiQnJvd3NlciBleHRlbnNpb25zICsgbmF0aXZlIGFwcHMgZm9yIFdpbmRvd3MsIE1hYywgaU9TLCBBbmRyb2lkOyBzeW5jcyBhY3Jvc3MgYWxsIGRldmljZXMuIn0sInJlYWR3aXNlIjp7InN0YXR1cyI6Im5hdGl2ZSIsIm5vdGUiOiJMb2NhbC1maXJzdCB3ZWIgYXBwICsgaU9TICsgQW5kcm9pZCArIE1hYy9XaW5kb3dzIGRlc2t0b3A7IGNvbnRpbnVvdXMgc3luYy4ifSwiaW5zdGFwYXBlciI6eyJzdGF0dXMiOiJuYXRpdmUiLCJub3RlIjoiU3luY3MgYWNyb3NzIHdlYiwgaU9TLCBBbmRyb2lkIG9uIHRoZSBmcmVlIHRpZXIuIn0sIm9tbml2b3JlIjp7InN0YXR1cyI6InBhcnRpYWwiLCJub3RlIjoiQXBwcyBleGlzdGVkLCBidXQgdGhlIGhvc3RlZCBjbG91ZCBzZXJ2aWNlIHdhcyBkZXByZWNhdGVkIE5vdiAyMDI0OyBzZWxmLWhvc3Qgb25seSBub3cg4oCUIG5vdCB2aWFibGUgZm9yIGEgbm9uLXByb2dyYW1tZXIuIn19fV0sImNvbXBldGl0b3JzIjpbeyJpZCI6InJhaW5kcm9wIiwibmFtZSI6IlJhaW5kcm9wLmlvIiwidXJsIjoiaHR0cHM6Ly9yYWluZHJvcC5pbyIsImNhdGVnb3J5IjoiUmVhZHktdG8tdXNlIHByb2R1Y3QiLCJvdmVydmlldyI6IkEgcG9saXNoZWQgYm9va21hcmsgbWFuYWdlciBhaW1lZCBhdCBwZW9wbGUgd2hvIHNhdmUgbG90cyBvZiBsaW5rcyBhbmQgd2FudCB0aGVtIG9yZ2FuaXplZCwgc2VhcmNoYWJsZSwgYW5kIHN5bmNlZCBhY3Jvc3MgZXZlcnkgZGV2aWNlLiBGcmVlIHRpZXIgaXMgZ2VuZXJvdXMgKHVubGltaXRlZCBib29rbWFya3MvY29sbGVjdGlvbnMvZGV2aWNlcyk7IFBybyAofiQzLjU0L21vbnRoLCB+MjAlIGNoZWFwZXIgeWVhcmx5KSBhZGRzIEFJIHN1Z2dlc3Rpb25zLCBmdWxsLXRleHQgc2VhcmNoLCB3ZWIgYXJjaGl2ZSwgYW5kIHJlbWluZGVycy4iLCJjb21wYXJpc29uIjpbeyJkaW1lbnNpb24iOiJDb3JlIHdvcmtmbG93IiwiY2FuZGlkYXRlIjoiU2F2ZSB2aWEgZXh0ZW5zaW9uL3NoYXJlIHNoZWV0OyBBSSBwcmUtZmlsbHMgY29sbGVjdGlvbiArIHRhZyBzdWdnZXN0aW9ucyBmb3IgcmV2aWV3LiIsImN1cnJlbnQiOiJTYXZlIG9uY2U7IGFwcCBzaWxlbnRseSBhdXRvLXNvcnRzIGludG8gY2F0ZWdvcmllcy4ifSx7ImRpbWVuc2lvbiI6IkRhaWx5IGRpZ2VzdCIsImNhbmRpZGF0ZSI6IlBlci1ib29rbWFyayByZW1pbmRlcnMgb25seTsgbm8gY3VyYXRlZCB1bnJlYWQgZGlnZXN0LiIsImN1cnJlbnQiOiJEYWlseSBkaWdlc3QgcGlja3MgMyB1bnJlYWQgaXRlbXMgdG8gcmVhZC4ifSx7ImRpbWVuc2lvbiI6IlN5bmMiLCJjYW5kaWRhdGUiOiJOYXRpdmUgYWNyb3NzIHBob25lICsgbGFwdG9wLiIsImN1cnJlbnQiOiJOYXRpdmUgYWNyb3NzIHBob25lICsgbGFwdG9wLiJ9LHsiZGltZW5zaW9uIjoiQXV0by1jYXRlZ29yaXphdGlvbiIsImNhbmRpZGF0ZSI6IlBhcnRpYWwg4oCUIFBybyBBSSBzdWdnZXN0aW9ucywgaW50ZXJhY3RpdmUsIGJldGEuIiwiY3VycmVudCI6Ik5hdGl2ZSwgYXV0b21hdGljLiJ9LHsiZGltZW5zaW9uIjoiUHJpY2UiLCJjYW5kaWRhdGUiOiJGcmVlIHRpZXI7IFBybyB+JDMuNTQvbW8gZm9yIEFJICsgcmVtaW5kZXJzLiIsImN1cnJlbnQiOiJCdWlsZCBjb3N0IGhpZ2ggKG5vbi1wcm9ncmFtbWVyKS4ifV0sIm5vdGFibGVEZXNpZ25zIjpbeyJ0aXRsZSI6IkFJIHRhZy9jb2xsZWN0aW9uIHN1Z2dlc3Rpb25zIGF0IHNhdmUgdGltZSIsImRldGFpbCI6IldoZW4geW91IHNhdmUgYSBsaW5rLCB0aGUgZm9ybSBpcyBwcmUtZmlsbGVkIHdpdGggYSBzdWdnZXN0ZWQgY29sbGVjdGlvbiBhbmQgdGFncyDigJQgY2xvc2VzdCB0aGluZyB0byBhdXRvLXNvcnRpbmcgaW4gYW55IHByb2R1Y3QsIHRob3VnaCB5b3Ugc3RpbGwgYXBwcm92ZS4ifSx7InRpdGxlIjoiUmVtaW5kZXJzIG9uIGJvb2ttYXJrcyIsImRldGFpbCI6IllvdSBjYW4gYXR0YWNoIGEgcmVtaW5kZXIgdG8gYSBzYXZlZCBpdGVtOyB0aGUgZ2FwIGlzIHRoYXQgdGhlcmUgaXMgbm8gc21hcnQgZGlnZXN0IHRoYXQgcGlja3MgaXRlbXMgZm9yIHlvdS4ifV0sInJldXNhYmxlTGVzc29ucyI6WyJVc2UgUmFpbmRyb3AgYXMgdGhlIHN0b3JhZ2UgKyBzeW5jICsgYXV0by10YWcgYmFja2JvbmUgaW5zdGVhZCBvZiByZWJ1aWxkaW5nIGl0LiIsIkl0cyBpbnRlcmFjdGl2ZSAoYXBwcm92ZS1iZWZvcmUtYXBwbHkpIEFJIHN1Z2dlc3Rpb25zIG1lYW4geW91IG1heSBzdGlsbCBmZWVsIHNvbWUgbWFudWFsIGZyaWN0aW9uIOKAlCB0ZXN0IHdoZXRoZXIgdGhhdCBzYXRpc2ZpZXMgJ2F1dG9tYXRpYycgZm9yIHlvdS4iLCJCcmlkZ2UgdGhlIG1pc3NpbmcgZGFpbHkgZGlnZXN0IHdpdGggYSBuby1jb2RlIHNjaGVkdWxlZCBhdXRvbWF0aW9uIChlLmcuLCBhbiBlbWFpbC9TbGFjayBkaWdlc3Qgb2YgcmVjZW50bHkgc2F2ZWQgdW5yZWFkIGl0ZW1zKSByYXRoZXIgdGhhbiBhIG5ldyBhcHAuIl0sInN1bW1hcnkiOiJUaGUgY2xvc2VzdCBhbGwtaW4tb25lIG1hdGNoIGZvciB5b3VyIG5lZWRzIOKAlCBhdXRvLXRhZyBzdWdnZXN0aW9ucywgcmVtaW5kZXJzLCBhbmQgc3luYywgY2hlYXBseSDigJQgYnV0IGl0cyByZW1pbmRlcnMgYXJlIG5vdCB0aGUgY3VyYXRlZCBkYWlseSB1bnJlYWQgZGlnZXN0IHlvdSB3YW50LiIsImNvdmVyYWdlTm90ZSI6IlBybyBwcmljZSAofiQzLjU0L21vLCB+JDI4LTM4L3lyKSBhbmQgUHJvLW9ubHkgQUkgY29uZmlybWVkIHZpYSBEdWNrRHVja0dvIHNuaXBwZXRzIGFuZCBoZWxwLnJhaW5kcm9wLmlvOyB0aGUgZXhhY3QgYnV5LXBhZ2UgZG9sbGFyIGZpZ3VyZSBpcyByZW5kZXJlZCBpbiBhbiBpbWFnZSBhbmQgY291bGQgbm90IGJlIHJlYWQgYXMgdGV4dC4iLCJzb3VyY2VzIjpbeyJsYWJlbCI6IlJhaW5kcm9wIGhlbHAg4oCUIFN0ZWxsYSBBSSIsInVybCI6Imh0dHBzOi8vaGVscC5yYWluZHJvcC5pby9zdGVsbGEifSx7ImxhYmVsIjoiUmFpbmRyb3AgaGVscCDigJQgUHJvIGZlYXR1cmVzIiwidXJsIjoiaHR0cHM6Ly9oZWxwLnJhaW5kcm9wLmlvL3ByZW1pdW0tZmVhdHVyZXMifV19LHsiaWQiOiJyZWFkd2lzZSIsIm5hbWUiOiJSZWFkd2lzZSBSZWFkZXIiLCJ1cmwiOiJodHRwczovL3JlYWR3aXNlLmlvL3JlYWQiLCJjYXRlZ29yeSI6IlJlYWR5LXRvLXVzZSBwcm9kdWN0Iiwib3ZlcnZpZXciOiJBIHJlYWQtaXQtbGF0ZXIgYXBwIGFpbWVkIGF0IHNlcmlvdXMgcmVhZGVycyB3aG8gaGlnaGxpZ2h0IGFuZCB0YWtlIG5vdGVzOyBzeW5jcyBhY3Jvc3Mgd2ViLCBpT1MsIEFuZHJvaWQsIGFuZCBkZXNrdG9wLiBUYWdnaW5nIGlzIG1hbnVhbC4gUHJpY2luZzogJDkuOTkvbW9udGggYmlsbGVkIGFubnVhbGx5IG9yICQxMi45OS9tb250aCBtb250aGx5ICg1MCUgZGlzY291bnQgYXZhaWxhYmxlIGZvciBlbGlnaWJsZSB1c2VycykuIiwiY29tcGFyaXNvbiI6W3siZGltZW5zaW9uIjoiQ29yZSB3b3JrZmxvdyIsImNhbmRpZGF0ZSI6IlNhdmUgdG8gYSByZWFkaW5nIHF1ZXVlOyByZWFkLCBoaWdobGlnaHQsIGFuZCB0YWcgbWFudWFsbHkuIiwiY3VycmVudCI6IlNhdmUgb25jZTsgYXBwIGF1dG8tc29ydHMgaW50byBjYXRlZ29yaWVzLiJ9LHsiZGltZW5zaW9uIjoiRGFpbHkgZGlnZXN0IiwiY2FuZGlkYXRlIjoiRGFpbHkgUmV2aWV3IHJlc3VyZmFjZXMgcGFzdCBoaWdobGlnaHRzLCBub3QgdW5yZWFkIGFydGljbGVzLiIsImN1cnJlbnQiOiJEYWlseSBkaWdlc3QgcGlja3MgMyB1bnJlYWQgaXRlbXMgdG8gcmVhZC4ifSx7ImRpbWVuc2lvbiI6IlN5bmMiLCJjYW5kaWRhdGUiOiJOYXRpdmUgYWNyb3NzIHBob25lICsgbGFwdG9wLiIsImN1cnJlbnQiOiJOYXRpdmUgYWNyb3NzIHBob25lICsgbGFwdG9wLiJ9LHsiZGltZW5zaW9uIjoiQXV0by1jYXRlZ29yaXphdGlvbiIsImNhbmRpZGF0ZSI6IlVuc3VwcG9ydGVkIOKAlCBtYW51YWwgdGFnZ2luZyBvbmx5LiIsImN1cnJlbnQiOiJOYXRpdmUsIGF1dG9tYXRpYy4ifSx7ImRpbWVuc2lvbiI6IlByaWNlIiwiY2FuZGlkYXRlIjoiJDkuOTktMTIuOTkvbW87IG5vIHBlcm1hbmVudCBmcmVlIHRpZXIgKDMwLWRheSB0cmlhbCkuIiwiY3VycmVudCI6IkJ1aWxkIGNvc3QgaGlnaCAobm9uLXByb2dyYW1tZXIpLiJ9XSwibm90YWJsZURlc2lnbnMiOlt7InRpdGxlIjoiRGFpbHkgUmV2aWV3IChzcGFjZWQgcmVwZXRpdGlvbikiLCJkZXRhaWwiOiJSZXN1cmZhY2VzIGhpZ2hsaWdodHMgeW91IGhhdmUgYWxyZWFkeSBtYWRlIOKAlCBleGNlbGxlbnQgZm9yIHJldGVudGlvbiwgYnV0IGl0IGRvZXMgbm90IHByb21wdCB5b3UgdG8gcmVhZCB1bnJlYWQgc2F2ZXMsIHdoaWNoIGlzIHlvdXIgYWN0dWFsIG5lZWQuIn1dLCJyZXVzYWJsZUxlc3NvbnMiOlsiSWYgeW91IGV2ZXIgd2FudCB0byByZXRhaW4gd2hhdCB5b3UgcmVhZCwgUmVhZGVyJ3MgaGlnaGxpZ2h0LXJldmlldyBsb29wIGlzIHdvcnRoIGJvcnJvd2luZyBhcyBhIHNlY29uZCBzdGFnZSBhZnRlciBhIGRhaWx5IHVucmVhZCBkaWdlc3QuIiwiRG8gbm90IHBpY2sgUmVhZGVyIGV4cGVjdGluZyBhdXRvLWNhdGVnb3JpemF0aW9uIOKAlCBpdCBpcyBtYW51YWwsIGFuZCBwcmljaWVyIHRoYW4gUmFpbmRyb3AuIl0sInN1bW1hcnkiOiJTdHJvbmcgb24gc3luYyBhbmQgcmVhZCBxdWFsaXR5LCBidXQgaXQgbGFja3MgYXV0by1jYXRlZ29yaXphdGlvbiBhbmQgaXRzIGRhaWx5IHJldmlldyB0YXJnZXRzIGhpZ2hsaWdodHMsIG5vdCB1bnJlYWQgaXRlbXMg4oCUIHR3byBvZiB5b3VyIHRocmVlIG11c3QtaGF2ZXMgbWlzcy4iLCJjb3ZlcmFnZU5vdGUiOiJEYWlseSBSZXZpZXcgYmVoYXZpb3IgKGhpZ2hsaWdodHMsIG5vdCB1bnJlYWQpIGluZmVycmVkIGZyb20gdGhlIHByb2R1Y3QgcGFnZSBhbmQgZG9jczsgbm8gcHJpbWFyeSBwYWdlIGV4cGxpY2l0bHkgY29udHJhc3RlZCB1bnJlYWQtdnMtaGlnaGxpZ2h0IHJlc3VyZmFjaW5nLCBzbyB0aGlzIGlzIHdlbGwtc3VwcG9ydGVkIGJ1dCBub3QgYSBkaXJlY3QgdmVyYmF0aW0gc3RhdGVtZW50LiIsInNvdXJjZXMiOltdfSx7ImlkIjoiaW5zdGFwYXBlciIsIm5hbWUiOiJJbnN0YXBhcGVyIiwidXJsIjoiaHR0cHM6Ly93d3cuaW5zdGFwYXBlci5jb20vcHJlbWl1bSIsImNhdGVnb3J5IjoiUmVhZHktdG8tdXNlIHByb2R1Y3QiLCJvdmVydmlldyI6IkEgbG9uZy1zdGFuZGluZywgc2ltcGxlIHJlYWQtaXQtbGF0ZXIgYXBwOiBzYXZlIGFydGljbGVzLCByZWFkIHRoZW0gY2xlYW5seSwgb3JnYW5pemUgaW50byBmb2xkZXJzLiBTeW5jcyBhY3Jvc3Mgd2ViLCBpT1MsIGFuZCBBbmRyb2lkIGZvciBmcmVlOyBQcmVtaXVtICgkNS45OS9tb250aCBvciAkNTkuOTkveWVhcikgYWRkcyBmdWxsLXRleHQgc2VhcmNoLCBwZXJtYW5lbnQgYXJjaGl2ZSwgYW5kIHRleHQtdG8tc3BlZWNoLiIsImNvbXBhcmlzb24iOlt7ImRpbWVuc2lvbiI6IkNvcmUgd29ya2Zsb3ciLCJjYW5kaWRhdGUiOiJTYXZlIHRvIGZvbGRlcnM7IHJlYWQgaW4gYSBjbGVhbiB2aWV3LiIsImN1cnJlbnQiOiJTYXZlIG9uY2U7IGFwcCBhdXRvLXNvcnRzIGludG8gY2F0ZWdvcmllcy4ifSx7ImRpbWVuc2lvbiI6IkRhaWx5IGRpZ2VzdCIsImNhbmRpZGF0ZSI6Ik5vIGRpZ2VzdCBvciByZWFkLXJlbWluZGVyIGZlYXR1cmUuIiwiY3VycmVudCI6IkRhaWx5IGRpZ2VzdCBwaWNrcyAzIHVucmVhZCBpdGVtcyB0byByZWFkLiJ9LHsiZGltZW5zaW9uIjoiU3luYyIsImNhbmRpZGF0ZSI6Ik5hdGl2ZSBhY3Jvc3MgcGhvbmUgKyBsYXB0b3AgKGZyZWUpLiIsImN1cnJlbnQiOiJOYXRpdmUgYWNyb3NzIHBob25lICsgbGFwdG9wLiJ9LHsiZGltZW5zaW9uIjoiQXV0by1jYXRlZ29yaXphdGlvbiIsImNhbmRpZGF0ZSI6IlVuc3VwcG9ydGVkIOKAlCBmb2xkZXJzIG9ubHksIG5vIHRhZ3MuIiwiY3VycmVudCI6Ik5hdGl2ZSwgYXV0b21hdGljLiJ9LHsiZGltZW5zaW9uIjoiUHJpY2UiLCJjYW5kaWRhdGUiOiJGcmVlIHN5bmM7IFByZW1pdW0gJDUuOTkvbW8uIiwiY3VycmVudCI6IkJ1aWxkIGNvc3QgaGlnaCAobm9uLXByb2dyYW1tZXIpLiJ9XSwibm90YWJsZURlc2lnbnMiOlt7InRpdGxlIjoiTWluaW1hbCBmb2xkZXItb25seSBvcmdhbml6YXRpb24iLCJkZXRhaWwiOiJTaG93cyBob3cgbGl0dGxlIHN0cnVjdHVyZSBtYW55IHJlYWRlcnMgYWN0dWFsbHkgbmVlZCDigJQgYSB1c2VmdWwgY29udHJhc3QgaWYgeW91ciAnY2F0ZWdvcmllcycgY291bGQganVzdCBiZSBhIGZldyBmb2xkZXJzLiJ9XSwicmV1c2FibGVMZXNzb25zIjpbIklmIHlvdSBmaW5kIGF1dG8tY2F0ZWdvcml6YXRpb24gb3ZlcmtpbGwsIEluc3RhcGFwZXIncyBzaW1wbGUgZm9sZGVycyArIGZyZWUgc3luYyBtYXkgYWxyZWFkeSBzb2x2ZSB0aGUgcmVhZC1sYXRlciBoYWxmLiIsIkl0IHdpbGwgbm90IHNvbHZlIHRoZSBkYWlseS1kaWdlc3Qgb3IgYXV0by10YWcgbXVzdC1oYXZlcywgc28gaXQgaXMgaW5jb21wbGV0ZSBvbiBpdHMgb3duLiJdLCJzdW1tYXJ5IjoiQ2hlYXBlc3QgcmVsaWFibGUgcmVhZC1sYXRlciArIHN5bmMsIGJ1dCBpdCBoYXMgbmVpdGhlciBhdXRvLWNhdGVnb3JpemF0aW9uIG5vciBhbnkgZGlnZXN0L3JlbWluZGVyIOKAlCBpdCBjb3ZlcnMgb25seSBvbmUgb2YgeW91ciB0aHJlZSBtdXN0LWhhdmVzLiIsImNvdmVyYWdlTm90ZSI6IkZlYXR1cmUgc2V0IHZlcmlmaWVkIGZyb20gdGhlIG9mZmljaWFsIFByZW1pdW0gcGFnZTsgYWJzZW5jZSBvZiB0YWdnaW5nL2RpZ2VzdCBpcyBiYXNlZCBvbiB3aGF0IHRoZSBwYWdlIGxpc3RzLCBub3QgYW4gZXhoYXVzdGl2ZSBmZWF0dXJlIGF1ZGl0LiIsInNvdXJjZXMiOltdfSx7ImlkIjoib21uaXZvcmUiLCJuYW1lIjoiT21uaXZvcmUiLCJ1cmwiOiJodHRwczovL29tbml2b3JlLmFwcCIsImNhdGVnb3J5IjoiQWRhcHRhYmxlIG9wZW4tc291cmNlIHByb2plY3QiLCJvdmVydmlldyI6IkEgY29tcGxldGUsIG9wZW4tc291cmNlIHJlYWQtaXQtbGF0ZXIgYXBwICgxNmsrIEdpdEh1YiBzdGFycykgdGhhdCB3YXMgcG9wdWxhciBhbmQgZnJlZS4gVGhlIGhvc3RlZCBjbG91ZCBzZXJ2aWNlIHdhcyBkZXByZWNhdGVkIGluIE5vdmVtYmVyIDIwMjQ7IGl0IGlzIG5vdyBzZWxmLWhvc3Qgb25seS4gTWFudWFsIGxhYmVscy90YWdzOyBubyBhdXRvLWNhdGVnb3JpemF0aW9uIG9yIGRhaWx5IGRpZ2VzdC4iLCJjb21wYXJpc29uIjpbeyJkaW1lbnNpb24iOiJDb3JlIHdvcmtmbG93IiwiY2FuZGlkYXRlIjoiU2F2ZSwgcmVhZCwgYW5kIG1hbnVhbGx5IGxhYmVsIGFydGljbGVzLiIsImN1cnJlbnQiOiJTYXZlIG9uY2U7IGFwcCBhdXRvLXNvcnRzIGludG8gY2F0ZWdvcmllcy4ifSx7ImRpbWVuc2lvbiI6IkRhaWx5IGRpZ2VzdCIsImNhbmRpZGF0ZSI6Ik5vIGRpZ2VzdCBmZWF0dXJlLiIsImN1cnJlbnQiOiJEYWlseSBkaWdlc3QgcGlja3MgMyB1bnJlYWQgaXRlbXMgdG8gcmVhZC4ifSx7ImRpbWVuc2lvbiI6IlN5bmMiLCJjYW5kaWRhdGUiOiJBcHBzIGV4aXN0ZWQsIGJ1dCBob3N0ZWQgY2xvdWQgZGVwcmVjYXRlZDsgc2VsZi1ob3N0IG9ubHkgbm93LiIsImN1cnJlbnQiOiJOYXRpdmUgYWNyb3NzIHBob25lICsgbGFwdG9wLiJ9LHsiZGltZW5zaW9uIjoiQXV0by1jYXRlZ29yaXphdGlvbiIsImNhbmRpZGF0ZSI6IlVuc3VwcG9ydGVkIOKAlCBtYW51YWwgbGFiZWxzIG9ubHkuIiwiY3VycmVudCI6Ik5hdGl2ZSwgYXV0b21hdGljLiJ9LHsiZGltZW5zaW9uIjoiRGVwbG95bWVudCIsImNhbmRpZGF0ZSI6IlNlbGYtaG9zdCB2aWEgRG9ja2VyOyBub3QgdmlhYmxlIGZvciBhIG5vbi1wcm9ncmFtbWVyLiIsImN1cnJlbnQiOiJIb3N0ZWQvY29udmVuaWVuY2UgcHJlZmVycmVkLiJ9XSwibm90YWJsZURlc2lnbnMiOlt7InRpdGxlIjoiT3Blbi1zb3VyY2UsIHNlbGYtaG9zdGFibGUgcmVhZC1sYXRlciIsImRldGFpbCI6IkEgcmVmZXJlbmNlIGRlc2lnbiBmb3IgYSBmdWxsIHJlYWQtbGF0ZXIgc3RhY2sgeW91IGNvdWxkIGZvcmsg4oCUIGJ1dCBvbmx5IHByYWN0aWNhbCBpZiB5b3UgaGF2ZSBob3N0aW5nL0Rldk9wcyBza2lsbHMsIHdoaWNoIHlvdSBkbyBub3QuIn1dLCJyZXVzYWJsZUxlc3NvbnMiOlsiSWYgeW91IGxhdGVyIGJlY29tZSB0ZWNobmljYWwgb3IgaGlyZSBoZWxwLCBPbW5pdm9yZSdzIGNvZGViYXNlIGlzIGEgc3Ryb25nIHN0YXJ0aW5nIHBvaW50IHRvIGFkYXB0IHJhdGhlciB0aGFuIGJ1aWxkIGZyb20gemVyby4iLCJGb3Igbm93LCBpdHMgZGVwcmVjYXRpb24gb2YgdGhlIGhvc3RlZCBzZXJ2aWNlIGFuZCBzZWxmLWhvc3Qtb25seSBtb2RlbCBkaXNxdWFsaWZ5IGl0IGZvciBhIGNvbnZlbmllbmNlLWZpcnN0LCBub24tcHJvZ3JhbW1lciB1c2VyLiJdLCJzdW1tYXJ5IjoiVGVjaG5pY2FsbHkgY2FwYWJsZSBhbmQgb3Blbi1zb3VyY2UsIGJ1dCBpdHMgaG9zdGVkIHNlcnZpY2UgaXMgZ29uZSBhbmQgc2VsZi1ob3N0aW5nIGlzIG91dCBvZiByZWFjaCBmb3IgYSBub24tcHJvZ3JhbW1lciDigJQgbm90IGEgcHJhY3RpY2FsIGNob2ljZSB0b2RheS4iLCJjb3ZlcmFnZU5vdGUiOiJDbG91ZCBkZXByZWNhdGlvbiAoTm92IDIwMjQpIGFuZCBmZWF0dXJlIHNldCBjb25maXJtZWQgZnJvbSB0aGUgb2ZmaWNpYWwgUkVBRE1FOyBHaXRIdWIgcmVwbyBhY3RpdmVseSBwdXNoZWQgKDIwMjYtMDgtMjgpIGJ1dCB0aGF0IHJlZmxlY3RzIGNvbW11bml0eS9tYWludGVuYW5jZSwgbm90IGEgcmV0dXJuIG9mIHRoZSBob3N0ZWQgYXBwLiIsInNvdXJjZXMiOlt7ImxhYmVsIjoiT21uaXZvcmUgUkVBRE1FIChzdGF0dXMgKyBmZWF0dXJlcykiLCJ1cmwiOiJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vb21uaXZvcmUtYXBwL29tbml2b3JlL21haW4vUkVBRE1FLm1kIn0seyJsYWJlbCI6IkdpdEh1YiByZXBvc2l0b3J5IiwidXJsIjoiaHR0cHM6Ly9naXRodWIuY29tL29tbml2b3JlLWFwcC9vbW5pdm9yZSJ9XX1dLCJ1bmtub3ducyI6WyJXaGV0aGVyIFJhaW5kcm9wLmlvJ3MgaW50ZXJhY3RpdmUgQUkgdGFnIHN1Z2dlc3Rpb25zICsgcGVyLWJvb2ttYXJrIHJlbWluZGVycyB3aWxsIGZlZWwgJ2F1dG9tYXRpYycgYW5kICdkYWlseS1kaWdlc3QnIGVub3VnaCBmb3IgeW91IOKAlCBvbmx5IGEgZnJlZSB0cmlhbCBhbnN3ZXJzIHRoaXMuIiwiVGhlIGV4YWN0IFJhaW5kcm9wIFBybyBkb2xsYXIgZmlndXJlIGlzIHNob3duIGFzIGFuIGltYWdlIG9uIHRoZSBidXkgcGFnZSBhbmQgY291bGQgbm90IGJlIHJlYWQgYXMgdGV4dCAofiQzLjU0L21vIHBlciB0aGlyZC1wYXJ0eSBwcmljaW5nIHRyYWNrZXJzKS4iLCJQb2NrZXQgKE1vemlsbGEpIGlzIGJlaW5nIHBoYXNlZCBvdXQgaW4gMjAyNiBhbmQgaXMgbm90IGEgdmlhYmxlIG9wdGlvbjsgRmlyZWZveCBUYWIgR3JvdXBzL2Jvb2ttYXJrcyBhcmUgTW96aWxsYSdzIHN1Z2dlc3RlZCByZXBsYWNlbWVudCwgd2hpY2ggaXMgY2xvc2VyIHRvIHlvdXIgY3VycmVudCB3b3JrYXJvdW5kIHRoYW4gYSBzb2x1dGlvbi4iLCJZb3UgaGF2ZSBuZXZlciB0cmllZCBhbnkgcmVhZC1sYXRlciBhcHAsIHNvIGl0IGlzIHVudmVyaWZpZWQgd2hldGhlciBleGlzdGluZyB0b29scyB3b3VsZCBhY3R1YWxseSBsZWF2ZSB5b3UgdW5zYXRpc2ZpZWQg4oCUIHRoZSBzdHJvbmdlc3QgcmVhc29uIHRvIGJ1aWxkIGhhcyBub3QgYmVlbiB0ZXN0ZWQuIl0sImxhYmVscyI6e319";
+        const bytes = Uint8Array.from(atob(encodedReport), (character) => character.charCodeAt(0));
+        const report = JSON.parse(new TextDecoder().decode(bytes));
+
+        const dictionaries = {
+          zh: {
+            skipToContent: "跳到主要内容",
+            assessment: "想法评估",
+            comparisonMode: "项目比较",
+            report: "研究简报",
+            project: "当前对象",
+            recommendation: "最终建议",
+            strongestReuse: "最值得复用",
+            biggestUnknown: "最大未知项",
+            generated: "生成时间",
+            temporaryNotice: "临时查看器 · 仅在主动保存时导出报告",
+            contextKicker: "01 / Context",
+            context: "问题轮廓",
+            contextDescription: "研究所依据的用户、任务、工作流与关键约束。",
+            coverageKicker: "02 / Evidence",
+            coverage: "检索覆盖",
+            coverageDescription: "本次实际使用的证据渠道，以及无法覆盖或发生降级的部分。",
+            matrixKicker: "03 / Fit",
+            comparison: "能力对比",
+            comparisonDescription: "只保留会影响选择的关键能力；未知不等于不支持。",
+            capability: "关键能力",
+            currentProject: "当前项目",
+            candidatesKicker: "04 / Alternatives",
+            candidates: "候选详析",
+            candidatesDescription: "逐一查看强候选的工作方式、差异、可复用设计与证据来源。",
+            overview: "概览",
+            comparisonWithProject: "与当前项目对比",
+            dimension: "维度",
+            notableDesigns: "值得关注的设计",
+            reusableLessons: "可复用经验",
+            summary: "总结",
+            sources: "来源",
+            officialAddress: "官方网站",
+            coverageNote: "覆盖说明",
+            saveMarkdown: "保存 Markdown",
+            copyMarkdown: "复制 Markdown",
+            openOfficial: "打开官网",
+            unknownsKicker: "05 / Unknowns",
+            unknowns: "仍需验证",
+            unknownsDescription: "这些事实可能改变最终判断，适合在投入实现前优先验证。",
+            used: "已使用",
+            limited: "受限",
+            unavailable: "不可用",
+            notCompared: "未比较",
+            noCandidates: "没有足够强的候选可进入详细比较。",
+            noData: "本次没有记录该项。",
+            saved: "报告已进入浏览器保存流程。",
+            copied: "Markdown 已复制。",
+            saveFailed: "无法保存，请尝试复制 Markdown。",
+            copyFailed: "复制失败，请使用保存按钮。",
+            theme: "切换明暗主题",
+          },
+          en: {
+            skipToContent: "Skip to content",
+            assessment: "Idea assessment",
+            comparisonMode: "Project comparison",
+            report: "Research brief",
+            project: "Subject",
+            recommendation: "Final recommendation",
+            strongestReuse: "Best reuse option",
+            biggestUnknown: "Biggest unknown",
+            generated: "Generated",
+            temporaryNotice: "Temporary viewer · export only when you choose",
+            contextKicker: "01 / Context",
+            context: "Problem fingerprint",
+            contextDescription: "The user, task, and constraints behind the search.",
+            coverageKicker: "02 / Evidence",
+            coverage: "Search coverage",
+            coverageDescription: "Evidence routes used and any coverage limits.",
+            matrixKicker: "03 / Fit",
+            comparison: "Capability comparison",
+            comparisonDescription: "Decision-relevant capabilities only. Unknown is not unsupported.",
+            capability: "Capability",
+            currentProject: "Current project",
+            candidatesKicker: "04 / Alternatives",
+            candidates: "Candidate details",
+            candidatesDescription: "Review fit, constraints, reuse, and sources.",
+            overview: "Overview",
+            comparisonWithProject: "Project comparison",
+            dimension: "Dimension",
+            notableDesigns: "Notable designs",
+            reusableLessons: "Reusable lessons",
+            summary: "Summary",
+            sources: "Sources",
+            officialAddress: "Official address",
+            coverageNote: "Coverage note",
+            saveMarkdown: "Save Markdown",
+            copyMarkdown: "Copy Markdown",
+            openOfficial: "Official site",
+            unknownsKicker: "05 / Unknowns",
+            unknowns: "Still unverified",
+            unknownsDescription: "These facts could still change the decision.",
+            used: "Used",
+            limited: "Limited",
+            unavailable: "Unavailable",
+            notCompared: "Not compared",
+            noCandidates: "No candidate was strong enough for a detailed comparison.",
+            noData: "No item was recorded for this section.",
+            saved: "The browser save flow has started.",
+            copied: "Markdown copied.",
+            saveFailed: "Could not save. Try copying the Markdown instead.",
+            copyFailed: "Copy failed. Use the save button instead.",
+            theme: "Toggle light or dark theme",
+          },
+        };
+        dictionaries.zh.exportPdf = "导出完整 PDF";
+        dictionaries.en.exportPdf = "Export full PDF";
+
+        const languageFamily = report.language.toLowerCase().startsWith("zh")
+          ? "zh"
+          : report.language.toLowerCase().startsWith("en")
+            ? "en"
+            : "custom";
+        const labels = languageFamily === "custom"
+          ? report.labels
+          : { ...dictionaries[languageFamily], ...(report.labels || {}) };
+        const supportLabels = languageFamily === "zh"
+          ? {
+              native: "原生支持",
+              partial: "部分支持",
+              extensible: "可通过扩展实现",
+              unsupported: "不支持",
+              unverified: "尚未验证",
+            }
+          : {
+              native: "Native",
+              partial: "Partial",
+              extensible: "Extensible",
+              unsupported: "Unsupported",
+              unverified: "Unverified",
+            };
+
+        const $ = (id) => document.getElementById(id);
+        const element = (tag, className, text) => {
+          const node = document.createElement(tag);
+          if (className) node.className = className;
+          if (text !== undefined) node.textContent = text;
+          return node;
+        };
+        const safeUrl = (value) => {
+          try {
+            const url = new URL(value);
+            return ["http:", "https:"].includes(url.protocol) ? url.href : null;
+          } catch {
+            return null;
+          }
+        };
+        const displayDate = (value) => {
+          try {
+            return new Intl.DateTimeFormat(report.language, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+          } catch {
+            return value;
+          }
+        };
+        const slug = (value) => value
+          .normalize("NFKD")
+          .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+          .replace(/^-|-$/g, "")
+          .toLowerCase() || "competitor";
+        const tableText = (value) => String(value).replace(/\|/g, "\\|").replace(/\r?\n/g, "<br>");
+        const textOrFallback = (value) => value && String(value).trim() ? value : labels.noData;
+
+        document.documentElement.lang = report.language;
+        document.documentElement.dir = /^(ar|fa|he|ur)(-|$)/i.test(report.language) ? "rtl" : "ltr";
+        document.title = `${report.topic} · Search Before Build`;
+
+        const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = preferredTheme;
+        $("theme-toggle").setAttribute("aria-label", labels.theme);
+        $("theme-toggle").title = labels.theme;
+        $("theme-toggle").addEventListener("click", () => {
+          document.documentElement.dataset.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        });
+        $("export-pdf").textContent = labels.exportPdf;
+        $("export-pdf").title = labels.exportPdf;
+        $("export-pdf").addEventListener("click", async () => {
+          if (document.fonts && document.fonts.ready) await document.fonts.ready;
+          window.print();
+        });
+
+        $("skip-link").textContent = labels.skipToContent;
+        $("mode-chip").textContent = report.mode === "assess" ? labels.assessment : labels.comparisonMode;
+        $("hero-eyebrow").textContent = labels.report;
+        $("report-topic").textContent = report.topic;
+        $("project-line").textContent = `${labels.project} · ${report.projectName}`;
+        $("decision-label").textContent = labels.recommendation;
+        $("decision-value").textContent = report.recommendation.value;
+        $("decision").dataset.value = report.recommendation.value.toLowerCase().replace(/\s+/g, "-");
+        $("decision-reason").textContent = report.recommendation.reason;
+        $("reuse-label").textContent = labels.strongestReuse;
+        $("reuse-value").textContent = report.recommendation.reusableOption;
+        $("unknown-label").textContent = labels.biggestUnknown;
+        $("unknown-value").textContent = report.recommendation.biggestUnknown;
+        $("generated-line").append(labels.generated + " · ", element("strong", "", displayDate(report.generatedAt)));
+        $("temporary-line").textContent = labels.temporaryNotice;
+
+        const sectionText = [
+          ["context-kicker", labels.contextKicker],
+          ["context-title", labels.context],
+          ["context-description", labels.contextDescription],
+          ["coverage-kicker", labels.coverageKicker],
+          ["coverage-title", labels.coverage],
+          ["coverage-description", labels.coverageDescription],
+          ["matrix-kicker", labels.matrixKicker],
+          ["matrix-title", labels.comparison],
+          ["matrix-description", labels.comparisonDescription],
+          ["candidates-kicker", labels.candidatesKicker],
+          ["candidates-title", labels.candidates],
+          ["candidates-description", labels.candidatesDescription],
+          ["unknowns-kicker", labels.unknownsKicker],
+          ["unknowns-title", labels.unknowns],
+          ["unknowns-description", labels.unknownsDescription],
+          ["footer-notice", labels.temporaryNotice],
+        ];
+        sectionText.forEach(([id, text]) => { $(id).textContent = text; });
+
+        report.fingerprint.forEach((item) => {
+          const card = element("article", "context-item");
+          card.append(element("p", "context-label", item.label), element("p", "context-value", item.value));
+          $("fingerprint-grid").append(card);
+        });
+        if (!report.fingerprint.length) {
+          $("fingerprint-grid").append(element("p", "empty-state", labels.noData));
+        }
+
+        report.coverage.forEach((item) => {
+          const card = element("article", "coverage-card");
+          const top = element("div", "coverage-top");
+          const status = element("span", "coverage-status", labels[item.status]);
+          status.dataset.status = item.status;
+          top.append(element("h3", "coverage-name", item.label), status);
+          card.append(top, element("p", "coverage-detail", item.detail));
+          $("coverage-grid").append(card);
+        });
+        if (!report.coverage.length) {
+          $("coverage-grid").append(element("p", "empty-state", labels.noData));
+        }
+
+        const supportCell = (cell) => {
+          const wrapper = element("div", "support-cell");
+          if (!cell) {
+            wrapper.append(element("span", "support-badge", labels.notCompared));
+            return wrapper;
+          }
+          const badge = element("span", "support-badge", supportLabels[cell.status]);
+          badge.dataset.status = cell.status;
+          wrapper.append(badge);
+          if (cell.note) wrapper.append(element("p", "cell-note", cell.note));
+          return wrapper;
+        };
+
+        const matrixHead = element("thead");
+        const matrixHeadRow = element("tr");
+        matrixHeadRow.append(element("th", "", labels.capability), element("th", "", report.projectName));
+        report.competitors.forEach((candidate) => matrixHeadRow.append(element("th", "", candidate.name)));
+        matrixHead.append(matrixHeadRow);
+        const matrixBody = element("tbody");
+        report.capabilities.forEach((capability) => {
+          const row = element("tr");
+          row.append(element("td", "capability-name", capability.name));
+          const current = element("td");
+          current.append(supportCell(capability.current));
+          row.append(current);
+          report.competitors.forEach((candidate) => {
+            const cell = element("td");
+            cell.append(supportCell(capability.candidates[candidate.id]));
+            row.append(cell);
+          });
+          matrixBody.append(row);
+        });
+        if (!report.capabilities.length) {
+          const row = element("tr");
+          const cell = element("td", "empty-state", labels.noData);
+          cell.colSpan = report.competitors.length + 2;
+          row.append(cell);
+          matrixBody.append(row);
+        }
+        $("capability-matrix").append(matrixHead, matrixBody);
+
+        const buildPrintMatrix = () => {
+          const container = $("print-capability-matrix");
+          if (!report.competitors.length) {
+            container.append(element("p", "empty-state", labels.noCandidates));
+            return;
+          }
+
+          report.competitors.forEach((candidate, index) => {
+            const group = element("section", "print-matrix-group");
+            const heading = element("header", "print-matrix-heading");
+            heading.append(
+              element("h3", "", candidate.name),
+              element("span", "", `${String(index + 1).padStart(2, "0")} / ${String(report.competitors.length).padStart(2, "0")}`),
+            );
+
+            const table = element("table", "print-matrix-table");
+            const head = element("thead");
+            const headRow = element("tr");
+            [labels.capability, report.projectName, candidate.name].forEach((text) => headRow.append(element("th", "", text)));
+            head.append(headRow);
+
+            const body = element("tbody");
+            report.capabilities.forEach((capability) => {
+              const row = element("tr");
+              const current = element("td");
+              const alternative = element("td");
+              current.append(supportCell(capability.current));
+              alternative.append(supportCell(capability.candidates[candidate.id]));
+              row.append(element("td", "capability-name", capability.name), current, alternative);
+              body.append(row);
+            });
+            if (!report.capabilities.length) {
+              const row = element("tr");
+              const cell = element("td", "empty-state", labels.noData);
+              cell.colSpan = 3;
+              row.append(cell);
+              body.append(row);
+            }
+
+            table.append(head, body);
+            group.append(heading, table);
+            container.append(group);
+          });
+        };
+        buildPrintMatrix();
+
+        const makeMarkdown = (candidate) => {
+          const lines = [
+            `# ${candidate.name}`,
+            "",
+          ];
+          const official = safeUrl(candidate.url);
+          if (official) lines.push(`${labels.officialAddress}: [${candidate.name}](${official})`, "");
+          lines.push(`## ${labels.overview}`, "", candidate.overview, "");
+          lines.push(`## ${labels.comparisonWithProject}`, "");
+          lines.push(`| ${labels.dimension} | ${candidate.name} | ${report.projectName} |`, "| --- | --- | --- |");
+          candidate.comparison.forEach((row) => {
+            lines.push(`| ${tableText(row.dimension)} | ${tableText(row.candidate)} | ${tableText(row.current)} |`);
+          });
+          lines.push("", `## ${labels.notableDesigns}`, "");
+          candidate.notableDesigns.forEach((item, index) => lines.push(`${index + 1}. **${item.title}**: ${item.detail}`));
+          lines.push("", `## ${labels.reusableLessons}`, "");
+          candidate.reusableLessons.forEach((item) => lines.push(`- ${item}`));
+          lines.push("", `## ${labels.summary}`, "", `> ${candidate.summary}`, "", `## ${labels.sources}`, "");
+          if (candidate.coverageNote) lines.push(`${labels.coverageNote}: ${candidate.coverageNote}`, "");
+          candidate.sources.forEach((source) => {
+            const url = safeUrl(source.url);
+            if (url) lines.push(`- [${source.label}](${url})`);
+          });
+          return `${lines.join("\n").trim()}\n`;
+        };
+
+        let toastTimer;
+        const showToast = (message) => {
+          clearTimeout(toastTimer);
+          $("toast").textContent = message;
+          $("toast").dataset.visible = "true";
+          toastTimer = setTimeout(() => { $("toast").dataset.visible = "false"; }, 2800);
+        };
+        const fallbackDownload = (contents, filename) => {
+          const url = URL.createObjectURL(new Blob([contents], { type: "text/markdown;charset=utf-8" }));
+          const link = element("a");
+          link.href = url;
+          link.download = filename;
+          document.body.append(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        };
+        const saveMarkdown = async (candidate) => {
+          const contents = makeMarkdown(candidate);
+          const filename = `${slug(candidate.name)}.md`;
+          try {
+            if (window.isSecureContext && "showSaveFilePicker" in window) {
+              try {
+                const handle = await window.showSaveFilePicker({
+                  suggestedName: filename,
+                  types: [{ description: "Markdown", accept: { "text/markdown": [".md"] } }],
+                });
+                const writable = await handle.createWritable();
+                await writable.write(contents);
+                await writable.close();
+                showToast(labels.saved);
+                return;
+              } catch (error) {
+                if (error && error.name === "AbortError") return;
+              }
+            }
+            fallbackDownload(contents, filename);
+            showToast(labels.saved);
+          } catch {
+            showToast(labels.saveFailed);
+          }
+        };
+        const copyMarkdown = async (candidate) => {
+          const contents = makeMarkdown(candidate);
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(contents);
+            } else {
+              const area = element("textarea");
+              area.value = contents;
+              area.setAttribute("readonly", "");
+              area.style.position = "fixed";
+              area.style.opacity = "0";
+              document.body.append(area);
+              area.select();
+              if (!document.execCommand("copy")) throw new Error("copy failed");
+              area.remove();
+            }
+            showToast(labels.copied);
+          } catch {
+            showToast(labels.copyFailed);
+          }
+        };
+
+        const contentBlock = (title) => {
+          const block = element("section", "content-block");
+          block.append(element("h4", "content-title", title));
+          return block;
+        };
+
+        report.competitors.forEach((candidate, index) => {
+          const card = element("article", "candidate-card");
+          card.id = `candidate-${candidate.id}`;
+          const header = element("header", "candidate-header");
+          const titleGroup = element("div");
+          titleGroup.append(element("h3", "candidate-title", candidate.name), element("p", "candidate-category", candidate.category));
+          const actions = element("div", "candidate-actions");
+          const saveButton = element("button", "button button-primary", labels.saveMarkdown);
+          saveButton.type = "button";
+          saveButton.addEventListener("click", () => saveMarkdown(candidate));
+          const copyButton = element("button", "button", labels.copyMarkdown);
+          copyButton.type = "button";
+          copyButton.addEventListener("click", () => copyMarkdown(candidate));
+          actions.append(saveButton, copyButton);
+          const official = safeUrl(candidate.url);
+          if (official) {
+            const officialLink = element("a", "button", labels.openOfficial);
+            officialLink.href = official;
+            officialLink.target = "_blank";
+            officialLink.rel = "noreferrer noopener";
+            actions.append(officialLink);
+          }
+          header.append(element("span", "candidate-index", String(index + 1).padStart(2, "0")), titleGroup, actions);
+          card.append(header, element("p", "candidate-overview", candidate.overview));
+
+          const body = element("div", "candidate-body");
+          const main = element("div", "candidate-main");
+          const comparison = contentBlock(labels.comparisonWithProject);
+          const table = element("table", "comparison-table");
+          const thead = element("thead");
+          const headRow = element("tr");
+          [labels.dimension, candidate.name, report.projectName].forEach((text) => headRow.append(element("th", "", text)));
+          thead.append(headRow);
+          const tbody = element("tbody");
+          candidate.comparison.forEach((item) => {
+            const row = element("tr");
+            row.append(element("td", "", item.dimension), element("td", "", item.candidate), element("td", "", item.current));
+            tbody.append(row);
+          });
+          table.append(thead, tbody);
+          comparison.append(table);
+          main.append(comparison);
+
+          const designs = contentBlock(labels.notableDesigns);
+          const designList = element("ol", "design-list");
+          candidate.notableDesigns.forEach((item, itemIndex) => {
+            const row = element("li", "design-item");
+            const copy = element("div");
+            copy.append(element("strong", "", item.title), element("p", "", item.detail));
+            row.append(element("span", "design-number", String(itemIndex + 1).padStart(2, "0")), copy);
+            designList.append(row);
+          });
+          designs.append(designList);
+          main.append(designs);
+
+          const side = element("aside", "candidate-side");
+          const lessons = contentBlock(labels.reusableLessons);
+          const lessonList = element("ul", "lesson-list");
+          candidate.reusableLessons.forEach((item) => lessonList.append(element("li", "", item)));
+          lessons.append(lessonList);
+          side.append(lessons);
+
+          const summary = contentBlock(labels.summary);
+          summary.append(element("blockquote", "summary-quote", candidate.summary));
+          side.append(summary);
+
+          const sources = contentBlock(labels.sources);
+          if (candidate.coverageNote) sources.append(element("p", "coverage-note", `${labels.coverageNote}: ${candidate.coverageNote}`));
+          const sourceList = element("ul", "source-list");
+          candidate.sources.forEach((source) => {
+            const url = safeUrl(source.url);
+            if (!url) return;
+            const item = element("li");
+            const link = element("a", "source-link", source.label);
+            link.href = url;
+            link.target = "_blank";
+            link.rel = "noreferrer noopener";
+            item.append(link);
+            sourceList.append(item);
+          });
+          sources.append(sourceList);
+          side.append(sources);
+
+          body.append(main, side);
+          card.append(body);
+          $("candidate-stack").append(card);
+        });
+        if (!report.competitors.length) {
+          $("candidate-stack").append(element("p", "empty-state", labels.noCandidates));
+        }
+
+        const unknowns = report.unknowns.length ? report.unknowns : [report.recommendation.biggestUnknown];
+        unknowns.forEach((item) => $("unknown-list").append(element("li", "", textOrFallback(item))));
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "query": "Generate strongly-typed TypeScript API clients (request/response models, path functions, query-parameter types) from OpenAPI 3.x specs, runnable offline in CI and locally, no SaaS generation dependency",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "Generate TypeScript types from OpenAPI 3.x specs",
+      "Offline local generation in CI",
+      "Type-safe query parameters and request/response models"
+    ],
+    "capabilityAliases": {
+      "Generate TypeScript types from OpenAPI 3.x specs": [
+        "openapi to typescript",
+        "generate types from openapi",
+        "openapi 3.1 typescript",
+        "typed client from openapi"
+      ],
+      "Offline local generation in CI": [
+        "offline code generation",
+        "local codegen cli",
+        "ci codegen",
+        "no saas dependency",
+        "run in ci"
+      ],
+      "Type-safe query parameters and request/response models": [
+        "query parameter types",
+        "typed request response",
+        "type-safe client",
+        "path functions"
+      ]
+    },
+    "desiredOutcome": "Generated clients cannot drift from specs; build fails in CI when generated output is stale",
+    "operatingMode": "CLI, local, CI"
+  },
+  "retrievals": [
+    {
+      "requestId": "npm-openapi-typescript",
+      "providerHint": "npm",
+      "categoryHint": "package",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"name": "openapi-typescript", "description": "Convert OpenAPI 3.0 & 3.1 schemas to TypeScript", "version": "7.13.0", "date": "2026-02-11", "links": {"repository": "https://github.com/openapi-ts/openapi-typescript"}},
+          {"name": "openapi-fetch", "description": "Fast, type-safe fetch client for your OpenAPI schema. Only 6 kb (min).", "date": "2026-02-11"},
+          {"name": "orval", "description": "A swagger client generator for typescript", "date": "2026-08-23"},
+          {"name": "kubb", "description": "The meta framework for code generation. Point Kubb at a schema and it generates types, clients, hooks, validators, mocks.", "date": "2026-08-28"},
+          {"name": "@hey-api/openapi-ts", "description": "Turn API specifications into production-ready SDKs", "date": "2026-06-23"},
+          {"name": "@openapi-codegen/cli", "description": "OpenAPI Codegen cli", "version": "3.1.0", "date": "2025-02-20"}
+        ]
+      }
+    },
+    {
+      "requestId": "npm-openapi-codegen",
+      "providerHint": "npm",
+      "categoryHint": "package",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"name": "@openapi-codegen/typescript", "description": "OpenAPI Codegen typescript generators", "version": "11.1.0", "date": "2025-10-01"},
+          {"name": "openapi-codegen", "description": "OpenAPI 3.0 CodeGen", "version": "2.2.2", "date": "2021-08-24"}
+        ]
+      }
+    },
+    {
+      "requestId": "github-openapi-ts-client",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "items": [
+          {"full_name": "openapi-ts/openapi-typescript", "description": "Generate TypeScript types from OpenAPI 3 specs", "stars": 8336, "archived": false, "license": "MIT", "pushed_at": "2026-08-26T14:16:19Z", "homepage": "https://openapi-ts.dev"},
+          {"full_name": "orval-labs/orval", "description": "orval is able to generate client with appropriate type-signatures (TypeScript) from any valid OpenAPI v3 or Swagger v2 spec", "stars": 6405, "archived": false, "license": "MIT", "pushed_at": "2026-08-28T12:26:07Z", "homepage": "https://orval.dev"},
+          {"full_name": "hey-api/hey-api", "description": "Turn API specifications into production-ready SDKs, validators, mocks, and more. 20+ plugins.", "stars": 5323, "archived": false, "license": "MIT", "pushed_at": "2026-08-24T17:31:35Z", "homepage": "https://heyapi.dev"},
+          {"full_name": "kubb-labs/kubb", "description": "The meta framework for code generation. Automate OpenAPI to type-safe TypeScript, Zod, and TanStack Query with a modular plugin system", "stars": 1788, "archived": false, "license": "MIT", "pushed_at": "2026-08-28T20:00:11Z", "homepage": "https://kubb.dev"},
+          {"full_name": "acacode/swagger-typescript-api", "description": "Generate the API Client for Fetch or Axios from an OpenAPI Specification", "stars": 4116, "archived": false, "license": "MIT", "pushed_at": "2026-08-22T21:12:37Z"},
+          {"full_name": "ferdikoomen/openapi-typescript-codegen", "description": "NodeJS library that generates Typescript or Javascript clients based on an OpenAPI spec", "stars": 3366, "archived": false, "license": "MIT", "pushed_at": "2026-08-28T00:12:33Z"},
+          {"full_name": "OpenAPITools/openapi-generator", "description": "OpenAPI Generator allows generation of API client libraries (SDK generation), server stubs, documentation and configuration", "stars": 26697, "archived": false, "license": "Apache-2.0", "pushed_at": "2026-08-28T04:15:32Z", "homepage": "https://openapi-generator.tech"},
+          {"full_name": "microsoft/kiota", "description": "OpenAPI based HTTP Client code generator", "stars": 3812, "archived": false, "pushed_at": "2026-08-28T22:45:35Z"},
+          {"full_name": "astahmer/typed-openapi", "description": "Generate a headless Typescript API client from an OpenAPI spec", "stars": 381, "archived": false, "pushed_at": "2026-08-28T23:45:19Z"}
+        ]
+      }
+    },
+    {
+      "requestId": "github-openapi-generator",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "items": [
+          {"full_name": "OpenAPITools/openapi-generator", "description": "OpenAPI Generator allows generation of API client libraries (SDK generation), server stubs, documentation and configuration", "stars": 26697, "archived": false, "license": "Apache-2.0", "pushed_at": "2026-08-28T04:15:32Z", "homepage": "https://openapi-generator.tech"},
+          {"full_name": "OpenAPITools/openapi-generator-cli", "description": "A node package wrapper for openapi-generator (jar artifact)", "stars": 1973, "archived": false, "pushed_at": "2026-08-27T17:31:08Z"}
+        ]
+      }
+    },
+    {
+      "requestId": "maven-openapi-generator",
+      "providerHint": "maven",
+      "categoryHint": "package",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"id": "org.openapitools:openapi-generator", "latestVersion": "7.14.0", "timestamp": 1750851508077},
+          {"id": "org.openapitools:openapi-generator-cli", "latestVersion": "7.14.0", "timestamp": 1750851513728}
+        ]
+      }
+    },
+    {
+      "requestId": "web-fern",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "Fern", "url": "https://github.com/fern-api/fern", "snippet": "Transforms API definitions into production-ready SDKs. fern generate runs generators in the cloud; fern generate --local runs generators in docker locally. Apache 2.0. fernapi/fern-typescript-sdk generator."}
+        ]
+      }
+    },
+    {
+      "requestId": "web-speakeasy",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "Speakeasy", "url": "https://github.com/speakeasy-api/speakeasy", "snippet": "A Modern OpenAPI Native Toolchain. Generates type-safe SDKs in 10 languages including TypeScript. CLI locally installable (Homebrew/Winget/Docker). Open source. Also has hosted app.speakeasy.com."}
+        ]
+      }
+    },
+    {
+      "requestId": "web-openapi-ts-docs",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "openapi-typescript CLI", "url": "https://openapi-ts.dev/cli", "snippet": "npx openapi-typescript schema.yaml -o schema.d.ts. Supports --check (verify generated types up-to-date for CI). Parses local and remote schemas. No watch flag. Multi-file $ref via Redocly bundle."},
+          {"title": "openapi-fetch", "url": "https://openapi-ts.dev/openapi-fetch", "snippet": "Thin wrappers around native fetch API. 6 kB. Type-safe request body, query params, path params, response data+error. No built-in axios."},
+          {"title": "openapi-typescript advanced", "url": "https://openapi-ts.dev/advanced", "snippet": "Supports OpenAPI 3.0 and 3.1 including discriminators. oneOf/anyOf/allOf composition; TypeScript unions do not provide XOR so oneOf recommended alone. --default-non-nullable true."}
+        ]
+      }
+    },
+    {
+      "requestId": "web-openapi-generator-docs",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "OpenAPI Generator generators", "url": "https://openapi-generator.tech/docs/generators", "snippet": "TypeScript client generators: typescript-axios, typescript-fetch, typescript-node, typescript-angular, typescript-rxjs, typescript (experimental). Last updated Jul 18 2026."},
+          {"title": "OpenAPI Generator", "url": "https://openapi-generator.tech", "snippet": "npm wrapper @openapitools/openapi-generator-cli is a cross-platform wrapper around the .jar artifact. JVM required unless using Docker image. Apache 2.0."}
+        ]
+      }
+    }
+  ],
+  "topK": 8
+}

@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T08:42:34.196Z",
+  "query": "read-it-later app that automatically categorizes saved web articles and sends a daily digest resurfacing unread items, synced across phone and laptop, for personal use",
+  "candidates": [
+    {
+      "id": "url:https://getpocket.com/",
+      "rank": 1,
+      "title": "Pocket Released (Formerly Read It Later)",
+      "url": "https://getpocket.com/",
+      "kind": "discussion",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://getpocket.com/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "discussion",
+        "web"
+      ],
+      "matchedCapabilities": [
+        "sync across phone and laptop"
+      ],
+      "evidenceRefs": [
+        "https://getpocket.com/",
+        "$.hits[3]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.8836,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.8893
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: sync across phone and laptop."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://www.instapaper.com/premium",
+      "rank": 2,
+      "title": "Instapaper",
+      "url": "https://www.instapaper.com/premium",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://www.instapaper.com/premium",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "automatic categorization of saved links",
+        "daily digest resurfacing unread items",
+        "sync across phone and laptop"
+      ],
+      "evidenceRefs": [
+        "https://www.instapaper.com/premium",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.9871,
+        "reciprocalRank": 0.0469,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.7184
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "Mentions: automatic categorization of saved links, daily digest resurfacing unread items, sync across phone and laptop."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://medium.com/better-humans/the-secret-power-of-read-it-later-apps",
+      "rank": 3,
+      "title": "The Secret Power of Read It Later Apps",
+      "url": "https://medium.com/better-humans/the-secret-power-of-read-it-later-apps",
+      "kind": "discussion",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://medium.com/better-humans/the-secret-power-of-read-it-later-apps",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "discussion"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://medium.com/better-humans/the-secret-power-of-read-it-later-apps",
+        "$.hits[2]"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 0.0151,
+        "evidenceQuality": 0.35,
+        "finalScore": 0.6888
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://omnivore.app/",
+      "rank": 4,
+      "title": "Omnivore – free, open source, read-it-later App",
+      "url": "https://omnivore.app/",
+      "kind": "discussion",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://omnivore.app/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "discussion"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://omnivore.app/",
+        "$.hits[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.7953,
+        "reciprocalRank": 0.0469,
+        "evidenceQuality": 0.35,
+        "finalScore": 0.5636
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:ncarlier/readflow",
+      "rank": 5,
+      "title": "ncarlier/readflow",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "ncarlier/readflow",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$.items[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.7256,
+        "reciprocalRank": 0.0307,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.5243
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "automatic categorization of saved links",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://www.instapaper.com/premium"
+      ]
+    },
+    {
+      "capability": "daily digest resurfacing unread items",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://www.instapaper.com/premium"
+      ]
+    },
+    {
+      "capability": "sync across phone and laptop",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://getpocket.com/",
+        "url:https://www.instapaper.com/premium"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "strong",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [],
+    "sourceCategories": [
+      "discussion",
+      "web",
+      "repo"
+    ],
+    "needsFollowUp": false,
+    "suggestedQueries": []
+  },
+  "retrieval": {
+    "requests": 7,
+    "failedRequests": 0,
+    "normalizedRecords": 13,
+    "rejectedRecords": 0,
+    "warnings": []
+  },
+  "metrics": {
+    "uniqueCandidates": 12,
+    "returnedCandidates": 5,
+    "duplicateObservationsMerged": 1
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "13 records from 7 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "1 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "12 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "5 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "0 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

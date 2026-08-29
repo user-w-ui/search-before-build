@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "query": "Personal read-later / bookmark organizer with automatic categorization, read reminders, and cross-device (phone + laptop) sync",
+  "fingerprint": {
+    "mustHaveCapabilities": ["automatic AI categorization/tagging without manual tagging", "read reminders / nudges", "cross-device sync (phone + laptop)"],
+    "desiredOutcome": "Saved links sorted automatically and surfaced with reminders so they actually get read, on both phone and laptop",
+    "operatingMode": "cross-platform hosted/cloud mobile + desktop app"
+  },
+  "retrievals": [
+    {"requestId":"web-cubox-home","providerHint":"host-web","categoryHint":"web","outcome":"success","payload":{"title":"Cubox","url":"https://cubox.cc/","snippet":"AI read-it-later + knowledge manager. Native iOS, Android, Mac, E-Ink, browser extensions. No Windows desktop. AI insights/summaries/ghost highlights; Library Q&A; invites Pocket import."}},
+    {"requestId":"web-cubox-pricing","providerHint":"host-web","categoryHint":"web","outcome":"success","payload":{"title":"Cubox pricing","url":"https://cubox.cc/pricing/","snippet":"Pro $39/year; Pro+AI $69/year annual only. AI features = AI Insights/summaries/Ghost Highlights. Automatic tagging/smart lists NOT confirmed on pricing page."}},
+    {"requestId":"web-raindrop-home","providerHint":"host-web","categoryHint":"web","outcome":"success","payload":{"title":"Raindrop.io","url":"https://raindrop.io/","snippet":"Cloud bookmark manager. Native apps Windows, Mac, iPad, iPhone, Android + extensions. Free: unlimited bookmarks/collections/devices. Reminders feature present. AI Assistant Stella referenced; auto-categorization details not on homepage."}},
+    {"requestId":"web-raindrop-pro","providerHint":"host-web","categoryHint":"web","outcome":"success","payload":{"title":"Raindrop.io Pro","url":"https://raindrop.io/pro","snippet":"Pro adds full-text search, permanent copies, upload space, cloud backup, cleanup tools. AI auto-categorization not mentioned. Exact monthly price not shown; ~20% yearly discount."}},
+    {"requestId":"web-readwise-reader","providerHint":"host-web","categoryHint":"web","outcome":"success","payload":{"title":"Readwise Reader","url":"https://readwise.io/read","snippet":"Read-later + annotation. $9.99/mo annual or $12.99/mo monthly; 30-day trial, no free tier. Daily Review resurfaces existing highlights not reminders to read saved items. Automatic tagging/smart feeds not mentioned."}},
+    {"requestId":"github-karakeep","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"title":"karakeep-app/karakeep","url":"https://github.com/karakeep-app/karakeep","fullName":"karakeep-app/karakeep","description":"Self-hostable bookmark-everything app with AI-based automatic tagging and full text search","stargazers_count":28649,"language":"TypeScript","license":"AGPL-3.0","pushed_at":"2026-08-26T14:14:40Z","archived":false,"topics":["bookmark-manager","read-it-later","self-hosted"],"features":"LLM-based automatic tagging and summarization (local models via Ollama); iOS+Android apps; Chrome/Firefox/Safari extensions; full-text+semantic search; full page archival; mobile offline reading; rule-based engine; REST API; importers from Chrome/Pocket/Linkwarden/Omnivore","note":"Self-hosted Docker; requires hosting/ops, not managed cloud signup"}},
+    {"requestId":"github-discovery-bookmark","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"title":"GitHub search results","snippet":"No higher-star direct competitor than Karakeep; lower-star DIY projects (SiftMarks local-first AI bookmark; karakeep-social-ai) are early-stage."}},
+    {"requestId":"mcp-bookmark","providerHint":"mcp-registry","categoryHint":"mcp","outcome":"success","payload":{"title":"MCP bookmark servers","snippet":"bookmarks-lifecycle, bookmarks-mcp, bookmark-lens - developer tools, not end-user apps."}}
+  ],
+  "topK": 5
+}

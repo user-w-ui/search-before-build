@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T08:42:43.700Z",
+  "query": "Generate strongly-typed TypeScript API clients (request/response models, path functions, query-parameter types) from OpenAPI 3.x specs, runnable offline in CI and locally, no SaaS generation dependency",
+  "candidates": [
+    {
+      "id": "url:https://openapi-ts.dev/openapi-fetch",
+      "rank": 1,
+      "title": "openapi-fetch",
+      "url": "https://openapi-ts.dev/openapi-fetch",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://openapi-ts.dev/openapi-fetch",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "Type-safe query parameters and request/response models"
+      ],
+      "evidenceRefs": [
+        "https://openapi-ts.dev/openapi-fetch",
+        "$.results[1]"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 0.0497,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.7274
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "Mentions: Type-safe query parameters and request/response models."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://openapi-ts.dev/cli",
+      "rank": 2,
+      "title": "openapi-typescript CLI",
+      "url": "https://openapi-ts.dev/cli",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://openapi-ts.dev/cli",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "Generate TypeScript types from OpenAPI 3.x specs",
+        "Offline local generation in CI"
+      ],
+      "evidenceRefs": [
+        "https://openapi-ts.dev/cli",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.7345,
+        "reciprocalRank": 0.0577,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.5568
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "Mentions: Generate TypeScript types from OpenAPI 3.x specs, Offline local generation in CI."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:openapitools/openapi-generator",
+      "rank": 3,
+      "title": "OpenAPITools/openapi-generator",
+      "url": "https://openapi-generator.tech/",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "openapitools/openapi-generator",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://openapi-generator.tech/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo",
+        "web"
+      ],
+      "matchedCapabilities": [
+        "Generate TypeScript types from OpenAPI 3.x specs"
+      ],
+      "evidenceRefs": [
+        "https://openapi-generator.tech/",
+        "$.items[6]",
+        "$.items[0]",
+        "$.results[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.2306,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.4799
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 3 observations by stable identity.",
+        "Mentions: Generate TypeScript types from OpenAPI 3.x specs."
+      ],
+      "observationCount": 3
+    },
+    {
+      "id": "purl:pkg:npm/openapi-typescript",
+      "rank": 4,
+      "title": "openapi-ts/openapi-typescript",
+      "url": "https://github.com/openapi-ts/openapi-typescript",
+      "kind": "package",
+      "identities": [
+        {
+          "scheme": "purl",
+          "value": "pkg:npm/openapi-typescript",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "github",
+          "value": "openapi-ts/openapi-typescript",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/openapi-ts/openapi-typescript",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://openapi-ts.dev/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "package",
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "Generate TypeScript types from OpenAPI 3.x specs"
+      ],
+      "evidenceRefs": [
+        "https://github.com/openapi-ts/openapi-typescript",
+        "$.results[0]",
+        "https://openapi-ts.dev/",
+        "$.items[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.4236,
+        "reciprocalRank": 0.5551,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.4941
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: Generate TypeScript types from OpenAPI 3.x specs."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:kubb-labs/kubb",
+      "rank": 5,
+      "title": "kubb-labs/kubb",
+      "url": "https://kubb.dev/",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "kubb-labs/kubb",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://kubb.dev/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "Generate TypeScript types from OpenAPI 3.x specs",
+        "Offline local generation in CI",
+        "Type-safe query parameters and request/response models"
+      ],
+      "evidenceRefs": [
+        "https://kubb.dev/",
+        "$.items[3]"
+      ],
+      "features": {
+        "lexicalFit": 0.5663,
+        "reciprocalRank": 0.0344,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.4567
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: Generate TypeScript types from OpenAPI 3.x specs, Offline local generation in CI, Type-safe query parameters and request/response models."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:astahmer/typed-openapi",
+      "rank": 6,
+      "title": "astahmer/typed-openapi",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "astahmer/typed-openapi",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "Generate TypeScript types from OpenAPI 3.x specs"
+      ],
+      "evidenceRefs": [
+        "$.items[8]"
+      ],
+      "features": {
+        "lexicalFit": 0.5232,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.3851
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: Generate TypeScript types from OpenAPI 3.x specs."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:speakeasy-api/speakeasy",
+      "rank": 7,
+      "title": "Speakeasy",
+      "url": "https://github.com/speakeasy-api/speakeasy",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "speakeasy-api/speakeasy",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/speakeasy-api/speakeasy",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "Generate TypeScript types from OpenAPI 3.x specs",
+        "Type-safe query parameters and request/response models"
+      ],
+      "evidenceRefs": [
+        "https://github.com/speakeasy-api/speakeasy",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.4596,
+        "reciprocalRank": 0.0577,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.3781
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: Generate TypeScript types from OpenAPI 3.x specs, Type-safe query parameters and request/response models."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:fern-api/fern",
+      "rank": 8,
+      "title": "Fern",
+      "url": "https://github.com/fern-api/fern",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "fern-api/fern",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/fern-api/fern",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/fern-api/fern",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.4044,
+        "reciprocalRank": 0.0577,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.3423
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "Generate TypeScript types from OpenAPI 3.x specs",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://openapi-ts.dev/cli",
+        "github:openapitools/openapi-generator",
+        "purl:pkg:npm/openapi-typescript",
+        "github:kubb-labs/kubb",
+        "github:astahmer/typed-openapi",
+        "github:speakeasy-api/speakeasy"
+      ]
+    },
+    {
+      "capability": "Offline local generation in CI",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://openapi-ts.dev/cli",
+        "github:kubb-labs/kubb"
+      ]
+    },
+    {
+      "capability": "Type-safe query parameters and request/response models",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://openapi-ts.dev/openapi-fetch",
+        "github:kubb-labs/kubb",
+        "github:speakeasy-api/speakeasy"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "strong",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [],
+    "sourceCategories": [
+      "web",
+      "repo",
+      "package"
+    ],
+    "needsFollowUp": false,
+    "suggestedQueries": []
+  },
+  "retrieval": {
+    "requests": 9,
+    "failedRequests": 0,
+    "normalizedRecords": 28,
+    "rejectedRecords": 0,
+    "warnings": [
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$.results[1]"
+      }
+    ]
+  },
+  "metrics": {
+    "uniqueCandidates": 23,
+    "returnedCandidates": 8,
+    "duplicateObservationsMerged": 3
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "28 records from 9 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "3 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "23 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "8 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "0 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}
