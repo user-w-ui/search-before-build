@@ -10,6 +10,6 @@
 
 - 离线回归：`npm run benchmark:offline`，入口 [`run-offline.mjs`](./run-offline.mjs)。
 - 真实场景：先读 [`real/README.md`](./real/README.md)，按协议逐 case 双跑（baseline / plugin 两臂）。
-- 量化对比：`node bench/metrics.mjs` 从各臂 session.jsonl 提取硬指标，结论见 [`results/METRICS.md`](./results/METRICS.md)。
+- 量化对比：`node bench/metrics.mjs` 从各臂 session.jsonl 提取指标（**指标规范见 [`results/METRICS.md`](./results/METRICS.md)**，运行统计数据与结论放 [`results/SUMMARY.md`](./results/SUMMARY.md)）。
 
 **结论纪律**：smoke 数字不构成任何质量声明；真实场景的对比结论只有在每个用例两臂证据齐全、并写入对比文档后才允许对外引用。
