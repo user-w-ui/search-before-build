@@ -20,7 +20,7 @@ export type RetrievalEnvelope = RetrievalContext & ({
     error: RetrievalError;
 });
 export interface NormalizationWarning {
-    code: "missing_identity" | "missing_text" | "invalid_url" | "invalid_date" | "unknown_shape" | "partial_item" | "retrieval_error";
+    code: "missing_identity" | "missing_text" | "invalid_url" | "invalid_date" | "unknown_shape" | "partial_item" | "flattened_payload" | "retrieval_error";
     message: string;
     rawRef?: string;
 }
@@ -84,6 +84,7 @@ export interface CandidateFeatureVector {
     lexicalFit: number;
     reciprocalRank: number;
     evidenceQuality: number;
+    freshnessScore: number;
     finalScore: number;
 }
 export interface RankedCandidate {

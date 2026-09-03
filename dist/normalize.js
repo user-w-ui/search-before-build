@@ -18,6 +18,19 @@ const TRACKING_PARAMS = new Set([
     "source",
     "spm",
 ]);
+// Provider-native field signatures: when a specialized provider's payload carries none of
+// these fields, the caller most likely flattened it into a uniform title/url/snippet shape,
+// which silently disables cross-source identity merging and recency ranking. The contract
+// in references/decision-kernel.md requires the raw response verbatim.
+const NATIVE_SIGNATURES = [
+    [/github/, ["full_name", "stargazers_count", "pushed_at", "html_url", "archived", "topics"]],
+    [/npm/, ["links", "version", "keywords", "date"]],
+    [/crates/, ["crate", "max_stable_version", "recent_downloads", "repository"]],
+    [/maven/, ["latestVersion", "timestamp", "canonical_url", "version"]],
+    [/registry|mcp/, ["server", "transports", "repository", "repository_url"]],
+    [/huggingface|^hf$/, ["modelId", "model_id", "pipeline_tag", "downloads", "likes"]],
+    [/arxiv/, ["published", "summary", "updated"]],
+];
 function asObject(value) {
     return value !== null && typeof value === "object" && !Array.isArray(value)
         ? value
@@ -254,6 +267,8 @@ function inferKind(envelope, item) {
     const provider = providerName(envelope) ?? "";
     if (/github/.test(provider) || firstString(item, ["full_name", "stargazers_url"]))
         return "repo";
+    if (/huggingface/.test(provider) || provider === "hf")
+        return "model";
     if (/npm|crates|maven|ecosystem/.test(provider))
         return "package";
     if (/mcp/.test(provider))
@@ -290,6 +305,15 @@ function collectIdentities(item, kind, provider, title, url) {
     if (kind === "mcp" && (title || explicitId)) {
         add({ scheme: "mcp", value: title ?? explicitId, confidence: "exact" });
     }
+    if (kind === "package" && provider?.includes("maven")) {
+        // Maven Central search items expose `id` as "group:artifact" — the only stable
+        // cross-source identity when repository links were not preserved.
+        const mavenId = firstString(item, ["id"]);
+        if (mavenId && /^[^:\s]+:[^:\s]+$/.test(mavenId)) {
+            const [group, artifact] = mavenId.split(":");
+            add({ scheme: "purl", value: `pkg:maven/${group}/${artifact}`, confidence: "derived" });
+        }
+    }
     if (kind === "package" && title) {
         const ecosystem = provider?.includes("crate")
             ? "cargo"
@@ -325,13 +349,14 @@ function projectItem(located, envelope) {
     const warnings = [];
     const provider = providerName(envelope);
     const kind = inferKind(envelope, item);
-    const title = firstString(item, ["title", "name", "identity", "full_name", "display_name", "server.name"]);
+    const title = firstString(item, ["title", "name", "identity", "full_name", "display_name", "server.name", "modelId"]);
     const rawUrl = firstString(item, [
         // html_url before url: GitHub search items expose both, and the API URL
         // (api.github.com/repos/...) neither reads well nor matches the github
         // identity extraction below.
         "html_url",
         "url",
+        "canonical_url",
         "repo",
         "repository",
         "link",
@@ -344,7 +369,14 @@ function projectItem(located, envelope) {
         "DOI",
         "doi",
     ]);
-    const url = normalizeUrl(rawUrl);
+    let url = normalizeUrl(rawUrl);
+    if (!url && kind === "model") {
+        // Hugging Face Hub items identify models by `modelId` ("org/name") and often
+        // carry no URL; the canonical model page is deterministic from it.
+        const modelId = firstString(item, ["modelId", "model_id"]);
+        if (modelId)
+            url = normalizeUrl(`https://huggingface.co/${modelId}`);
+    }
     if (rawUrl && !url)
         warnings.push({ code: "invalid_url", message: `Could not normalize URL: ${rawUrl}`, rawRef: located.rawRef });
     const snippet = firstString(item, ["snippet", "text", "extract"]);
@@ -355,8 +387,11 @@ function projectItem(located, envelope) {
         ...textFragments(getPath(item, "transport")),
         ...textFragments(getPath(item, "runtime")),
     ];
-    const publishedRaw = getPath(item, "published") ?? getPath(item, "published_at") ?? getPath(item, "publish_date") ?? getPath(item, "published.date-parts");
-    const updatedRaw = getPath(item, "updated") ?? getPath(item, "updated_at") ?? getPath(item, "last_synced_at");
+    // Source-native date fields: GitHub exposes pushed_at (and created_at), Hugging Face
+    // lastModified, npm date, Maven timestamp, Hacker News created_at — without these
+    // mappings even a verbatim raw payload carries no recency signal.
+    const publishedRaw = getPath(item, "published") ?? getPath(item, "published_at") ?? getPath(item, "publish_date") ?? getPath(item, "created_at") ?? getPath(item, "published.date-parts");
+    const updatedRaw = getPath(item, "updated") ?? getPath(item, "pushed_at") ?? getPath(item, "updated_at") ?? getPath(item, "last_synced_at") ?? getPath(item, "lastModified") ?? getPath(item, "date") ?? getPath(item, "timestamp");
     const publishedAt = normalizeDate(publishedRaw);
     const updatedAt = normalizeDate(updatedRaw);
     if (publishedRaw !== undefined && !publishedAt)
@@ -390,7 +425,14 @@ function projectItem(located, envelope) {
     if (!title && !snippet && !description && !fragments.length)
         warnings.push({ code: "missing_text", message: "No searchable text was found.", rawRef: located.rawRef });
     const hasText = Boolean(title || snippet || description || fragments.length);
-    const status = hasText && (url || identities.length) ? "usable" : hasText ? "partial" : "unusable";
+    // A textless record with a stable identity (e.g. Maven Central's {id, latestVersion,
+    // timestamp}) is still a real cross-source observation: keep it mergeable as "partial"
+    // instead of discarding it, so registry/package hits can merge into richer candidates.
+    const status = hasText && (url || identities.length)
+        ? "usable"
+        : hasText || identities.length
+            ? "partial"
+            : "unusable";
     if (status !== "usable")
         warnings.push({ code: "partial_item", message: `Record is ${status} and will use only available signals.`, rawRef: located.rawRef });
     const identitySeed = identities[0] ? `${identities[0].scheme}:${identities[0].value}` : `${envelope.requestId}:${located.rawRef}`;
@@ -439,6 +481,20 @@ export function normalizeRetrieval(envelope) {
     const located = parsePayload(envelope.payload);
     if (!located.length) {
         batchWarnings.push({ code: "unknown_shape", message: "Payload did not contain any usable item." });
+    }
+    const provider = providerName(envelope);
+    const signature = provider ? NATIVE_SIGNATURES.find(([pattern]) => pattern.test(provider)) : undefined;
+    if (signature && located.length) {
+        const hasNativeField = located.some((item) => {
+            const object = asObject(item.value);
+            return object ? signature[1].some((key) => object[key] !== undefined) : false;
+        });
+        if (!hasNativeField) {
+            batchWarnings.push({
+                code: "flattened_payload",
+                message: `Provider "${provider}" payload lacks native fields (${signature[1].slice(0, 4).join(", ")}); identity merging and recency ranking are degraded. Pass the raw response verbatim.`,
+            });
+        }
     }
     const records = [];
     for (const item of located) {

@@ -101,6 +101,7 @@ function mergeRecords(records) {
             lexical: 0,
             rrf: 0,
             evidence: 0,
+            freshness: 0,
             final: 0,
         };
     });
@@ -193,6 +194,28 @@ function evidenceQuality(candidate) {
         score += 0.15;
     return Math.min(1, score);
 }
+// Latest updatedAt/publishedAt across merged observations, in epoch milliseconds.
+function latestActivityMs(candidate) {
+    const times = candidate.observations
+        .map((record) => record.dates?.updatedAt ?? record.dates?.publishedAt)
+        .filter((value) => Boolean(value))
+        .map((value) => Date.parse(value))
+        .filter((value) => !Number.isNaN(value));
+    return times.length ? Math.max(...times) : undefined;
+}
+// Recency signal for ranking: <=1 year old scores 1, >=3 years old scores 0,
+// linear in between, and unknown dates are neutral (0.5) — absence of a date is
+// common for web records and must not double-penalize a candidate.
+function freshnessFromActivity(latest, referenceTime) {
+    if (latest === undefined)
+        return 0.5;
+    const ageDays = (referenceTime - latest) / 86_400_000;
+    if (ageDays <= 365)
+        return 1;
+    if (ageDays >= 1095)
+        return 0;
+    return 1 - (ageDays - 365) / 730;
+}
 function selectDiverse(candidates, topK, capabilities) {
     const selected = [];
     const remaining = new Set(candidates.map((_, index) => index));
@@ -222,7 +245,7 @@ function selectDiverse(candidates, topK, capabilities) {
     }
     return selected;
 }
-export function rankCandidates(records, query, fingerprint = {}, topK = 5) {
+export function rankCandidates(records, query, fingerprint = {}, topK = 5, referenceTime = Date.now()) {
     const drafts = mergeRecords(records);
     const capabilities = [...new Set((fingerprint.mustHaveCapabilities ?? []).map((value) => value.trim()).filter(Boolean))];
     const expandedQuery = [query, fingerprint.desiredOutcome, fingerprint.operatingMode, ...capabilities]
@@ -233,13 +256,14 @@ export function rankCandidates(records, query, fingerprint = {}, topK = 5) {
         const seen = new Set();
         let score = 0;
         for (const observation of candidate.observations) {
-            const provenance = observation.provenance;
-            const listId = `${provenance.requestId}:${provenance.provider ?? "unknown"}`;
+            // One list per request: requestIds are unique per tool call, so the request
+            // alone identifies the result list; repeated ranks inside one request count once.
+            const listId = observation.provenance.requestId;
             if (seen.has(listId))
                 continue;
             seen.add(listId);
-            if (provenance.providerRank)
-                score += 1 / (60 + provenance.providerRank);
+            if (observation.provenance.providerRank)
+                score += 1 / (60 + observation.provenance.providerRank);
         }
         return score;
     });
@@ -249,7 +273,8 @@ export function rankCandidates(records, query, fingerprint = {}, topK = 5) {
         candidate.lexical = lexicalScores[index] ?? 0;
         candidate.rrf = rrfScores[index] ?? 0;
         candidate.evidence = evidenceQuality(candidate);
-        candidate.final = 0.65 * candidate.lexical + 0.25 * candidate.rrf + 0.1 * candidate.evidence;
+        candidate.freshness = freshnessFromActivity(latestActivityMs(candidate), referenceTime);
+        candidate.final = 0.60 * candidate.lexical + 0.22 * candidate.rrf + 0.1 * candidate.evidence + 0.08 * candidate.freshness;
     });
     drafts.sort((a, b) => b.final - a.final || a.id.localeCompare(b.id));
     const selected = selectDiverse(drafts, Math.max(1, Math.min(20, topK)), capabilities);
@@ -263,17 +288,21 @@ export function rankCandidates(records, query, fingerprint = {}, topK = 5) {
             identities: candidate.identities,
             sourceCategories: candidate.sourceCategories,
             matchedCapabilities: candidate.matchedCapabilities,
-            evidenceRefs: [...new Set(candidate.observations.flatMap((record) => [record.url, record.provenance.rawRef].filter((value) => Boolean(value))))],
+            evidenceRefs: [...new Set(candidate.observations.flatMap((record) => [record.url, record.provenance.rawRef].filter((value) => Boolean(value))))].slice(0, 10),
             features: {
                 lexicalFit: Number(candidate.lexical.toFixed(4)),
                 reciprocalRank: Number(candidate.rrf.toFixed(4)),
                 evidenceQuality: Number(candidate.evidence.toFixed(4)),
+                freshnessScore: Number(candidate.freshness.toFixed(4)),
                 finalScore: Number(candidate.final.toFixed(4)),
             },
             explanations: [
                 candidate.lexical > 0.6 ? "Strong lexical fit with the functional fingerprint." : "Limited lexical fit; verify manually.",
                 candidate.observations.length > 1 ? `Merged ${candidate.observations.length} observations by stable identity.` : "Single-source observation.",
                 candidate.matchedCapabilities.length ? `Mentions: ${candidate.matchedCapabilities.join(", ")}.` : "No must-have capability mention detected.",
+                latestActivityMs(candidate) !== undefined
+                    ? `Most recent activity ${new Date(latestActivityMs(candidate)).toISOString().slice(0, 10)} (freshness ${candidate.freshness.toFixed(2)}).`
+                    : "No recency signal in merged observations.",
             ],
             observationCount: candidate.observations.length,
         })),

@@ -5,4 +5,4 @@ export interface RankResult {
     uniqueCandidates: number;
     duplicateObservationsMerged: number;
 }
-export declare function rankCandidates(records: NormalizedRecord[], query: string, fingerprint?: FunctionalFingerprint, topK?: number): RankResult;
+export declare function rankCandidates(records: NormalizedRecord[], query: string, fingerprint?: FunctionalFingerprint, topK?: number, referenceTime?: number): RankResult;

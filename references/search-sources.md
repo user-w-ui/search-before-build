@@ -34,6 +34,8 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 
 Use ordinary web search for products, SaaS, app stores, documentation, or discovery outside these catalogs. Use catalog results for discovery, then verify strong candidates from their primary project pages and implementation evidence.
 
+**Payload fidelity rule**: when a catalog source returns JSON, XML, or HTML, capture the response body **verbatim** as the retrieval payload for the decision kernel. Do not translate or flatten it into a uniform `title`/`url`/`snippet` shape — that discards the structured fields (`full_name`, `repository.url`, `transports`, `purl`, `pushed_at`, …) that cross-source identity merging and recency ranking depend on. See `decision-kernel.md` for the input contract.
+
 The catalog commands were originally verified anonymously on 2026-07-12; the anonymous Web, Hugging Face REST, and Hacker News routes were rechecked on 2026-08-29. Replace literal query values and URL-encode them. Respect rate limits and identify the client with a useful `User-Agent` for HTTP APIs.
 
 ## Anonymous Web fallback
