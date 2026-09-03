@@ -91,6 +91,7 @@ function parseSession(path) {
     zhQ: 0, enQ: 0, queryCount: 0, fetchUrls: [], catalogHits: new Set(),
     dateEvidence: false, assistantTexts: [], mentions: new Set(), qaEvents: [],
   };
+  const pendingResolvedOpenIds = new Set();
   if (!existsSync(path)) return out;
   const lines = readFileSync(path, "utf8").split("\n").filter((l) => l.trim());
   const results = new Map();
@@ -127,6 +128,17 @@ function parseSession(path) {
       }
       const text = texts.join("");
       if (text) { raw.push({ role: "assistant", text }); out.assistantTexts.push(text); }
+    }
+  }
+  // Older normalized logs retained search refs in the tool input and wrote the
+  // exact resolved URLs into the matching result summary. Recover those URLs
+  // only for open calls that had no directly recorded resolution metadata.
+  for (const id of pendingResolvedOpenIds) {
+    const result = results.get(id);
+    if (!result) continue;
+    for (const u of result.content.match(URL_RE) || []) {
+      out.fetchUrls.push(u.replace(/[.;,]+$/, ""));
+      scanCatalog(u, out);
     }
   }
   out.fetchUrls = [...new Set(out.fetchUrls)];
@@ -172,6 +184,40 @@ function parseSession(path) {
       o.webFetch++;
       const u = item.input?.url;
       if (u) { o.fetchUrls.push(u); scanCatalog(u, o); }
+    }
+    // Direct Codex subagent runs batch search/open operations through web__run.
+    // Preserve the existing per-call counters while counting every batched query
+    // and every directly recorded URL for the coverage metrics.
+    if (item.name === "web__run") {
+      const searches = Array.isArray(item.input?.search_query) ? item.input.search_query : [];
+      const opens = Array.isArray(item.input?.open) ? item.input.open : [];
+      const resolvedUrls = Array.isArray(item.input?.resolved_urls) ? item.input.resolved_urls : [];
+      if (searches.length) o.webSearch++;
+      if (opens.length) o.webFetch++;
+      for (const search of searches) {
+        const q = search?.q || "";
+        o.queryCount++;
+        if (hasCJK(q)) o.zhQ++; else o.enQ++;
+      }
+      let directlyResolved = 0;
+      for (const open of opens) {
+        const u = open?.ref_id;
+        if (typeof u === "string" && /^https?:\/\//i.test(u)) {
+          o.fetchUrls.push(u);
+          scanCatalog(u, o);
+          directlyResolved++;
+        }
+      }
+      // Normalized Codex evidence logs retain the original ref_id inputs and
+      // separately record the URLs that those refs resolved to.
+      for (const u of resolvedUrls) {
+        if (typeof u === "string" && /^https?:\/\//i.test(u)) {
+          o.fetchUrls.push(u);
+          scanCatalog(u, o);
+          directlyResolved++;
+        }
+      }
+      if (opens.length && directlyResolved === 0 && item.id) pendingResolvedOpenIds.add(item.id);
     }
     if (item.name === "Task" || item.name === "Agent") o.tasksAgents++;
     if (item.name === "Bash" || item.name === "PowerShell") {
