@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "query": "美股基本面分析工具，获取SEC财报数据、执行透明可复核的估值计算、生成带数据溯源的结构化报告",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "自动获取SEC财报数据并标注出处与日期",
+      "透明可复核的估值模型计算",
+      "生成结构化报告整合数字、假设和来源"
+    ],
+    "capabilityAliases": {
+      "自动获取SEC财报数据并标注出处与日期": [
+        "SEC EDGAR data retrieval",
+        "financial statement extraction",
+        "XBRL parsing",
+        "10-K 10-Q filings",
+        "data source attribution",
+        "财报数据获取"
+      ],
+      "透明可复核的估值模型计算": [
+        "DCF valuation",
+        "discounted cash flow",
+        "PE ratio analysis",
+        "valuation model",
+        "transparent assumptions",
+        "customizable parameters",
+        "估值模型",
+        "DCF模型"
+      ],
+      "生成结构化报告整合数字、假设和来源": [
+        "report generation",
+        "structured output",
+        "markdown report",
+        "data traceability",
+        "source links",
+        "audit trail",
+        "报告生成",
+        "数据溯源"
+      ]
+    },
+    "desiredOutcome": "生成可追溯的美股基本面分析报告，每个数字都能回溯到原始出处",
+    "operatingMode": "本地工具或CLI，可能带简单界面"
+  },
+  "retrievals": [
+    {
+      "requestId": "web-sec-tools",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "SEC Financial Statement Data Sets",
+            "url": "https://www.sec.gov/data-research/financial-statement-data-sets",
+            "snippet": "Free downloadable datasets containing numeric information from financial statements filed using XBRL format"
+          },
+          {
+            "title": "edgartools Python library",
+            "url": "https://pypi.org/project/edgartools/",
+            "snippet": "Parse financial statements, insider trades, fund holdings, and 20+ filing types. Simple API to get income statements, balance sheets, and cash flows. 1M downloads per month."
+          },
+          {
+            "title": "SEC-API.io",
+            "url": "https://sec-api.io/",
+            "snippet": "AI-powered tool for analyzing stocks by connecting to filing databases with natural language queries"
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-dcf-tools",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "EmanueleSturzo/DCF-Valuation-Model",
+            "url": "https://github.com/EmanueleSturzo/DCF-Valuation-Model",
+            "snippet": "5-year DCF model with Monte Carlo simulation, sensitivity analysis, scenario analysis, comparable company analysis. Python with automated financial data retrieval and WACC calculation."
+          },
+          {
+            "title": "dafahentra/dcf-valuation-tool",
+            "url": "https://github.com/dafahentra/dcf-valuation-tool",
+            "snippet": "Institutional-grade DCF engine with Monte Carlo simulations, real-time beta calculation, multi-market support, and interactive visualizations. Built with Streamlit."
+          },
+          {
+            "title": "devc2255/Institutional-Intrinsic-Valuation-Engine",
+            "url": "https://github.com/devc2255/Institutional-Intrinsic-Valuation-Engine",
+            "snippet": "Multi-stage DCF toolkit with live market data via yfinance, WACC automation, sensitivity analysis, reverse-DCF growth checks, and interactive Streamlit dashboard."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "github-llm-financial",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "total_count": 397,
+        "items": [
+          {
+            "full_name": "yennanliu/InvestSkill",
+            "description": "US stock analysis skills for LLMs (Claude code, Gemini ...)  | #AI",
+            "stargazers_count": 198,
+            "topics": ["agent", "financial", "financial-analysis", "gemini", "investment", "llm", "stock", "stock-market", "us-stock"],
+            "html_url": "https://github.com/yennanliu/InvestSkill",
+            "language": "JavaScript",
+            "updated_at": "2026-09-02T11:20:43Z"
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "npm-financial-tools",
+      "providerHint": "npm",
+      "categoryHint": "package",
+      "outcome": "success",
+      "payload": [
+        {
+          "name": "sec-edgar-api",
+          "description": "Fetch and parse SEC earnings reports and other filings. Useful for financial analysis.",
+          "version": "1.0.11"
+        },
+        {
+          "name": "@omnifolio/sec-toolkit",
+          "description": "Production-grade SEC EDGAR toolkit — XBRL parser, filing text extractor, and financial analysis utilities",
+          "version": "1.0.0"
+        },
+        {
+          "name": "dsh-financial-analysis",
+          "description": "DeepSeek Harness 财务报表分析插件：基于财务分析规则，提供「财报分析师」Agent preset 与5项分析技能",
+          "version": "0.1.1"
+        }
+      ]
+    },
+    {
+      "requestId": "web-commercial-platforms",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "FinChat.io (now Fiscal.ai)",
+            "url": "https://fiscal.ai/",
+            "snippet": "AI-powered investment research with conversational AI assistant. Real-time verified financial data from 100,000+ companies. Pricing up to $64/month."
+          },
+          {
+            "title": "Simply Wall St",
+            "url": "https://simplywall.st/",
+            "snippet": "Visual financial analysis platform covering 120,000+ stocks. Uses DCF and Excess Returns valuation models. Premium ~$120/year."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-investskill-detail",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "InvestSkill - US Stock Analysis Skills",
+            "url": "https://github.com/yennanliu/InvestSkill",
+            "snippet": "26 structured analysis frameworks for LLMs. Works with Claude Code, Cursor, Gemini CLI, GitHub Copilot. No runtime required. Includes 10K digest, fundamental analysis, DCF valuation, chart master, bear case analysis."
+          }
+        ]
+      }
+    }
+  ],
+  "topK": 8
+}

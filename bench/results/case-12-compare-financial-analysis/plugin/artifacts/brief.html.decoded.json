@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 1,
+  "language": "zh-CN",
+  "mode": "compare",
+  "topic": "美股基本面分析工具对比",
+  "projectName": "AG2多智能体金融分析系统",
+  "generatedAt": "2026-09-03T07:00:24Z",
+  "recommendation": {
+    "value": "Adapt",
+    "reason": "现有AG2项目聚焦新闻与股价趋势分析，缺少你需要的核心能力：SEC财报数据获取、透明估值计算、数据溯源。直接使用现有Python工具(edgartools + DCF库)组合或采用LLM技能框架(InvestSkill)，比从零构建AG2多智能体系统更高效。多智能体架构本身不是你的核心需求，数据可追溯性才是。",
+    "reusableOption": "组合方案：edgartools(财报数据) + 开源DCF工具(估值计算) + 结构化报告模板；或直接采用InvestSkill的LLM技能框架",
+    "biggestUnknown": "是否需要完全自动化端到端流程，还是可以接受半自动化工作流(LLM辅助但需人工审核关键假设)"
+  },
+  "fingerprint": [
+    {
+      "label": "目标用户",
+      "value": "个人投资者，进行美股基本面研究"
+    },
+    {
+      "label": "核心任务",
+      "value": "获取SEC财报数据、执行估值计算、生成可追溯的分析报告"
+    },
+    {
+      "label": "输入",
+      "value": "美股股票代码(1-4只)，估值假设参数"
+    },
+    {
+      "label": "输出",
+      "value": "结构化报告，包含财报核心科目、估值计算、数据来源标注"
+    },
+    {
+      "label": "运行模式",
+      "value": "本地工具/CLI"
+    },
+    {
+      "label": "必备能力",
+      "value": "①自动获取SEC财报数据并标注出处 ②透明可复核的估值模型 ③生成结构化报告整合数字、假设和来源"
+    },
+    {
+      "label": "不可接受",
+      "value": "黑盒模型、无法溯源的数据、无法自定义假设"
+    },
+    {
+      "label": "硬约束",
+      "value": "仅使用公开或免费API；数据必须标注日期和来源"
+    }
+  ],
+  "coverage": [
+    {
+      "label": "Web搜索",
+      "status": "used",
+      "detail": "产品、工具、文档检索"
+    },
+    {
+      "label": "GitHub",
+      "status": "limited",
+      "detail": "使用匿名REST API，未使用深度检索工具。本次未使用GitHub专属深度检索工具，结果主要来自公开API或网页索引，可能遗漏较新、低曝光或仅在代码内部出现的项目。"
+    },
+    {
+      "label": "npm",
+      "status": "used",
+      "detail": "JavaScript/Node包检索"
+    },
+    {
+      "label": "Python PyPI",
+      "status": "used",
+      "detail": "通过Web搜索覆盖主要Python库"
+    },
+    {
+      "label": "Hugging Face",
+      "status": "used",
+      "detail": "仅发现情感分析模型，无完整分析工具"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "自动获取SEC财报数据并标注出处与日期",
+      "current": {
+        "status": "unsupported",
+        "note": "当前AG2项目从Yahoo Finance爬取新闻，不涉及SEC财报数据"
+      },
+      "candidates": {
+        "edgartools": {
+          "status": "native",
+          "note": "直接解析SEC XBRL数据，返回三大报表，MIT许可"
+        },
+        "investskill": {
+          "status": "extensible",
+          "note": "提供10-K摘要和财报分析技能框架，需手动获取数据"
+        }
+      }
+    },
+    {
+      "name": "透明可复核的估值模型计算",
+      "current": {
+        "status": "unsupported",
+        "note": "当前项目无估值模型，仅生成buy/sell/hold建议"
+      },
+      "candidates": {
+        "dcf-tools": {
+          "status": "native",
+          "note": "5年DCF+蒙特卡洛+敏感性分析，Streamlit界面"
+        },
+        "investskill": {
+          "status": "native",
+          "note": "提供DCF估值技能框架，透明假设"
+        },
+        "simplywall": {
+          "status": "partial",
+          "note": "DCF模型但假设透明度有限，120美元/年"
+        }
+      }
+    },
+    {
+      "name": "生成结构化报告整合数字、假设和来源",
+      "current": {
+        "status": "partial",
+        "note": "生成Markdown报告但无数据溯源标注"
+      },
+      "candidates": {
+        "investskill": {
+          "status": "native",
+          "note": "26个结构化分析框架，可串联使用，输出结构化报告"
+        },
+        "edgartools": {
+          "status": "extensible",
+          "note": "返回结构化数据，需自行构建报告层"
+        },
+        "fiscal-ai": {
+          "status": "native",
+          "note": "AI生成报告但需付费64美元/月，溯源透明度未知"
+        }
+      }
+    }
+  ],
+  "competitors": [
+    {
+      "id": "edgartools",
+      "name": "edgartools",
+      "url": "https://github.com/dgunning/edgartools",
+      "category": "可复用Python库",
+      "overview": "最流行的Python SEC EDGAR数据访问库，月下载量100万次。提供简洁的API解析20+种SEC文件类型，包括10-K/10-Q财报、内部交易、基金持仓等。返回pandas DataFrame便于分析。",
+      "comparison": [
+        {
+          "dimension": "定位",
+          "candidate": "Python库，作为数据层被其他工具调用",
+          "current": "完整的多智能体应用"
+        },
+        {
+          "dimension": "核心能力",
+          "candidate": "SEC财报数据提取和结构化，原生支持三大报表",
+          "current": "新闻摘要+股价分析+LLM生成报告"
+        },
+        {
+          "dimension": "数据来源",
+          "candidate": "直接从SEC EDGAR获取XBRL数据",
+          "current": "Yahoo Finance新闻爬虫+yfinance股价"
+        },
+        {
+          "dimension": "估值模型",
+          "candidate": "不提供，仅数据层",
+          "current": "不提供"
+        },
+        {
+          "dimension": "数据溯源",
+          "candidate": "每个数据点可追溯到SEC文件",
+          "current": "无溯源标注"
+        },
+        {
+          "dimension": "运行模式",
+          "candidate": "Python库，需编码集成",
+          "current": "独立Python脚本"
+        },
+        {
+          "dimension": "许可证",
+          "candidate": "MIT开源",
+          "current": "Apache 2.0(推测，基于AG2)"
+        },
+        {
+          "dimension": "维护状态",
+          "candidate": "活跃维护，2026年9月仍在更新",
+          "current": "演示项目，最后更新2025年9月"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "简洁的API设计",
+          "detail": "三行代码即可获取任意公司的财务报表，大幅降低SEC数据访问门槛"
+        },
+        {
+          "title": "多文件类型支持",
+          "detail": "不仅支持财报，还包括内部交易(Form 3/4/5)、基金持仓(13F)、委托书等20+种文件类型"
+        },
+        {
+          "title": "pandas集成",
+          "detail": "返回DataFrame格式，无缝对接Python数据分析生态"
+        }
+      ],
+      "reusableLessons": [
+        "可直接作为财报数据层，替换当前项目的Yahoo Finance新闻爬虫",
+        "提供的数据结构天然支持溯源(每个数据点关联SEC文件)",
+        "需要自行构建估值模型和报告生成层"
+      ],
+      "summary": "edgartools是成熟的数据获取方案，解决了第一个核心能力(SEC财报数据)，但不提供估值和报告功能，需要与其他工具组合使用。",
+      "coverageNote": "",
+      "sources": [
+        {
+          "label": "PyPI包页面",
+          "url": "https://pypi.org/project/edgartools/"
+        },
+        {
+          "label": "官方文档",
+          "url": "https://edgartools.readthedocs.io/"
+        }
+      ]
+    },
+    {
+      "id": "investskill",
+      "name": "InvestSkill",
+      "url": "https://github.com/yennanliu/InvestSkill",
+      "category": "可复用LLM技能框架",
+      "overview": "为LLM(Claude、Gemini等)设计的26个结构化美股分析框架。无需运行时，每个技能是一个prompt模板。支持技能串联(如用9个技能分析Meta的138页10-K报告)。包括10-K摘要、基本面分析、DCF估值、熊市分析等。",
+      "comparison": [
+        {
+          "dimension": "定位",
+          "candidate": "LLM技能/提示词框架库",
+          "current": "独立Python应用"
+        },
+        {
+          "dimension": "核心能力",
+          "candidate": "提供18+分析框架指导LLM执行分析",
+          "current": "自动化agent工作流"
+        },
+        {
+          "dimension": "数据获取",
+          "candidate": "依赖LLM的工具调用能力或手动提供",
+          "current": "内置爬虫获取新闻和股价"
+        },
+        {
+          "dimension": "估值模型",
+          "candidate": "包含DCF估值技能框架，透明假设",
+          "current": "无"
+        },
+        {
+          "dimension": "报告生成",
+          "candidate": "结构化输出，可串联多技能",
+          "current": "单一Markdown报告"
+        },
+        {
+          "dimension": "运行方式",
+          "candidate": "在任意LLM界面使用(Claude Code/Cursor/ChatGPT)",
+          "current": "需本地Python环境+OpenAI API"
+        },
+        {
+          "dimension": "成本",
+          "candidate": "免费技能框架，LLM费用另计",
+          "current": "OpenAI API费用"
+        },
+        {
+          "dimension": "灵活性",
+          "candidate": "高度灵活，可自由组合技能",
+          "current": "固定工作流"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "技能串联模式",
+          "detail": "可以将多个分析技能按顺序执行(如先10-K摘要→基本面分析→DCF估值→熊市分析)，形成完整分析流程"
+        },
+        {
+          "title": "跨LLM平台",
+          "detail": "同一套技能框架可在Claude Code、Cursor、Gemini CLI、GitHub Copilot等多个平台使用"
+        },
+        {
+          "title": "无运行时依赖",
+          "detail": "不需要安装框架或依赖，直接在LLM对话中使用提示词模板"
+        }
+      ],
+      "reusableLessons": [
+        "技能框架模式比固定工作流更灵活，适合个人投资者根据具体需求组合使用",
+        "结构化提示词可以引导LLM生成符合特定格式的输出，提升报告一致性",
+        "但需要手动或半自动提供数据，不是完全自动化方案"
+      ],
+      "summary": "InvestSkill提供了完整的分析方法论和报告结构，但依赖LLM能力和手动数据输入。适合作为分析框架参考，或直接在Claude Code中使用其技能。",
+      "coverageNote": "",
+      "sources": [
+        {
+          "label": "项目主页",
+          "url": "http://yennj12.js.org/InvestSkill/"
+        }
+      ]
+    },
+    {
+      "id": "dcf-tools",
+      "name": "开源DCF估值工具集",
+      "url": "https://github.com/dafahentra/dcf-valuation-tool",
+      "category": "可复用Python工具",
+      "overview": "多个开源Python DCF估值工具，包括dafahentra/dcf-valuation-tool(机构级DCF引擎)、devc2255/Institutional-Intrinsic-Valuation-Engine(多阶段DCF)、EmanueleSturzo/DCF-Valuation-Model(5年DCF+蒙特卡洛)。大多使用Streamlit构建交互界面，集成yfinance获取实时数据。",
+      "comparison": [
+        {
+          "dimension": "定位",
+          "candidate": "专注估值计算的独立工具",
+          "current": "端到端金融分析应用"
+        },
+        {
+          "dimension": "估值能力",
+          "candidate": "原生支持DCF、WACC、敏感性分析、蒙特卡洛模拟",
+          "current": "无"
+        },
+        {
+          "dimension": "数据来源",
+          "candidate": "yfinance(Yahoo Finance API)",
+          "current": "Yahoo Finance新闻爬虫"
+        },
+        {
+          "dimension": "财报数据",
+          "candidate": "通过yfinance获取，深度有限",
+          "current": "不涉及财报"
+        },
+        {
+          "dimension": "假设透明度",
+          "candidate": "完全透明，用户可调整所有参数",
+          "current": "N/A"
+        },
+        {
+          "dimension": "界面",
+          "candidate": "Streamlit交互式Web界面",
+          "current": "命令行+文件输出"
+        },
+        {
+          "dimension": "报告输出",
+          "candidate": "图表+敏感性表格，但缺少完整报告结构",
+          "current": "Markdown报告"
+        },
+        {
+          "dimension": "数据溯源",
+          "candidate": "标注数据来自Yahoo Finance，但无细粒度溯源",
+          "current": "无"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "蒙特卡洛模拟",
+          "detail": "通过模拟多种情景生成估值分布区间，比单点估值更稳健"
+        },
+        {
+          "title": "敏感性分析",
+          "detail": "自动生成关键参数(增长率、折现率)变化对估值的影响矩阵"
+        },
+        {
+          "title": "Streamlit界面",
+          "detail": "提供交互式参数调整，无需编码即可探索不同假设"
+        }
+      ],
+      "reusableLessons": [
+        "可以直接使用这些工具的估值计算逻辑，解决第二个核心能力",
+        "Streamlit交互模式适合参数探索，但如果需要批量处理或自动化需要重构",
+        "yfinance的财报数据深度不及edgartools，考虑替换数据源"
+      ],
+      "summary": "成熟的估值工具，解决了第二个核心能力(透明估值模型)，但数据层较弱，且缺少完整的报告生成能力。",
+      "coverageNote": "",
+      "sources": [
+        {
+          "label": "Institutional Engine",
+          "url": "https://github.com/devc2255/Institutional-Intrinsic-Valuation-Engine"
+        },
+        {
+          "label": "EmanueleSturzo模型",
+          "url": "https://github.com/EmanueleSturzo/DCF-Valuation-Model"
+        }
+      ]
+    },
+    {
+      "id": "fiscal-ai",
+      "name": "Fiscal.ai (原FinChat.io)",
+      "url": "https://fiscal.ai/",
+      "category": "现成商业产品",
+      "overview": "AI驱动的投资研究平台，提供10万+全球上市公司的实时财务数据。包括对话式AI助手、可定制仪表板、机构级数据分析。2025年中从FinChat.io更名并完成A轮融资。面向个人和机构投资者。",
+      "comparison": [
+        {
+          "dimension": "定位",
+          "candidate": "商业SaaS产品",
+          "current": "本地开源工具"
+        },
+        {
+          "dimension": "数据覆盖",
+          "candidate": "10万+公司，全球市场",
+          "current": "任意股票但需手动输入"
+        },
+        {
+          "dimension": "财报数据",
+          "candidate": "机构级财务数据，实时验证",
+          "current": "无"
+        },
+        {
+          "dimension": "估值模型",
+          "candidate": "内置但透明度未知(可能黑盒)",
+          "current": "无"
+        },
+        {
+          "dimension": "报告生成",
+          "candidate": "对话式生成，格式和溯源细节未知",
+          "current": "Markdown报告"
+        },
+        {
+          "dimension": "数据溯源",
+          "candidate": "未明确说明细粒度溯源能力",
+          "current": "无"
+        },
+        {
+          "dimension": "定价",
+          "candidate": "最高64美元/月，免费版功能受限",
+          "current": "免费(仅API费用)"
+        },
+        {
+          "dimension": "定制性",
+          "candidate": "有限，受产品功能约束",
+          "current": "完全可定制"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "对话式AI助手",
+          "detail": "自然语言查询财务数据和分析，降低使用门槛"
+        },
+        {
+          "title": "实时验证数据",
+          "detail": "强调数据质量和实时性，适合快速研究"
+        },
+        {
+          "title": "可定制仪表板",
+          "detail": "用户可创建个性化KPI追踪面板"
+        }
+      ],
+      "reusableLessons": [
+        "如果预算允许且不要求完全自定义，商业产品可能更省时",
+        "但需要验证其估值模型透明度和数据溯源能力是否满足你的要求",
+        "从描述看，可能不符合你对黑盒模型和数据可追溯性的要求"
+      ],
+      "summary": "功能全面的商业产品，但估值透明度和数据溯源能力未知，且需要付费订阅。可能不符合你对透明度和可定制性的核心要求。",
+      "coverageNote": "",
+      "sources": []
+    },
+    {
+      "id": "simplywall",
+      "name": "Simply Wall St",
+      "url": "https://simplywall.st/",
+      "category": "现成商业产品",
+      "overview": "可视化财务分析平台，覆盖12万+股票、90+市场。使用DCF和超额收益模型计算内在价值，以图表和雪花图呈现。面向长期价值投资者，强调视觉化和易用性。约120美元/年。",
+      "comparison": [
+        {
+          "dimension": "定位",
+          "candidate": "商业可视化分析平台",
+          "current": "本地自动化工具"
+        },
+        {
+          "dimension": "数据覆盖",
+          "candidate": "12万+股票，全球90+市场",
+          "current": "理论上任意股票"
+        },
+        {
+          "dimension": "估值模型",
+          "candidate": "DCF+超额收益模型，但假设透明度有限",
+          "current": "无"
+        },
+        {
+          "dimension": "报告形式",
+          "candidate": "可视化图表和雪花评分",
+          "current": "文本报告"
+        },
+        {
+          "dimension": "数据溯源",
+          "candidate": "未强调细粒度溯源",
+          "current": "无"
+        },
+        {
+          "dimension": "定制性",
+          "candidate": "筛选器和部分参数可调",
+          "current": "完全可定制"
+        },
+        {
+          "dimension": "定价",
+          "candidate": "约120美元/年，有免费版",
+          "current": "免费"
+        },
+        {
+          "dimension": "目标用户",
+          "candidate": "视觉学习者和初学者",
+          "current": "需要编程能力的用户"
+        }
+      ],
+      "notableDesigns": [
+        {
+          "title": "雪花评分系统",
+          "detail": "多维度可视化评估(价值、财务健康、增长、分红等)，直观但简化"
+        },
+        {
+          "title": "公允价值估算",
+          "detail": "自动DCF估值并与市价对比，标注超买/低估"
+        },
+        {
+          "title": "投资组合追踪",
+          "detail": "真实回报率计算和持仓监控"
+        }
+      ],
+      "reusableLessons": [
+        "可视化呈现对非专业用户友好，但你需要的是详细可复核的报告",
+        "自动估值方便但牺牲了透明度，不符合你的核心需求",
+        "适合快速筛选，不适合深度基本面研究"
+      ],
+      "summary": "面向大众的可视化工具，但估值模型透明度不足，无法满足你对可复核性和数据溯源的要求。",
+      "coverageNote": "",
+      "sources": []
+    }
+  ],
+  "unknowns": [
+    "是否需要完全自动化的端到端流程，还是可以接受半自动化(LLM辅助但需人工审核)",
+    "对报告格式的具体要求(Markdown、PDF、Excel、交互式网页)",
+    "是否需要历史数据对比和多季度趋势分析",
+    "具体需要哪些估值模型(DCF优先级 vs 倍数法优先级)",
+    "是否需要支持其他市场(港股、A股)或仅限美股"
+  ],
+  "labels": {}
+}

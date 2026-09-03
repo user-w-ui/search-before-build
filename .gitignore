@@ -4,3 +4,4 @@ __pycache__/
 node_modules/
 tests/.tmp-cli-*/
 bench/results/*.json
+bench/results/**/session.jsonl

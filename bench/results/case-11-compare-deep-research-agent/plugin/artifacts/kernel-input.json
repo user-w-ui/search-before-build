@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "query": "self-hosted deep research agent with fine-grained citation tracking, conflict detection, resumable workflows, and structured report output for technical landscape reviews and investment memos",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "fine-grained citation tracking with source links and dates",
+      "conflict detection across sources",
+      "resumable multi-step workflows",
+      "structured report output"
+    ],
+    "capabilityAliases": {
+      "fine-grained citation tracking with source links and dates": [
+        "citation tracking",
+        "source attribution",
+        "reference links",
+        "publication dates",
+        "traceable evidence",
+        "audit trail"
+      ],
+      "conflict detection across sources": [
+        "conflict detection",
+        "disagreement surfacing",
+        "source conflict",
+        "contradicting information",
+        "multiple viewpoints"
+      ],
+      "resumable multi-step workflows": [
+        "resumable",
+        "checkpoint",
+        "stateful",
+        "pause and resume",
+        "workflow state",
+        "long-running"
+      ],
+      "structured report output": [
+        "report generation",
+        "markdown output",
+        "HTML report",
+        "structured output",
+        "export report"
+      ]
+    },
+    "desiredOutcome": "comprehensive research reports covering dozens of sources with multiple verification rounds, where every claim links to original sources with dates and conflicts are explicitly surfaced",
+    "operatingMode": "self-hosted, CLI or web interface, on-premise deployment"
+  },
+  "retrievals": [
+    {
+      "requestId": "web-ai-research-tools",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "Scite - Smart Citations", "snippet": "Shows whether citing papers support, contradict, or mention original findings through full-text analysis"},
+          {"title": "Consensus - Evidence-weighted answers", "snippet": "Provides evidence-weighted answers about academic literature with citation tracking"},
+          {"title": "Elicit - Literature review matrices", "snippet": "Builds structured literature-review matrices for systematic research"},
+          {"title": "NotebookLM", "snippet": "Grounds answers against uploaded documents with citation tracking"},
+          {"title": "Perplexity", "snippet": "3-7 clickable source references per answer, real-time web retrieval"}
+        ]
+      }
+    },
+    {
+      "requestId": "web-open-source-research",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "scholar-deep-research (Agents365-ai)", "snippet": "8-phase literature review pipeline, citation chasing, self-critique, per-paper audit trail with enforced citation anchoring"},
+          {"title": "deep-research-agent (tarun7r)", "snippet": "Multi-agent system using LangGraph and LangChain, citation-backed reports with credibility scoring"},
+          {"title": "agent-research (SCTY-Inc)", "snippet": "Multi-agent pipeline with Agno framework"}
+        ]
+      }
+    },
+    {
+      "requestId": "github-deep-research-citation",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "total_count": 164,
+        "items": [
+          {
+            "full_name": "agentset-ai/agentset",
+            "description": "The open-source RAG platform: built-in citations, deep research, 22+ file formats, partitions, MCP server, and more.",
+            "stargazers_count": 2079,
+            "language": "TypeScript",
+            "topics": ["agentic-rag", "ai", "ai-agents", "citations", "embeddings", "rag"],
+            "updated_at": "2026-09-01T06:46:58Z",
+            "license": {"spdx_id": "MIT"}
+          },
+          {
+            "full_name": "tarun7r/deep-research-agent",
+            "description": "Multi-agent autonomous research system using LangGraph and LangChain. Generates citation-backed reports with credibility scoring and web search",
+            "stargazers_count": 184,
+            "language": "Python",
+            "topics": ["agentic-ai", "ai-agents", "deepresearch", "langchain", "langgraph"],
+            "updated_at": "2026-08-25T14:11:19Z",
+            "license": {"spdx_id": "MIT"}
+          },
+          {
+            "full_name": "Agents365-ai/scholar-deep-research",
+            "description": "8-phase literature-review pipeline. 7 federated sources, dedup, ranked retrieval, citation chasing, self-critique, 5 report archetypes.",
+            "stargazers_count": 26,
+            "language": "Python",
+            "topics": ["citations", "deep-research", "literature-review", "research"],
+            "updated_at": "2026-08-31T13:57:35Z",
+            "license": {"spdx_id": "MIT"}
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-conflict-detection",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "ConflictRAG", "snippet": "Conflict-aware RAG framework that detects, classifies, and resolves knowledge conflicts. 88.7% conflict-detection F1 score"},
+          {"title": "Conflicts Benchmark", "snippet": "First benchmark for tracking how LLMs handle knowledge conflicts between sources"},
+          {"title": "Dual-Perspective Retrieval", "snippet": "Collects evidence for both original and negated forms of claims to capture supporting and contradicting information"}
+        ]
+      }
+    },
+    {
+      "requestId": "web-langgraph-checkpointing",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {"title": "LangGraph Checkpointing", "snippet": "Built-in persistence layer that saves graph state as snapshots at every node transition. Threads with thread_id for resuming workflows"},
+          {"title": "LangGraph Resume", "snippet": "Pass same thread_id to resume workflow from last checkpoint. Supports long-running workflows, human-in-the-loop, crash recovery"}
+        ]
+      }
+    },
+    {
+      "requestId": "arxiv-deep-research",
+      "providerHint": "arxiv",
+      "categoryHint": "paper",
+      "outcome": "success",
+      "payload": {
+        "totalResults": 165,
+        "entries": [
+          {
+            "title": "APEx: Distillation of Agent Procedural Experience for Adaptive Deep Research Question Answering",
+            "published": "2026-09-02",
+            "summary": "Deep research agents augment LLMs with external tools. Hierarchical experience utilization framework with trajectory memories and procedural skills."
+          },
+          {
+            "title": "Explore Before Committing: Hypothesis-Guided Search for Deep Research Agents",
+            "published": "2026-09-01",
+            "summary": "HypoSearch generates lightweight hypotheses, explores through bounded independent branches, compares evidence before commitment"
+          },
+          {
+            "title": "DualStake: Dual-Path Confidence Calibration in Deep Research Agents",
+            "published": "2026-09-01",
+            "summary": "Addresses overconfidence in deep research agents through dual-path calibration"
+          }
+        ]
+      }
+    }
+  ],
+  "topK": 8
+}

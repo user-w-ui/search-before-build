@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03T06:35:34.933Z",
+  "query": "self-hosted deep research agent with fine-grained citation tracking, conflict detection, resumable workflows, and structured report output for technical landscape reviews and investment memos",
+  "candidates": [
+    {
+      "id": "github:tarun7r/deep-research-agent",
+      "rank": 1,
+      "title": "tarun7r/deep-research-agent",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "tarun7r/deep-research-agent",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$.items[1]"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 0.7379,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.8795
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "record:rec-9d624640",
+      "rank": 2,
+      "title": "ConflictRAG",
+      "kind": "web",
+      "identities": [],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "conflict detection across sources"
+      ],
+      "evidenceRefs": [
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.6724,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.3,
+        "finalScore": 0.717
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "Mentions: conflict detection across sources."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "record:rec-694f4ad5",
+      "rank": 3,
+      "title": "deep-research-agent (tarun7r)",
+      "kind": "web",
+      "identities": [],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$.results[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.8993,
+        "reciprocalRank": 0.7379,
+        "evidenceQuality": 0.3,
+        "finalScore": 0.799
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "record:rec-a1600df5",
+      "rank": 4,
+      "title": "Conflicts Benchmark",
+      "kind": "web",
+      "identities": [],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$.results[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.7035,
+        "reciprocalRank": 0.7379,
+        "evidenceQuality": 0.3,
+        "finalScore": 0.6718
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:agents365-ai/scholar-deep-research",
+      "rank": 5,
+      "title": "Agents365-ai/scholar-deep-research",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "agents365-ai/scholar-deep-research",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$.items[2]"
+      ],
+      "features": {
+        "lexicalFit": 0.7273,
+        "reciprocalRank": 0.4841,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.6388
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "record:rec-b24a5431",
+      "rank": 6,
+      "title": "LangGraph Checkpointing",
+      "kind": "web",
+      "identities": [],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "resumable multi-step workflows"
+      ],
+      "evidenceRefs": [
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.2803,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.3,
+        "finalScore": 0.4622
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: resumable multi-step workflows."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "record:rec-65518320",
+      "rank": 7,
+      "title": "scholar-deep-research (Agents365-ai)",
+      "kind": "web",
+      "identities": [],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "fine-grained citation tracking with source links and dates"
+      ],
+      "evidenceRefs": [
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.3833,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.3,
+        "finalScore": 0.5292
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: fine-grained citation tracking with source links and dates."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "record:rec-cd07c3e6",
+      "rank": 8,
+      "title": "APEx: Distillation of Agent Procedural Experience for Adaptive Deep Research Question Answering",
+      "kind": "paper",
+      "identities": [],
+      "sourceCategories": [
+        "paper"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$.entries[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.2805,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.4773
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "fine-grained citation tracking with source links and dates",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "record:rec-65518320"
+      ]
+    },
+    {
+      "capability": "conflict detection across sources",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "record:rec-9d624640"
+      ]
+    },
+    {
+      "capability": "resumable multi-step workflows",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "record:rec-b24a5431"
+      ]
+    },
+    {
+      "capability": "structured report output",
+      "status": "missing",
+      "candidateIds": []
+    }
+  ],
+  "evidence": {
+    "level": "weak",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [
+      "structured report output"
+    ],
+    "sourceCategories": [
+      "repo",
+      "web",
+      "paper"
+    ],
+    "needsFollowUp": true,
+    "suggestedQueries": [
+      "self-hosted deep research agent with fine-grained citation tracking, conflict detection, resumable workflows, and structured report output for technical landscape reviews and investment memos structured report output"
+    ]
+  },
+  "retrieval": {
+    "requests": 6,
+    "failedRequests": 0,
+    "normalizedRecords": 19,
+    "rejectedRecords": 0,
+    "warnings": [
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[2]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[2]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[3]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[3]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[4]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[4]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[2]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[2]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[2]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[2]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[0]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.results[1]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.entries[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.entries[0]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.entries[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.entries[1]"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$.entries[2]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is partial and will use only available signals.",
+        "rawRef": "$.entries[2]"
+      }
+    ]
+  },
+  "metrics": {
+    "uniqueCandidates": 19,
+    "returnedCandidates": 8,
+    "duplicateObservationsMerged": 0
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "19 records from 6 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "0 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "19 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "8 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "1 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}
