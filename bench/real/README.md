@@ -22,14 +22,14 @@ python tests/validate_plugin.py
 ## 1. 防污染设计（务必遵守）
 
 1. **两臂完全隔离**：每臂独立全新会话、独立空工作目录（建议 `C:\Users\QC\AppData\Local\Temp\opencode\sbb-real\<case-id>\<arm>`），互不共享上下文。先跑 A 臂还是 B 臂均可，但同一 case 的两臂不得互相引述结果。
-2. **工作目录与插件目录分离**：`--plugin-dir` 指向仓库根，但工作目录在仓库外；compare 类 case 把 `material/` 复制进工作目录。
+2. **工作目录与插件目录分离**：`--plugin-dir` 指向仓库根，但工作目录在仓库外；compare 类 case 按 case 文件说明提供计划文件、仓库路径或仓库链接，供 agent 只读检查。
 3. **同一 prompt**：A、B 两臂的初始输入完全一致（见各 case 的 prompt 区块）。A 臂直接粘贴；B 臂通过技能命令调用。**不得**额外提示"请先搜索"之类的话——A 臂会不会主动检索，本身就是要测的行为。
 4. **澄清脚本两臂通用**：case 里的预设回答用于扮演用户。B 臂按技能流程逐轮追问；A 臂不一定按同一脚本提问，如实记录 A 臂的实际对话即可。
 5. **临时产物按 run 隔离**：插件已改为每次研究使用唯一的 run 目录（`<temp>/search-before-build/runs/<run-id>/`，见 `references/report-viewer.md`），并发会话不再互相覆盖。但每个 case×arm 组合仍必须有自己的**工作目录 + 全新会话**，这是会话层面（而非文件层面）的隔离。
 
 ## 2. 执行方式（可并发）
 
-每个 **case×arm** 组合是一个独立子代理任务：一个子代理只跑一个组合，多个子代理可同时并行（如 5 个 case 的 B 臂一起跑）。前提是每个组合遵守第 1 节的隔离要求。
+每个 **case×arm** 组合是一个独立任务：一个任务只跑一个组合，多个组合可同时并行（如 12 个 case 的 B 臂一起跑）。前提是每个组合遵守第 1 节的隔离要求。
 
 单组合步骤：
 
@@ -81,11 +81,18 @@ B 臂若内核未被调用，在 `artifacts/` 放一个 `KERNEL_NOT_RUN.md` 说�
 | 03 | 中文语音转文字 + 会议纪要（本地） | assess | zh | Hugging Face Hub、arXiv、GitHub、双语 web |
 | 04 | 自动整理收藏内容（稍后读，市场未说明） | assess | en | web、Hacker News Algolia、Wikipedia（可选）、产品主页核验 |
 | 05 | Rust 极速本地代码/模糊搜索 CLI | assess | en | crates.io、GitHub、web、Ecosyste.ms（可选） |
+| 06 | 发票识别与报销自动化（中文办公） | assess | zh | GitHub、中文 web、Hugging Face/ModelScope、PyPI/npm |
+| 07 | 照片时间窗口近重复过滤器 | assess | en | GitHub、Immich 文档、web、npm/PyPI |
+| 08 | 家庭日程与任务 AI 摘要助手 | assess | en | GitHub、web、官方 API 文档、HN/社区（可选） |
+| 09 | 离线 PDF 表格转 Excel 工具 | assess | en | GitHub、PyPI、web、官方文档、Hugging Face（可选） |
+| 10 | Kaggle 自动化机器学习项目（已有仓库） | compare | zh | 项目代码、GitHub、Kaggle、PyPI、web |
+| 11 | 深度研究 Agent 仓库对比（已有仓库） | compare | en | 项目代码、GitHub、web、arXiv/Papers with Code、npm/PyPI |
+| 12 | 金融分析 Agent 仓库对比（已有仓库） | compare | zh | 项目代码、GitHub、SEC EDGAR、官方 API、PyPI/npm、web |
 
 设计上未覆盖（留待后续补充）：Crossref/OpenAlex（纯学术出版场景）。核验层来源（Jina Reader、Context7、grep.app）不绑定具体 case，任何臂都可能用到，如实记录即可。
 
 ## 6. 汇总与发布纪律
 
-- 5 个 case 全部双跑完成后，在 `../results/SUMMARY.md` 汇总跨用例对比结论。
+- 12 个 case 全部双跑完成后，在 `../results/SUMMARY.md` 汇总跨用例对比结论。现有 `results/` 中的历史 5-case 快照不自动代表新增用例。
 - 任何"插件检索强于默认搜索"的结论必须引用两臂证据与对比表；smoke 数字不得混入。
 - 换模型、换工具预算或改内核版本后重测，注明环境并作为新一批快照落档。

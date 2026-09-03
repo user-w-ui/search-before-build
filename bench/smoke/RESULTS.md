@@ -12,6 +12,6 @@ Runner 位于 [`../run-offline.mjs`](../run-offline.mjs)，用例在 [`cases/`](
 
 ## 发布量化结论前
 
-1. 在 `../real/` 完成冻结评测集（5 个真实场景）；
+1. 在 `../real/` 完成冻结评测集（当前 12 个真实场景）；
 2. 用相同模型与工具预算分别跑 baseline 与 pipeline 两组；
 3. 在 [`../results/`](../results/) 提交带日期的结果快照。
