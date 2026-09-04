@@ -203,7 +203,14 @@ python tests/validate_plugin.py
 
 ## Benchmark
 
-A real-scenario paired comparison (5 tasks, same model and tool budget, bare agent vs. plugin) shows a substantial improvement over ordinary web search in retrieval breadth, evidence density, and primary-source verification. See [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md) for details.
+We ran a paired, real-scenario comparison: 12 tasks (9 "should I build this" ideas + 3 evaluations of existing projects), each executed twice — once with a bare agent, once with the plugin loaded — across Claude Code and Codex. Full data and methodology: [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md).
+
+<div align="center">
+
+<img src="./assets/benchmark-radar.svg" alt="Search Before Build vs Bare Agent 6D Capability Radar" width="820">
+
+</div>
+
 
 ## Acknowledgements
 

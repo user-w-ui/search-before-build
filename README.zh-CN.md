@@ -204,7 +204,14 @@ python tests/validate_plugin.py
 
 ## Benchmark
 
-真实场景成对对比（5 个任务、同模型同预算双臂运行）显示插件在检索广度、证据密度和一手核验率上相较普通 Web 搜索有大幅提升。详见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
+我们做了一组真实场景成对对比：12 个任务（9 个"要不要造"的想法 + 3 个已有项目评估），每个任务跑两遍——裸 agent 一遍、加载插件一遍——覆盖 Claude Code 与 Codex 两类宿主。完整数据与方法见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
+
+<div align="center">
+
+<img src="./assets/benchmark-radar.zh.svg" alt="Search Before Build 插件 vs 裸 Agent 6维能力雷达图" width="820">
+
+</div>
+
 
 ## 致谢
 
