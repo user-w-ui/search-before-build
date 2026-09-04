@@ -1,0 +1,2167 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Search Before Build</title>
+    <style>
+      :root {
+        --paper: #f3f4ef;
+        --paper-raised: rgba(255, 255, 252, 0.82);
+        --ink: #101916;
+        --muted: #61706a;
+        --faint: #8a9691;
+        --line: rgba(20, 49, 40, 0.12);
+        --line-strong: rgba(20, 49, 40, 0.22);
+        --night: #081713;
+        --night-raised: #10231d;
+        --mint: #65e6b4;
+        --mint-deep: #067a57;
+        --amber: #f2ae4a;
+        --rose: #e97972;
+        --blue: #79aef8;
+        --shadow: 0 24px 80px rgba(15, 39, 31, 0.1);
+        --shadow-soft: 0 12px 32px rgba(15, 39, 31, 0.07);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --max: 1180px;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      html[data-theme="dark"] {
+        --paper: #07100d;
+        --paper-raised: rgba(15, 29, 24, 0.84);
+        --ink: #e9f2ed;
+        --muted: #9db0a8;
+        --faint: #73867e;
+        --line: rgba(202, 238, 224, 0.12);
+        --line-strong: rgba(202, 238, 224, 0.22);
+        --night: #020806;
+        --night-raised: #0c1c17;
+        --mint-deep: #65e6b4;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+        --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(circle at 8% 0%, rgba(101, 230, 180, 0.12), transparent 30rem),
+          radial-gradient(circle at 92% 18%, rgba(121, 174, 248, 0.09), transparent 26rem),
+          var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 15px;
+        line-height: 1.65;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 42px 42px;
+        opacity: 0.22;
+        mask-image: linear-gradient(to bottom, black, transparent 58%);
+        content: "";
+        pointer-events: none;
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      a:focus-visible,
+      button:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid rgba(101, 230, 180, 0.55);
+        outline-offset: 3px;
+      }
+
+      .skip-link {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 100;
+        padding: 10px 14px;
+        transform: translateY(-160%);
+        border-radius: 10px;
+        background: var(--ink);
+        color: var(--paper);
+        transition: transform 180ms ease;
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .shell {
+        width: min(calc(100% - 40px), var(--max));
+        margin: 0 auto;
+      }
+
+      .masthead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 90px;
+        gap: 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        font-size: 13px;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        position: relative;
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line-strong);
+        border-radius: 50%;
+        background: var(--paper-raised);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .brand-mark::before,
+      .brand-mark::after {
+        position: absolute;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .brand-mark::before {
+        inset: 7px;
+        background: var(--mint);
+        box-shadow: 0 0 24px rgba(101, 230, 180, 0.45);
+      }
+
+      .brand-mark::after {
+        width: 7px;
+        height: 7px;
+        top: 1px;
+        right: 2px;
+        background: var(--amber);
+        border: 3px solid var(--paper);
+      }
+
+      .mast-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .export-button {
+        white-space: nowrap;
+      }
+
+      .mode-chip,
+      .icon-button {
+        border: 1px solid var(--line);
+        background: var(--paper-raised);
+        backdrop-filter: blur(16px);
+      }
+
+      .mode-chip {
+        padding: 7px 12px;
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .icon-button {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        place-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+
+      .icon-button:hover {
+        transform: translateY(-2px);
+        border-color: var(--line-strong);
+      }
+
+      .theme-symbol {
+        width: 16px;
+        height: 16px;
+        border: 1.8px solid currentColor;
+        border-radius: 50%;
+        box-shadow: inset -5px -3px 0 -2px var(--paper-raised);
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(270px, 0.72fr);
+        min-height: 520px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-xl);
+        background:
+          radial-gradient(circle at 74% 5%, rgba(101, 230, 180, 0.22), transparent 25rem),
+          radial-gradient(circle at 4% 100%, rgba(121, 174, 248, 0.13), transparent 24rem),
+          var(--night);
+        color: #eff8f3;
+        box-shadow: 0 30px 100px rgba(4, 20, 15, 0.25);
+      }
+
+      .hero::after {
+        position: absolute;
+        width: 440px;
+        height: 440px;
+        top: -220px;
+        right: -180px;
+        border: 1px solid rgba(101, 230, 180, 0.18);
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 46px rgba(101, 230, 180, 0.035),
+          0 0 0 98px rgba(101, 230, 180, 0.02);
+        content: "";
+        pointer-events: none;
+      }
+
+      .hero-main {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-width: 0;
+        padding: clamp(34px, 6vw, 70px);
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 26px;
+        color: #a7beb5;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 28px;
+        height: 1px;
+        background: var(--mint);
+        content: "";
+      }
+
+      .topic {
+        max-width: 770px;
+        margin: 0;
+        font-size: clamp(30px, 5vw, 62px);
+        font-weight: 620;
+        letter-spacing: -0.045em;
+        line-height: 1.02;
+      }
+
+      .project-line {
+        margin: 18px 0 0;
+        color: #9cb0a8;
+        font-size: 14px;
+      }
+
+      .decision-block {
+        margin-top: 64px;
+      }
+
+      .decision-label {
+        margin: 0 0 8px;
+        color: #8fa59c;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .decision {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 0;
+        color: var(--mint);
+        font-size: clamp(42px, 7vw, 82px);
+        font-weight: 760;
+        letter-spacing: -0.055em;
+        line-height: 0.95;
+      }
+
+      .decision-dot {
+        width: 13px;
+        height: 13px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 0 7px rgba(101, 230, 180, 0.1), 0 0 34px currentColor;
+      }
+
+      .decision[data-value="stop"] {
+        color: var(--rose);
+      }
+
+      .decision[data-value="use-existing"] {
+        color: var(--blue);
+      }
+
+      .decision[data-value="adapt"] {
+        color: var(--amber);
+      }
+
+      .reason {
+        max-width: 750px;
+        margin: 24px 0 0;
+        color: #cfddd7;
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.55;
+      }
+
+      .hero-aside {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid rgba(226, 245, 237, 0.1);
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .hero-note {
+        display: flex;
+        min-height: 50%;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 38px;
+      }
+
+      .hero-note + .hero-note {
+        border-top: 1px solid rgba(226, 245, 237, 0.1);
+      }
+
+      .note-number {
+        color: #668078;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .note-label {
+        margin: 28px 0 10px;
+        color: #8fa59c;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .note-value {
+        margin: 0;
+        color: #edf6f1;
+        font-size: 17px;
+        font-weight: 550;
+        line-height: 1.5;
+      }
+
+      .meta-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px 4px 0;
+        color: var(--faint);
+        font-size: 12px;
+      }
+
+      .meta-line strong {
+        color: var(--muted);
+        font-weight: 650;
+      }
+
+      .section {
+        padding-top: 100px;
+        scroll-margin-top: 30px;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.68fr) minmax(0, 1.32fr);
+        align-items: end;
+        gap: 40px;
+        margin-bottom: 34px;
+      }
+
+      .section-kicker {
+        margin: 0 0 8px;
+        color: var(--mint-deep);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 650;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+      }
+
+      .section-description {
+        max-width: 640px;
+        margin: 0;
+        justify-self: end;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .context-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(16px);
+      }
+
+      .context-item {
+        min-height: 148px;
+        padding: 28px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .context-item:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .context-label {
+        margin: 0 0 24px;
+        color: var(--faint);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .context-value {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 540;
+        line-height: 1.5;
+      }
+
+      .coverage-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .coverage-card {
+        position: relative;
+        min-height: 145px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(16px);
+      }
+
+      .coverage-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .coverage-name {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .coverage-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 780;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .coverage-status::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--mint-deep);
+        content: "";
+      }
+
+      .coverage-status[data-status="limited"]::before {
+        background: var(--amber);
+      }
+
+      .coverage-status[data-status="unavailable"]::before {
+        background: var(--rose);
+      }
+
+      .coverage-detail {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .matrix-shell {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow);
+      }
+
+      .matrix-scroll {
+        overflow-x: auto;
+      }
+
+      .print-matrix {
+        display: none;
+      }
+
+      .matrix {
+        width: 100%;
+        min-width: 760px;
+        border-collapse: collapse;
+      }
+
+      .matrix th,
+      .matrix td {
+        padding: 20px 22px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .matrix th:last-child,
+      .matrix td:last-child {
+        border-right: 0;
+      }
+
+      .matrix tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .matrix thead th {
+        background: color-mix(in srgb, var(--paper) 82%, transparent);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 780;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .matrix thead th:first-child,
+      .matrix tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        min-width: 220px;
+        background: var(--paper-raised);
+      }
+
+      .matrix thead th:first-child {
+        z-index: 2;
+        background: var(--paper);
+      }
+
+      .capability-name {
+        font-weight: 680;
+      }
+
+      .support-cell {
+        min-width: 180px;
+      }
+
+      .support-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 4px 9px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 760;
+        white-space: nowrap;
+      }
+
+      .support-badge[data-status="native"] {
+        border-color: rgba(6, 122, 87, 0.2);
+        background: rgba(101, 230, 180, 0.14);
+        color: var(--mint-deep);
+      }
+
+      .support-badge[data-status="partial"] {
+        border-color: rgba(242, 174, 74, 0.24);
+        background: rgba(242, 174, 74, 0.13);
+        color: color-mix(in srgb, var(--amber) 72%, var(--ink));
+      }
+
+      .support-badge[data-status="extensible"] {
+        border-color: rgba(121, 174, 248, 0.24);
+        background: rgba(121, 174, 248, 0.13);
+        color: color-mix(in srgb, var(--blue) 72%, var(--ink));
+      }
+
+      .support-badge[data-status="unsupported"] {
+        border-color: rgba(233, 121, 114, 0.24);
+        background: rgba(233, 121, 114, 0.12);
+        color: color-mix(in srgb, var(--rose) 72%, var(--ink));
+      }
+
+      .support-badge[data-status="unverified"] {
+        border-color: var(--line);
+        background: rgba(127, 143, 136, 0.08);
+        color: var(--faint);
+      }
+
+      .cell-note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .candidate-stack {
+        display: grid;
+        gap: 28px;
+      }
+
+      .candidate-card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: var(--paper-raised);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .candidate-header {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 20px;
+        padding: 30px 32px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .candidate-index {
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 15px;
+        background: linear-gradient(145deg, rgba(101, 230, 180, 0.15), rgba(121, 174, 248, 0.08));
+        color: var(--mint-deep);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .candidate-title {
+        margin: 0;
+        font-size: clamp(23px, 3vw, 32px);
+        font-weight: 670;
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+      }
+
+      .candidate-category {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .candidate-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 9px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 39px;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 13px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 180ms ease, border-color 180ms ease, color 180ms ease, background 180ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        border-color: var(--line-strong);
+        color: var(--ink);
+      }
+
+      .button-primary {
+        border-color: var(--night);
+        background: var(--night);
+        color: #eff8f3;
+      }
+
+      .button-primary:hover {
+        border-color: var(--night-raised);
+        background: var(--night-raised);
+        color: #eff8f3;
+      }
+
+      html[data-theme="dark"] .button-primary {
+        border-color: var(--mint);
+        background: var(--mint);
+        color: #052017;
+      }
+
+      html[data-theme="dark"] .button-primary:hover {
+        border-color: #83edc4;
+        background: #83edc4;
+        color: #052017;
+      }
+
+      .candidate-overview {
+        max-width: 860px;
+        margin: 0;
+        padding: 34px 32px;
+        color: var(--ink);
+        font-size: 17px;
+        line-height: 1.7;
+      }
+
+      .candidate-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1.42fr) minmax(260px, 0.58fr);
+        border-top: 1px solid var(--line);
+      }
+
+      .candidate-main {
+        min-width: 0;
+        padding: 32px;
+      }
+
+      .candidate-side {
+        padding: 32px;
+        border-left: 1px solid var(--line);
+        background: color-mix(in srgb, var(--paper) 54%, transparent);
+      }
+
+      .content-block + .content-block {
+        margin-top: 38px;
+      }
+
+      .content-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 17px;
+        font-size: 14px;
+        font-weight: 790;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .content-title::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--mint-deep);
+        content: "";
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .comparison-table th {
+        color: var(--faint);
+        font-size: 12px;
+        font-weight: 780;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .comparison-table td:first-child {
+        width: 24%;
+        color: var(--ink);
+        font-weight: 680;
+      }
+
+      .design-list,
+      .lesson-list,
+      .source-list,
+      .unknown-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .design-item {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr);
+        gap: 12px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .design-item:last-child {
+        border-bottom: 0;
+      }
+
+      .design-number {
+        color: var(--faint);
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 11px;
+      }
+
+      .design-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+
+      .design-item p,
+      .lesson-list li,
+      .source-list li {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .lesson-list li {
+        position: relative;
+        padding: 0 0 13px 18px;
+      }
+
+      .lesson-list li::before {
+        position: absolute;
+        top: 0.68em;
+        left: 0;
+        width: 7px;
+        height: 1px;
+        background: var(--mint-deep);
+        content: "";
+      }
+
+      .summary-quote {
+        margin: 0;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--paper-raised);
+        font-size: 16px;
+        font-weight: 590;
+        line-height: 1.55;
+      }
+
+      .summary-quote::before {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--mint-deep);
+        font-family: Georgia, serif;
+        font-size: 38px;
+        line-height: 0.7;
+        content: "“";
+      }
+
+      .source-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .source-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--paper-raised);
+        transition: border-color 180ms ease, transform 180ms ease;
+      }
+
+      .source-link:hover {
+        transform: translateX(2px);
+        border-color: var(--line-strong);
+      }
+
+      .source-link::after {
+        color: var(--faint);
+        content: "↗";
+      }
+
+      .coverage-note {
+        margin: 0 0 14px;
+        padding: 12px 14px;
+        border-left: 2px solid var(--amber);
+        background: rgba(242, 174, 74, 0.08);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .unknown-panel {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: var(--night);
+        color: #edf6f1;
+        box-shadow: var(--shadow);
+      }
+
+      .unknown-list {
+        counter-reset: unknown;
+      }
+
+      .unknown-list li {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr);
+        align-items: center;
+        min-height: 88px;
+        padding: 18px 28px;
+        border-bottom: 1px solid rgba(230, 246, 239, 0.1);
+        counter-increment: unknown;
+      }
+
+      .unknown-list li:last-child {
+        border-bottom: 0;
+      }
+
+      .unknown-list li::before {
+        color: #6e887e;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 11px;
+        content: "0" counter(unknown);
+      }
+
+      .empty-state {
+        padding: 40px;
+        border: 1px dashed var(--line-strong);
+        border-radius: var(--radius-lg);
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .footer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+        margin-top: 100px;
+        padding: 30px 0 46px;
+        border-top: 1px solid var(--line);
+        color: var(--faint);
+        font-size: 12px;
+      }
+
+      .footer strong {
+        color: var(--muted);
+      }
+
+      .toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        z-index: 90;
+        max-width: min(380px, calc(100vw - 44px));
+        padding: 13px 17px;
+        transform: translateY(140%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        background: var(--night-raised);
+        color: #edf6f1;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        font-size: 13px;
+        opacity: 0;
+        transition: transform 320ms var(--ease), opacity 320ms ease;
+      }
+
+      .toast[data-visible="true"] {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .reveal {
+        animation: reveal 680ms var(--ease) both;
+      }
+
+      .reveal-delay {
+        animation-delay: 90ms;
+      }
+
+      @keyframes reveal {
+        from {
+          transform: translateY(18px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      html[lang^="en"] body {
+        font-size: 16px;
+      }
+
+      html[lang^="en"] .topic {
+        max-width: 840px;
+        font-size: clamp(30px, 4.4vw, 54px);
+        letter-spacing: -0.04em;
+        line-height: 1.04;
+      }
+
+      html[lang^="en"] .section-kicker {
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .section-description {
+        font-size: 17px;
+      }
+
+      html[lang^="en"] .matrix thead th {
+        font-size: 13px;
+        letter-spacing: 0.06em;
+      }
+
+      html[lang^="en"] .capability-name {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      html[lang^="en"] .support-badge {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .cell-note {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      html[lang^="en"] .candidate-category,
+      html[lang^="en"] .button {
+        font-size: 13px;
+      }
+
+      html[lang^="en"] .content-title {
+        font-size: 15px;
+        letter-spacing: 0.08em;
+      }
+
+      html[lang^="en"] .comparison-table {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .comparison-table th {
+        font-size: 13px;
+        letter-spacing: 0.05em;
+      }
+
+      html[lang^="en"] .design-item strong,
+      html[lang^="en"] .design-item p,
+      html[lang^="en"] .lesson-list li,
+      html[lang^="en"] .source-list li {
+        font-size: 15px;
+      }
+
+      html[lang^="en"] .summary-quote {
+        font-size: 17px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-aside {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 0;
+          border-left: 1px solid rgba(226, 245, 237, 0.1);
+        }
+
+        .coverage-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .candidate-body {
+          grid-template-columns: 1fr;
+        }
+
+        .candidate-side {
+          border-top: 1px solid var(--line);
+          border-left: 0;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(calc(100% - 24px), var(--max));
+        }
+
+        .masthead {
+          min-height: 72px;
+        }
+
+        .brand span:last-child,
+        .mode-chip {
+          display: none;
+        }
+
+        .hero-main {
+          padding: 34px 24px 42px;
+        }
+
+        .hero-aside,
+        .context-grid,
+        .section-head {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .decision-block {
+          margin-top: 52px;
+        }
+
+        .meta-line {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .section {
+          padding-top: 76px;
+        }
+
+        .section-description {
+          justify-self: start;
+        }
+
+        .context-item,
+        .context-item:nth-child(2n) {
+          border-right: 0;
+        }
+
+        .coverage-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .candidate-header {
+          grid-template-columns: auto minmax(0, 1fr);
+          padding: 24px;
+        }
+
+        .candidate-actions {
+          grid-column: 1 / -1;
+          justify-content: flex-start;
+        }
+
+        .candidate-overview,
+        .candidate-main,
+        .candidate-side {
+          padding: 26px 24px;
+        }
+
+        .comparison-table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .footer {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 12mm;
+        }
+
+        :root {
+          --paper: #fff;
+          --paper-raised: #fff;
+          --ink: #111;
+          --muted: #555;
+          --faint: #777;
+          --line: #ddd;
+          --line-strong: #bbb;
+          --shadow: none;
+          --shadow-soft: none;
+        }
+
+        body {
+          background: #fff;
+          font-size: 10pt;
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+
+        body::before,
+        .skip-link,
+        .mast-actions,
+        .candidate-actions,
+        .toast {
+          display: none !important;
+        }
+
+        .shell {
+          width: 100%;
+          max-width: none;
+        }
+
+        .masthead {
+          min-height: 0;
+          margin-bottom: 8mm;
+        }
+
+        .hero {
+          grid-template-columns: minmax(0, 1.45fr) minmax(54mm, 0.75fr);
+          min-height: 0;
+          box-shadow: none;
+        }
+
+        .hero-main {
+          padding: 12mm;
+        }
+
+        .hero-aside {
+          display: flex;
+          grid-template-columns: none;
+          border-top: 0;
+          border-left: 1px solid rgba(226, 245, 237, 0.1);
+        }
+
+        .hero-note {
+          padding: 8mm;
+        }
+
+        .hero-note + .hero-note {
+          border-top: 1px solid rgba(226, 245, 237, 0.1);
+          border-left: 0;
+        }
+
+        .topic {
+          font-size: 27pt;
+        }
+
+        .decision-block {
+          margin-top: 14mm;
+        }
+
+        .decision {
+          font-size: 38pt;
+        }
+
+        .reason {
+          font-size: 11pt;
+        }
+
+        .meta-line {
+          padding-top: 4mm;
+        }
+
+        .section {
+          padding-top: 12mm;
+        }
+
+        .section-head {
+          grid-template-columns: minmax(52mm, 0.68fr) minmax(0, 1.32fr);
+          gap: 8mm;
+          margin-bottom: 6mm;
+          break-after: avoid;
+        }
+
+        .section-title {
+          font-size: 24pt;
+        }
+
+        .context-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          box-shadow: none;
+        }
+
+        .coverage-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .matrix-shell {
+          display: none;
+        }
+
+        .print-matrix {
+          display: block;
+        }
+
+        .print-matrix-group {
+          break-inside: auto;
+        }
+
+        .print-matrix-group + .print-matrix-group {
+          break-before: page;
+        }
+
+        .print-matrix-heading {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 6mm;
+          margin: 0 0 5mm;
+          break-after: avoid;
+        }
+
+        .print-matrix-heading h3 {
+          margin: 0;
+          font-size: 17pt;
+        }
+
+        .print-matrix-heading span {
+          color: var(--muted);
+          font-size: 9pt;
+        }
+
+        .print-matrix-table {
+          width: 100%;
+          border: 1px solid var(--line);
+          border-collapse: collapse;
+          table-layout: fixed;
+        }
+
+        .print-matrix-table thead {
+          display: table-header-group;
+        }
+
+        .print-matrix-table th,
+        .print-matrix-table td {
+          padding: 3.5mm;
+          border-right: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
+          text-align: left;
+          vertical-align: top;
+          overflow-wrap: anywhere;
+        }
+
+        .print-matrix-table th {
+          background: #f3f4ef;
+          color: var(--muted);
+          font-size: 8.5pt;
+          text-transform: uppercase;
+        }
+
+        .print-matrix-table th:first-child,
+        .print-matrix-table td:first-child {
+          width: 27%;
+        }
+
+        .print-matrix-table th:last-child,
+        .print-matrix-table td:last-child {
+          border-right: 0;
+        }
+
+        .print-matrix-table tr:last-child td {
+          border-bottom: 0;
+        }
+
+        .print-matrix-table tr,
+        .comparison-table tr,
+        .design-item,
+        .lesson-list li,
+        .source-list li,
+        .unknown-list li {
+          break-inside: avoid;
+        }
+
+        .print-matrix .support-cell {
+          min-width: 0;
+        }
+
+        .candidate-stack {
+          display: block;
+        }
+
+        .candidate-card {
+          overflow: visible;
+          break-inside: auto;
+          box-shadow: none;
+        }
+
+        .candidate-card + .candidate-card {
+          margin-top: 0;
+          break-before: page;
+        }
+
+        .candidate-header,
+        .candidate-overview,
+        .content-title {
+          break-after: avoid;
+        }
+
+        .candidate-body {
+          display: block;
+        }
+
+        .candidate-side {
+          border-top: 1px solid var(--line);
+          border-left: 0;
+        }
+
+        .comparison-table {
+          display: table;
+          overflow: visible;
+        }
+
+        .comparison-table thead {
+          display: table-header-group;
+        }
+
+        .reveal {
+          animation: none;
+        }
+
+        .hero,
+        .unknown-panel {
+          break-inside: avoid;
+        }
+
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" id="skip-link" href="#main">Skip to content</a>
+    <header class="shell masthead">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Search Before Build</span>
+      </div>
+      <div class="mast-actions">
+        <button class="button button-primary export-button" id="export-pdf" type="button"></button>
+        <span class="mode-chip" id="mode-chip"></span>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+          <span class="theme-symbol" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="shell" id="main">
+      <section class="hero reveal" aria-labelledby="report-topic">
+        <div class="hero-main">
+          <div>
+            <p class="eyebrow" id="hero-eyebrow"></p>
+            <h1 class="topic" id="report-topic"></h1>
+            <p class="project-line" id="project-line"></p>
+          </div>
+          <div class="decision-block">
+            <p class="decision-label" id="decision-label"></p>
+            <p class="decision" id="decision"><span class="decision-dot" aria-hidden="true"></span><span id="decision-value"></span></p>
+            <p class="reason" id="decision-reason"></p>
+          </div>
+        </div>
+        <aside class="hero-aside">
+          <div class="hero-note">
+            <span class="note-number">01</span>
+            <div>
+              <p class="note-label" id="reuse-label"></p>
+              <p class="note-value" id="reuse-value"></p>
+            </div>
+          </div>
+          <div class="hero-note">
+            <span class="note-number">02</span>
+            <div>
+              <p class="note-label" id="unknown-label"></p>
+              <p class="note-value" id="unknown-value"></p>
+            </div>
+          </div>
+        </aside>
+      </section>
+      <div class="meta-line reveal reveal-delay">
+        <span id="generated-line"></span>
+        <span id="temporary-line"></span>
+      </div>
+
+      <section class="section" id="context-section" aria-labelledby="context-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="context-kicker"></p>
+            <h2 class="section-title" id="context-title"></h2>
+          </div>
+          <p class="section-description" id="context-description"></p>
+        </header>
+        <div class="context-grid" id="fingerprint-grid"></div>
+      </section>
+
+      <section class="section" id="coverage-section" aria-labelledby="coverage-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="coverage-kicker"></p>
+            <h2 class="section-title" id="coverage-title"></h2>
+          </div>
+          <p class="section-description" id="coverage-description"></p>
+        </header>
+        <div class="coverage-grid" id="coverage-grid"></div>
+      </section>
+
+      <section class="section" id="matrix-section" aria-labelledby="matrix-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="matrix-kicker"></p>
+            <h2 class="section-title" id="matrix-title"></h2>
+          </div>
+          <p class="section-description" id="matrix-description"></p>
+        </header>
+        <div class="matrix-shell">
+          <div class="matrix-scroll">
+            <table class="matrix" id="capability-matrix"></table>
+          </div>
+        </div>
+        <div class="print-matrix" id="print-capability-matrix" aria-hidden="true"></div>
+      </section>
+
+      <section class="section" id="candidates-section" aria-labelledby="candidates-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="candidates-kicker"></p>
+            <h2 class="section-title" id="candidates-title"></h2>
+          </div>
+          <p class="section-description" id="candidates-description"></p>
+        </header>
+        <div class="candidate-stack" id="candidate-stack"></div>
+      </section>
+
+      <section class="section" id="unknowns-section" aria-labelledby="unknowns-title">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker" id="unknowns-kicker"></p>
+            <h2 class="section-title" id="unknowns-title"></h2>
+          </div>
+          <p class="section-description" id="unknowns-description"></p>
+        </header>
+        <div class="unknown-panel"><ol class="unknown-list" id="unknown-list"></ol></div>
+      </section>
+    </main>
+
+    <footer class="shell footer">
+      <span id="footer-notice"></span>
+      <strong>Search Before Build</strong>
+    </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      (() => {
+        "use strict";
+
+        const encodedReport = "eyJzY2hlbWFWZXJzaW9uIjoxLCJsYW5ndWFnZSI6InpoLUNOIiwibW9kZSI6ImNvbXBhcmUiLCJ0b3BpYyI6Iue+juiCoeWfuuacrOmdouWIhuaekOW3peWFt+WvueavlCIsInByb2plY3ROYW1lIjoiQUcy5aSa5pm66IO95L2T6YeR6J6N5YiG5p6Q57O757ufIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTA5LTAzVDA3OjAwOjI0WiIsInJlY29tbWVuZGF0aW9uIjp7InZhbHVlIjoiQWRhcHQiLCJyZWFzb24iOiLnjrDmnIlBRzLpobnnm67ogZrnhKbmlrDpl7vkuI7ogqHku7fotovlir/liIbmnpDvvIznvLrlsJHkvaDpnIDopoHnmoTmoLjlv4Pog73lipvvvJpTRUPotKLmiqXmlbDmja7ojrflj5bjgIHpgI/mmI7kvLDlgLzorqHnrpfjgIHmlbDmja7muq/mupDjgILnm7TmjqXkvb/nlKjnjrDmnIlQeXRob27lt6XlhbcoZWRnYXJ0b29scyArIERDRuW6kynnu4TlkIjmiJbph4fnlKhMTE3mioDog73moYbmnrYoSW52ZXN0U2tpbGwp77yM5q+U5LuO6Zu25p6E5bu6QUcy5aSa5pm66IO95L2T57O757uf5pu06auY5pWI44CC5aSa5pm66IO95L2T5p625p6E5pys6Lqr5LiN5piv5L2g55qE5qC45b+D6ZyA5rGC77yM5pWw5o2u5Y+v6L+95rqv5oCn5omN5piv44CCIiwicmV1c2FibGVPcHRpb24iOiLnu4TlkIjmlrnmoYjvvJplZGdhcnRvb2xzKOi0ouaKpeaVsOaNrikgKyDlvIDmupBEQ0blt6Xlhbco5Lyw5YC86K6h566XKSArIOe7k+aehOWMluaKpeWRiuaooeadv++8m+aIluebtOaOpemHh+eUqEludmVzdFNraWxs55qETExN5oqA6IO95qGG5p62IiwiYmlnZ2VzdFVua25vd24iOiLmmK/lkKbpnIDopoHlrozlhajoh6rliqjljJbnq6/liLDnq6/mtYHnqIvvvIzov5jmmK/lj6/ku6XmjqXlj5fljYroh6rliqjljJblt6XkvZzmtYEoTExN6L6F5Yqp5L2G6ZyA5Lq65bel5a6h5qC45YWz6ZSu5YGH6K6+KSJ9LCJmaW5nZXJwcmludCI6W3sibGFiZWwiOiLnm67moIfnlKjmiLciLCJ2YWx1ZSI6IuS4quS6uuaKlei1hOiAhe+8jOi/m+ihjOe+juiCoeWfuuacrOmdoueglOeptiJ9LHsibGFiZWwiOiLmoLjlv4Pku7vliqEiLCJ2YWx1ZSI6IuiOt+WPllNFQ+i0ouaKpeaVsOaNruOAgeaJp+ihjOS8sOWAvOiuoeeul+OAgeeUn+aIkOWPr+i/vea6r+eahOWIhuaekOaKpeWRiiJ9LHsibGFiZWwiOiLovpPlhaUiLCJ2YWx1ZSI6Iue+juiCoeiCoeelqOS7o+eggSgxLTTlj6op77yM5Lyw5YC85YGH6K6+5Y+C5pWwIn0seyJsYWJlbCI6Iui+k+WHuiIsInZhbHVlIjoi57uT5p6E5YyW5oql5ZGK77yM5YyF5ZCr6LSi5oql5qC45b+D56eR55uu44CB5Lyw5YC86K6h566X44CB5pWw5o2u5p2l5rqQ5qCH5rOoIn0seyJsYWJlbCI6Iui/kOihjOaooeW8jyIsInZhbHVlIjoi5pys5Zyw5bel5YW3L0NMSSJ9LHsibGFiZWwiOiLlv4XlpIfog73lipsiLCJ2YWx1ZSI6IuKRoOiHquWKqOiOt+WPllNFQ+i0ouaKpeaVsOaNruW5tuagh+azqOWHuuWkhCDikaHpgI/mmI7lj6/lpI3moLjnmoTkvLDlgLzmqKHlnosg4pGi55Sf5oiQ57uT5p6E5YyW5oql5ZGK5pW05ZCI5pWw5a2X44CB5YGH6K6+5ZKM5p2l5rqQIn0seyJsYWJlbCI6IuS4jeWPr+aOpeWPlyIsInZhbHVlIjoi6buR55uS5qih5Z6L44CB5peg5rOV5rqv5rqQ55qE5pWw5o2u44CB5peg5rOV6Ieq5a6a5LmJ5YGH6K6+In0seyJsYWJlbCI6IuehrOe6puadnyIsInZhbHVlIjoi5LuF5L2/55So5YWs5byA5oiW5YWN6LS5QVBJ77yb5pWw5o2u5b+F6aG75qCH5rOo5pel5pyf5ZKM5p2l5rqQIn1dLCJjb3ZlcmFnZSI6W3sibGFiZWwiOiJXZWLmkJzntKIiLCJzdGF0dXMiOiJ1c2VkIiwiZGV0YWlsIjoi5Lqn5ZOB44CB5bel5YW344CB5paH5qGj5qOA57SiIn0seyJsYWJlbCI6IkdpdEh1YiIsInN0YXR1cyI6ImxpbWl0ZWQiLCJkZXRhaWwiOiLkvb/nlKjljL/lkI1SRVNUIEFQSe+8jOacquS9v+eUqOa3seW6puajgOe0ouW3peWFt+OAguacrOasoeacquS9v+eUqEdpdEh1YuS4k+Wxnua3seW6puajgOe0ouW3peWFt++8jOe7k+aenOS4u+imgeadpeiHquWFrOW8gEFQSeaIlue9kemhtee0ouW8le+8jOWPr+iDvemBl+a8j+i+g+aWsOOAgeS9juabneWFieaIluS7heWcqOS7o+eggeWGhemDqOWHuueOsOeahOmhueebruOAgiJ9LHsibGFiZWwiOiJucG0iLCJzdGF0dXMiOiJ1c2VkIiwiZGV0YWlsIjoiSmF2YVNjcmlwdC9Ob2Rl5YyF5qOA57SiIn0seyJsYWJlbCI6IlB5dGhvbiBQeVBJIiwic3RhdHVzIjoidXNlZCIsImRldGFpbCI6IumAmui/h1dlYuaQnOe0ouimhuebluS4u+imgVB5dGhvbuW6kyJ9LHsibGFiZWwiOiJIdWdnaW5nIEZhY2UiLCJzdGF0dXMiOiJ1c2VkIiwiZGV0YWlsIjoi5LuF5Y+R546w5oOF5oSf5YiG5p6Q5qih5Z6L77yM5peg5a6M5pW05YiG5p6Q5bel5YW3In1dLCJjYXBhYmlsaXRpZXMiOlt7Im5hbWUiOiLoh6rliqjojrflj5ZTRUPotKLmiqXmlbDmja7lubbmoIfms6jlh7rlpITkuI7ml6XmnJ8iLCJjdXJyZW50Ijp7InN0YXR1cyI6InVuc3VwcG9ydGVkIiwibm90ZSI6IuW9k+WJjUFHMumhueebruS7jllhaG9vIEZpbmFuY2XniKzlj5bmlrDpl7vvvIzkuI3mtonlj4pTRUPotKLmiqXmlbDmja4ifSwiY2FuZGlkYXRlcyI6eyJlZGdhcnRvb2xzIjp7InN0YXR1cyI6Im5hdGl2ZSIsIm5vdGUiOiLnm7TmjqXop6PmnpBTRUMgWEJSTOaVsOaNru+8jOi/lOWbnuS4ieWkp+aKpeihqO+8jE1JVOiuuOWPryJ9LCJpbnZlc3Rza2lsbCI6eyJzdGF0dXMiOiJleHRlbnNpYmxlIiwibm90ZSI6IuaPkOS+mzEwLUvmkZjopoHlkozotKLmiqXliIbmnpDmioDog73moYbmnrbvvIzpnIDmiYvliqjojrflj5bmlbDmja4ifX19LHsibmFtZSI6IumAj+aYjuWPr+WkjeaguOeahOS8sOWAvOaooeWei+iuoeeulyIsImN1cnJlbnQiOnsic3RhdHVzIjoidW5zdXBwb3J0ZWQiLCJub3RlIjoi5b2T5YmN6aG555uu5peg5Lyw5YC85qih5Z6L77yM5LuF55Sf5oiQYnV5L3NlbGwvaG9sZOW7uuiuriJ9LCJjYW5kaWRhdGVzIjp7ImRjZi10b29scyI6eyJzdGF0dXMiOiJuYXRpdmUiLCJub3RlIjoiNeW5tERDRivokpnnibnljaHmtJsr5pWP5oSf5oCn5YiG5p6Q77yMU3RyZWFtbGl055WM6Z2iIn0sImludmVzdHNraWxsIjp7InN0YXR1cyI6Im5hdGl2ZSIsIm5vdGUiOiLmj5DkvptEQ0bkvLDlgLzmioDog73moYbmnrbvvIzpgI/mmI7lgYforr4ifSwic2ltcGx5d2FsbCI6eyJzdGF0dXMiOiJwYXJ0aWFsIiwibm90ZSI6IkRDRuaooeWei+S9huWBh+iuvumAj+aYjuW6puaciemZkO+8jDEyMOe+juWFgy/lubQifX19LHsibmFtZSI6IueUn+aIkOe7k+aehOWMluaKpeWRiuaVtOWQiOaVsOWtl+OAgeWBh+iuvuWSjOadpea6kCIsImN1cnJlbnQiOnsic3RhdHVzIjoicGFydGlhbCIsIm5vdGUiOiLnlJ/miJBNYXJrZG93buaKpeWRiuS9huaXoOaVsOaNrua6r+a6kOagh+azqCJ9LCJjYW5kaWRhdGVzIjp7ImludmVzdHNraWxsIjp7InN0YXR1cyI6Im5hdGl2ZSIsIm5vdGUiOiIyNuS4que7k+aehOWMluWIhuaekOahhuaetu+8jOWPr+S4suiBlOS9v+eUqO+8jOi+k+WHuue7k+aehOWMluaKpeWRiiJ9LCJlZGdhcnRvb2xzIjp7InN0YXR1cyI6ImV4dGVuc2libGUiLCJub3RlIjoi6L+U5Zue57uT5p6E5YyW5pWw5o2u77yM6ZyA6Ieq6KGM5p6E5bu65oql5ZGK5bGCIn0sImZpc2NhbC1haSI6eyJzdGF0dXMiOiJuYXRpdmUiLCJub3RlIjoiQUnnlJ/miJDmiqXlkYrkvYbpnIDku5jotLk2NOe+juWFgy/mnIjvvIzmuq/mupDpgI/mmI7luqbmnKrnn6UifX19XSwiY29tcGV0aXRvcnMiOlt7ImlkIjoiZWRnYXJ0b29scyIsIm5hbWUiOiJlZGdhcnRvb2xzIiwidXJsIjoiaHR0cHM6Ly9naXRodWIuY29tL2RndW5uaW5nL2VkZ2FydG9vbHMiLCJjYXRlZ29yeSI6IuWPr+WkjeeUqFB5dGhvbuW6kyIsIm92ZXJ2aWV3Ijoi5pyA5rWB6KGM55qEUHl0aG9uIFNFQyBFREdBUuaVsOaNruiuv+mXruW6k++8jOaciOS4i+i9vemHjzEwMOS4h+asoeOAguaPkOS+m+eugOa0geeahEFQSeino+aekDIwK+enjVNFQ+aWh+S7tuexu+Wei++8jOWMheaLrDEwLUsvMTAtUei0ouaKpeOAgeWGhemDqOS6pOaYk+OAgeWfuumHkeaMgeS7k+etieOAgui/lOWbnnBhbmRhcyBEYXRhRnJhbWXkvr/kuo7liIbmnpDjgIIiLCJjb21wYXJpc29uIjpbeyJkaW1lbnNpb24iOiLlrprkvY0iLCJjYW5kaWRhdGUiOiJQeXRob27lupPvvIzkvZzkuLrmlbDmja7lsYLooqvlhbbku5blt6XlhbfosIPnlKgiLCJjdXJyZW50Ijoi5a6M5pW055qE5aSa5pm66IO95L2T5bqU55SoIn0seyJkaW1lbnNpb24iOiLmoLjlv4Pog73lipsiLCJjYW5kaWRhdGUiOiJTRUPotKLmiqXmlbDmja7mj5Dlj5blkoznu5PmnoTljJbvvIzljp/nlJ/mlK/mjIHkuInlpKfmiqXooagiLCJjdXJyZW50Ijoi5paw6Ze75pGY6KaBK+iCoeS7t+WIhuaekCtMTE3nlJ/miJDmiqXlkYoifSx7ImRpbWVuc2lvbiI6IuaVsOaNruadpea6kCIsImNhbmRpZGF0ZSI6IuebtOaOpeS7jlNFQyBFREdBUuiOt+WPllhCUkzmlbDmja4iLCJjdXJyZW50IjoiWWFob28gRmluYW5jZeaWsOmXu+eIrOiZqyt5ZmluYW5jZeiCoeS7tyJ9LHsiZGltZW5zaW9uIjoi5Lyw5YC85qih5Z6LIiwiY2FuZGlkYXRlIjoi5LiN5o+Q5L6b77yM5LuF5pWw5o2u5bGCIiwiY3VycmVudCI6IuS4jeaPkOS+myJ9LHsiZGltZW5zaW9uIjoi5pWw5o2u5rqv5rqQIiwiY2FuZGlkYXRlIjoi5q+P5Liq5pWw5o2u54K55Y+v6L+95rqv5YiwU0VD5paH5Lu2IiwiY3VycmVudCI6IuaXoOa6r+a6kOagh+azqCJ9LHsiZGltZW5zaW9uIjoi6L+Q6KGM5qih5byPIiwiY2FuZGlkYXRlIjoiUHl0aG9u5bqT77yM6ZyA57yW56CB6ZuG5oiQIiwiY3VycmVudCI6IueLrOeri1B5dGhvbuiEmuacrCJ9LHsiZGltZW5zaW9uIjoi6K645Y+v6K+BIiwiY2FuZGlkYXRlIjoiTUlU5byA5rqQIiwiY3VycmVudCI6IkFwYWNoZSAyLjAo5o6o5rWL77yM5Z+65LqOQUcyKSJ9LHsiZGltZW5zaW9uIjoi57u05oqk54q25oCBIiwiY2FuZGlkYXRlIjoi5rS76LeD57u05oqk77yMMjAyNuW5tDnmnIjku43lnKjmm7TmlrAiLCJjdXJyZW50Ijoi5ryU56S66aG555uu77yM5pyA5ZCO5pu05pawMjAyNeW5tDnmnIgifV0sIm5vdGFibGVEZXNpZ25zIjpbeyJ0aXRsZSI6IueugOa0geeahEFQSeiuvuiuoSIsImRldGFpbCI6IuS4ieihjOS7o+eggeWNs+WPr+iOt+WPluS7u+aEj+WFrOWPuOeahOi0ouWKoeaKpeihqO+8jOWkp+W5hemZjeS9jlNFQ+aVsOaNruiuv+mXrumXqOanmyJ9LHsidGl0bGUiOiLlpJrmlofku7bnsbvlnovmlK/mjIEiLCJkZXRhaWwiOiLkuI3ku4XmlK/mjIHotKLmiqXvvIzov5jljIXmi6zlhoXpg6jkuqTmmJMoRm9ybSAzLzQvNSnjgIHln7rph5HmjIHku5MoMTNGKeOAgeWnlOaJmOS5puetiTIwK+enjeaWh+S7tuexu+WeiyJ9LHsidGl0bGUiOiJwYW5kYXPpm4bmiJAiLCJkZXRhaWwiOiLov5Tlm55EYXRhRnJhbWXmoLzlvI/vvIzml6DnvJ3lr7nmjqVQeXRob27mlbDmja7liIbmnpDnlJ/mgIEifV0sInJldXNhYmxlTGVzc29ucyI6WyLlj6/nm7TmjqXkvZzkuLrotKLmiqXmlbDmja7lsYLvvIzmm7/mjaLlvZPliY3pobnnm67nmoRZYWhvbyBGaW5hbmNl5paw6Ze754is6JmrIiwi5o+Q5L6b55qE5pWw5o2u57uT5p6E5aSp54S25pSv5oyB5rqv5rqQKOavj+S4quaVsOaNrueCueWFs+iBlFNFQ+aWh+S7tikiLCLpnIDopoHoh6rooYzmnoTlu7rkvLDlgLzmqKHlnovlkozmiqXlkYrnlJ/miJDlsYIiXSwic3VtbWFyeSI6ImVkZ2FydG9vbHPmmK/miJDnhp/nmoTmlbDmja7ojrflj5bmlrnmoYjvvIzop6PlhrPkuobnrKzkuIDkuKrmoLjlv4Pog73lipsoU0VD6LSi5oql5pWw5o2uKe+8jOS9huS4jeaPkOS+m+S8sOWAvOWSjOaKpeWRiuWKn+iDve+8jOmcgOimgeS4juWFtuS7luW3peWFt+e7hOWQiOS9v+eUqOOAgiIsImNvdmVyYWdlTm90ZSI6IiIsInNvdXJjZXMiOlt7ImxhYmVsIjoiUHlQSeWMhemhtemdoiIsInVybCI6Imh0dHBzOi8vcHlwaS5vcmcvcHJvamVjdC9lZGdhcnRvb2xzLyJ9LHsibGFiZWwiOiLlrpjmlrnmlofmoaMiLCJ1cmwiOiJodHRwczovL2VkZ2FydG9vbHMucmVhZHRoZWRvY3MuaW8vIn1dfSx7ImlkIjoiaW52ZXN0c2tpbGwiLCJuYW1lIjoiSW52ZXN0U2tpbGwiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20veWVubmFubGl1L0ludmVzdFNraWxsIiwiY2F0ZWdvcnkiOiLlj6/lpI3nlKhMTE3mioDog73moYbmnrYiLCJvdmVydmlldyI6IuS4ukxMTShDbGF1ZGXjgIFHZW1pbmnnrYkp6K6+6K6h55qEMjbkuKrnu5PmnoTljJbnvo7ogqHliIbmnpDmoYbmnrbjgILml6DpnIDov5DooYzml7bvvIzmr4/kuKrmioDog73mmK/kuIDkuKpwcm9tcHTmqKHmnb/jgILmlK/mjIHmioDog73kuLLogZQo5aaC55SoOeS4quaKgOiDveWIhuaekE1ldGHnmoQxMzjpobUxMC1L5oql5ZGKKeOAguWMheaLrDEwLUvmkZjopoHjgIHln7rmnKzpnaLliIbmnpDjgIFEQ0bkvLDlgLzjgIHnhorluILliIbmnpDnrYnjgIIiLCJjb21wYXJpc29uIjpbeyJkaW1lbnNpb24iOiLlrprkvY0iLCJjYW5kaWRhdGUiOiJMTE3mioDog70v5o+Q56S66K+N5qGG5p625bqTIiwiY3VycmVudCI6IueLrOeri1B5dGhvbuW6lOeUqCJ9LHsiZGltZW5zaW9uIjoi5qC45b+D6IO95YqbIiwiY2FuZGlkYXRlIjoi5o+Q5L6bMTgr5YiG5p6Q5qGG5p625oyH5a+8TExN5omn6KGM5YiG5p6QIiwiY3VycmVudCI6IuiHquWKqOWMlmFnZW505bel5L2c5rWBIn0seyJkaW1lbnNpb24iOiLmlbDmja7ojrflj5YiLCJjYW5kaWRhdGUiOiLkvp3otZZMTE3nmoTlt6XlhbfosIPnlKjog73lipvmiJbmiYvliqjmj5DkvpsiLCJjdXJyZW50Ijoi5YaF572u54is6Jmr6I635Y+W5paw6Ze75ZKM6IKh5Lu3In0seyJkaW1lbnNpb24iOiLkvLDlgLzmqKHlnosiLCJjYW5kaWRhdGUiOiLljIXlkKtEQ0bkvLDlgLzmioDog73moYbmnrbvvIzpgI/mmI7lgYforr4iLCJjdXJyZW50Ijoi5pegIn0seyJkaW1lbnNpb24iOiLmiqXlkYrnlJ/miJAiLCJjYW5kaWRhdGUiOiLnu5PmnoTljJbovpPlh7rvvIzlj6/kuLLogZTlpJrmioDog70iLCJjdXJyZW50Ijoi5Y2V5LiATWFya2Rvd27miqXlkYoifSx7ImRpbWVuc2lvbiI6Iui/kOihjOaWueW8jyIsImNhbmRpZGF0ZSI6IuWcqOS7u+aEj0xMTeeVjOmdouS9v+eUqChDbGF1ZGUgQ29kZS9DdXJzb3IvQ2hhdEdQVCkiLCJjdXJyZW50Ijoi6ZyA5pys5ZywUHl0aG9u546v5aKDK09wZW5BSSBBUEkifSx7ImRpbWVuc2lvbiI6IuaIkOacrCIsImNhbmRpZGF0ZSI6IuWFjei0ueaKgOiDveahhuaetu+8jExMTei0ueeUqOWPpuiuoSIsImN1cnJlbnQiOiJPcGVuQUkgQVBJ6LS555SoIn0seyJkaW1lbnNpb24iOiLngbXmtLvmgKciLCJjYW5kaWRhdGUiOiLpq5jluqbngbXmtLvvvIzlj6/oh6rnlLHnu4TlkIjmioDog70iLCJjdXJyZW50Ijoi5Zu65a6a5bel5L2c5rWBIn1dLCJub3RhYmxlRGVzaWducyI6W3sidGl0bGUiOiLmioDog73kuLLogZTmqKHlvI8iLCJkZXRhaWwiOiLlj6/ku6XlsIblpJrkuKrliIbmnpDmioDog73mjInpobrluo/miafooYwo5aaC5YWIMTAtS+aRmOimgeKGkuWfuuacrOmdouWIhuaekOKGkkRDRuS8sOWAvOKGkueGiuW4guWIhuaekCnvvIzlvaLmiJDlrozmlbTliIbmnpDmtYHnqIsifSx7InRpdGxlIjoi6LeoTExN5bmz5Y+wIiwiZGV0YWlsIjoi5ZCM5LiA5aWX5oqA6IO95qGG5p625Y+v5ZyoQ2xhdWRlIENvZGXjgIFDdXJzb3LjgIFHZW1pbmkgQ0xJ44CBR2l0SHViIENvcGlsb3TnrYnlpJrkuKrlubPlj7Dkvb/nlKgifSx7InRpdGxlIjoi5peg6L+Q6KGM5pe25L6d6LWWIiwiZGV0YWlsIjoi5LiN6ZyA6KaB5a6J6KOF5qGG5p625oiW5L6d6LWW77yM55u05o6l5ZyoTExN5a+56K+d5Lit5L2/55So5o+Q56S66K+N5qih5p2/In1dLCJyZXVzYWJsZUxlc3NvbnMiOlsi5oqA6IO95qGG5p625qih5byP5q+U5Zu65a6a5bel5L2c5rWB5pu054G15rS777yM6YCC5ZCI5Liq5Lq65oqV6LWE6ICF5qC55o2u5YW35L2T6ZyA5rGC57uE5ZCI5L2/55SoIiwi57uT5p6E5YyW5o+Q56S66K+N5Y+v5Lul5byV5a+8TExN55Sf5oiQ56ym5ZCI54m55a6a5qC85byP55qE6L6T5Ye677yM5o+Q5Y2H5oql5ZGK5LiA6Ie05oCnIiwi5L2G6ZyA6KaB5omL5Yqo5oiW5Y2K6Ieq5Yqo5o+Q5L6b5pWw5o2u77yM5LiN5piv5a6M5YWo6Ieq5Yqo5YyW5pa55qGIIl0sInN1bW1hcnkiOiJJbnZlc3RTa2lsbOaPkOS+m+S6huWujOaVtOeahOWIhuaekOaWueazleiuuuWSjOaKpeWRiue7k+aehO+8jOS9huS+nei1lkxMTeiDveWKm+WSjOaJi+WKqOaVsOaNrui+k+WFpeOAgumAguWQiOS9nOS4uuWIhuaekOahhuaetuWPguiAg++8jOaIluebtOaOpeWcqENsYXVkZSBDb2Rl5Lit5L2/55So5YW25oqA6IO944CCIiwiY292ZXJhZ2VOb3RlIjoiIiwic291cmNlcyI6W3sibGFiZWwiOiLpobnnm67kuLvpobUiLCJ1cmwiOiJodHRwOi8veWVubmoxMi5qcy5vcmcvSW52ZXN0U2tpbGwvIn1dfSx7ImlkIjoiZGNmLXRvb2xzIiwibmFtZSI6IuW8gOa6kERDRuS8sOWAvOW3peWFt+mbhiIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9kYWZhaGVudHJhL2RjZi12YWx1YXRpb24tdG9vbCIsImNhdGVnb3J5Ijoi5Y+v5aSN55SoUHl0aG9u5bel5YW3Iiwib3ZlcnZpZXciOiLlpJrkuKrlvIDmupBQeXRob24gRENG5Lyw5YC85bel5YW377yM5YyF5ousZGFmYWhlbnRyYS9kY2YtdmFsdWF0aW9uLXRvb2wo5py65p6E57qnRENG5byV5pOOKeOAgWRldmMyMjU1L0luc3RpdHV0aW9uYWwtSW50cmluc2ljLVZhbHVhdGlvbi1FbmdpbmUo5aSa6Zi25q61RENGKeOAgUVtYW51ZWxlU3R1cnpvL0RDRi1WYWx1YXRpb24tTW9kZWwoNeW5tERDRivokpnnibnljaHmtJsp44CC5aSn5aSa5L2/55SoU3RyZWFtbGl05p6E5bu65Lqk5LqS55WM6Z2i77yM6ZuG5oiQeWZpbmFuY2Xojrflj5blrp7ml7bmlbDmja7jgIIiLCJjb21wYXJpc29uIjpbeyJkaW1lbnNpb24iOiLlrprkvY0iLCJjYW5kaWRhdGUiOiLkuJPms6jkvLDlgLzorqHnrpfnmoTni6znq4vlt6XlhbciLCJjdXJyZW50Ijoi56uv5Yiw56uv6YeR6J6N5YiG5p6Q5bqU55SoIn0seyJkaW1lbnNpb24iOiLkvLDlgLzog73lipsiLCJjYW5kaWRhdGUiOiLljp/nlJ/mlK/mjIFEQ0bjgIFXQUND44CB5pWP5oSf5oCn5YiG5p6Q44CB6JKZ54m55Y2h5rSb5qih5oufIiwiY3VycmVudCI6IuaXoCJ9LHsiZGltZW5zaW9uIjoi5pWw5o2u5p2l5rqQIiwiY2FuZGlkYXRlIjoieWZpbmFuY2UoWWFob28gRmluYW5jZSBBUEkpIiwiY3VycmVudCI6IllhaG9vIEZpbmFuY2XmlrDpl7vniKzomasifSx7ImRpbWVuc2lvbiI6Iui0ouaKpeaVsOaNriIsImNhbmRpZGF0ZSI6IumAmui/h3lmaW5hbmNl6I635Y+W77yM5rex5bqm5pyJ6ZmQIiwiY3VycmVudCI6IuS4jea2ieWPiui0ouaKpSJ9LHsiZGltZW5zaW9uIjoi5YGH6K6+6YCP5piO5bqmIiwiY2FuZGlkYXRlIjoi5a6M5YWo6YCP5piO77yM55So5oi35Y+v6LCD5pW05omA5pyJ5Y+C5pWwIiwiY3VycmVudCI6Ik4vQSJ9LHsiZGltZW5zaW9uIjoi55WM6Z2iIiwiY2FuZGlkYXRlIjoiU3RyZWFtbGl05Lqk5LqS5byPV2Vi55WM6Z2iIiwiY3VycmVudCI6IuWRveS7pOihjCvmlofku7bovpPlh7oifSx7ImRpbWVuc2lvbiI6IuaKpeWRiui+k+WHuiIsImNhbmRpZGF0ZSI6IuWbvuihqCvmlY/mhJ/mgKfooajmoLzvvIzkvYbnvLrlsJHlrozmlbTmiqXlkYrnu5PmnoQiLCJjdXJyZW50IjoiTWFya2Rvd27miqXlkYoifSx7ImRpbWVuc2lvbiI6IuaVsOaNrua6r+a6kCIsImNhbmRpZGF0ZSI6Iuagh+azqOaVsOaNruadpeiHqllhaG9vIEZpbmFuY2XvvIzkvYbml6Dnu4bnspLluqbmuq/mupAiLCJjdXJyZW50Ijoi5pegIn1dLCJub3RhYmxlRGVzaWducyI6W3sidGl0bGUiOiLokpnnibnljaHmtJvmqKHmi58iLCJkZXRhaWwiOiLpgJrov4fmqKHmi5/lpJrnp43mg4Xmma/nlJ/miJDkvLDlgLzliIbluIPljLrpl7TvvIzmr5TljZXngrnkvLDlgLzmm7TnqLPlgaUifSx7InRpdGxlIjoi5pWP5oSf5oCn5YiG5p6QIiwiZGV0YWlsIjoi6Ieq5Yqo55Sf5oiQ5YWz6ZSu5Y+C5pWwKOWinumVv+eOh+OAgeaKmOeOsOeOhynlj5jljJblr7nkvLDlgLznmoTlvbHlk43nn6npmLUifSx7InRpdGxlIjoiU3RyZWFtbGl055WM6Z2iIiwiZGV0YWlsIjoi5o+Q5L6b5Lqk5LqS5byP5Y+C5pWw6LCD5pW077yM5peg6ZyA57yW56CB5Y2z5Y+v5o6i57Si5LiN5ZCM5YGH6K6+In1dLCJyZXVzYWJsZUxlc3NvbnMiOlsi5Y+v5Lul55u05o6l5L2/55So6L+Z5Lqb5bel5YW355qE5Lyw5YC86K6h566X6YC76L6R77yM6Kej5Yaz56ys5LqM5Liq5qC45b+D6IO95YqbIiwiU3RyZWFtbGl05Lqk5LqS5qih5byP6YCC5ZCI5Y+C5pWw5o6i57Si77yM5L2G5aaC5p6c6ZyA6KaB5om56YeP5aSE55CG5oiW6Ieq5Yqo5YyW6ZyA6KaB6YeN5p6EIiwieWZpbmFuY2XnmoTotKLmiqXmlbDmja7mt7HluqbkuI3lj4plZGdhcnRvb2xz77yM6ICD6JmR5pu/5o2i5pWw5o2u5rqQIl0sInN1bW1hcnkiOiLmiJDnhp/nmoTkvLDlgLzlt6XlhbfvvIzop6PlhrPkuobnrKzkuozkuKrmoLjlv4Pog73lipso6YCP5piO5Lyw5YC85qih5Z6LKe+8jOS9huaVsOaNruWxgui+g+W8se+8jOS4lOe8uuWwkeWujOaVtOeahOaKpeWRiueUn+aIkOiDveWKm+OAgiIsImNvdmVyYWdlTm90ZSI6IiIsInNvdXJjZXMiOlt7ImxhYmVsIjoiSW5zdGl0dXRpb25hbCBFbmdpbmUiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vZGV2YzIyNTUvSW5zdGl0dXRpb25hbC1JbnRyaW5zaWMtVmFsdWF0aW9uLUVuZ2luZSJ9LHsibGFiZWwiOiJFbWFudWVsZVN0dXJ6b+aooeWeiyIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9FbWFudWVsZVN0dXJ6by9EQ0YtVmFsdWF0aW9uLU1vZGVsIn1dfSx7ImlkIjoiZmlzY2FsLWFpIiwibmFtZSI6IkZpc2NhbC5haSAo5Y6fRmluQ2hhdC5pbykiLCJ1cmwiOiJodHRwczovL2Zpc2NhbC5haS8iLCJjYXRlZ29yeSI6IueOsOaIkOWVhuS4muS6p+WTgSIsIm92ZXJ2aWV3IjoiQUnpqbHliqjnmoTmipXotYTnoJTnqbblubPlj7DvvIzmj5DkvpsxMOS4hyvlhajnkIPkuIrluILlhazlj7jnmoTlrp7ml7botKLliqHmlbDmja7jgILljIXmi6zlr7nor53lvI9BSeWKqeaJi+OAgeWPr+WumuWItuS7quihqOadv+OAgeacuuaehOe6p+aVsOaNruWIhuaekOOAgjIwMjXlubTkuK3ku45GaW5DaGF0Lmlv5pu05ZCN5bm25a6M5oiQQei9ruiejei1hOOAgumdouWQkeS4quS6uuWSjOacuuaehOaKlei1hOiAheOAgiIsImNvbXBhcmlzb24iOlt7ImRpbWVuc2lvbiI6IuWumuS9jSIsImNhbmRpZGF0ZSI6IuWVhuS4mlNhYVPkuqflk4EiLCJjdXJyZW50Ijoi5pys5Zyw5byA5rqQ5bel5YW3In0seyJkaW1lbnNpb24iOiLmlbDmja7opobnm5YiLCJjYW5kaWRhdGUiOiIxMOS4hyvlhazlj7jvvIzlhajnkIPluILlnLoiLCJjdXJyZW50Ijoi5Lu75oSP6IKh56Wo5L2G6ZyA5omL5Yqo6L6T5YWlIn0seyJkaW1lbnNpb24iOiLotKLmiqXmlbDmja4iLCJjYW5kaWRhdGUiOiLmnLrmnoTnuqfotKLliqHmlbDmja7vvIzlrp7ml7bpqozor4EiLCJjdXJyZW50Ijoi5pegIn0seyJkaW1lbnNpb24iOiLkvLDlgLzmqKHlnosiLCJjYW5kaWRhdGUiOiLlhoXnva7kvYbpgI/mmI7luqbmnKrnn6Uo5Y+v6IO96buR55uSKSIsImN1cnJlbnQiOiLml6AifSx7ImRpbWVuc2lvbiI6IuaKpeWRiueUn+aIkCIsImNhbmRpZGF0ZSI6IuWvueivneW8j+eUn+aIkO+8jOagvOW8j+WSjOa6r+a6kOe7huiKguacquefpSIsImN1cnJlbnQiOiJNYXJrZG93buaKpeWRiiJ9LHsiZGltZW5zaW9uIjoi5pWw5o2u5rqv5rqQIiwiY2FuZGlkYXRlIjoi5pyq5piO56Gu6K+05piO57uG57KS5bqm5rqv5rqQ6IO95YqbIiwiY3VycmVudCI6IuaXoCJ9LHsiZGltZW5zaW9uIjoi5a6a5Lu3IiwiY2FuZGlkYXRlIjoi5pyA6auYNjTnvo7lhYMv5pyI77yM5YWN6LS554mI5Yqf6IO95Y+X6ZmQIiwiY3VycmVudCI6IuWFjei0uSjku4VBUEnotLnnlKgpIn0seyJkaW1lbnNpb24iOiLlrprliLbmgKciLCJjYW5kaWRhdGUiOiLmnInpmZDvvIzlj5fkuqflk4Hlip/og73nuqbmnZ8iLCJjdXJyZW50Ijoi5a6M5YWo5Y+v5a6a5Yi2In1dLCJub3RhYmxlRGVzaWducyI6W3sidGl0bGUiOiLlr7nor53lvI9BSeWKqeaJiyIsImRldGFpbCI6IuiHqueEtuivreiogOafpeivoui0ouWKoeaVsOaNruWSjOWIhuaekO+8jOmZjeS9juS9v+eUqOmXqOanmyJ9LHsidGl0bGUiOiLlrp7ml7bpqozor4HmlbDmja4iLCJkZXRhaWwiOiLlvLrosIPmlbDmja7otKjph4/lkozlrp7ml7bmgKfvvIzpgILlkIjlv6vpgJ/noJTnqbYifSx7InRpdGxlIjoi5Y+v5a6a5Yi25Luq6KGo5p2/IiwiZGV0YWlsIjoi55So5oi35Y+v5Yib5bu65Liq5oCn5YyWS1BJ6L+96Liq6Z2i5p2/In1dLCJyZXVzYWJsZUxlc3NvbnMiOlsi5aaC5p6c6aKE566X5YWB6K645LiU5LiN6KaB5rGC5a6M5YWo6Ieq5a6a5LmJ77yM5ZWG5Lia5Lqn5ZOB5Y+v6IO95pu055yB5pe2Iiwi5L2G6ZyA6KaB6aqM6K+B5YW25Lyw5YC85qih5Z6L6YCP5piO5bqm5ZKM5pWw5o2u5rqv5rqQ6IO95Yqb5piv5ZCm5ruh6Laz5L2g55qE6KaB5rGCIiwi5LuO5o+P6L+w55yL77yM5Y+v6IO95LiN56ym5ZCI5L2g5a+56buR55uS5qih5Z6L5ZKM5pWw5o2u5Y+v6L+95rqv5oCn55qE6KaB5rGCIl0sInN1bW1hcnkiOiLlip/og73lhajpnaLnmoTllYbkuJrkuqflk4HvvIzkvYbkvLDlgLzpgI/mmI7luqblkozmlbDmja7muq/mupDog73lipvmnKrnn6XvvIzkuJTpnIDopoHku5jotLnorqLpmIXjgILlj6/og73kuI3nrKblkIjkvaDlr7npgI/mmI7luqblkozlj6/lrprliLbmgKfnmoTmoLjlv4PopoHmsYLjgIIiLCJjb3ZlcmFnZU5vdGUiOiIiLCJzb3VyY2VzIjpbXX0seyJpZCI6InNpbXBseXdhbGwiLCJuYW1lIjoiU2ltcGx5IFdhbGwgU3QiLCJ1cmwiOiJodHRwczovL3NpbXBseXdhbGwuc3QvIiwiY2F0ZWdvcnkiOiLnjrDmiJDllYbkuJrkuqflk4EiLCJvdmVydmlldyI6IuWPr+inhuWMlui0ouWKoeWIhuaekOW5s+WPsO+8jOimhuebljEy5LiHK+iCoeelqOOAgTkwK+W4guWcuuOAguS9v+eUqERDRuWSjOi2hemineaUtuebiuaooeWei+iuoeeul+WGheWcqOS7t+WAvO+8jOS7peWbvuihqOWSjOmbquiKseWbvuWRiOeOsOOAgumdouWQkemVv+acn+S7t+WAvOaKlei1hOiAhe+8jOW8uuiwg+inhuinieWMluWSjOaYk+eUqOaAp+OAgue6pjEyMOe+juWFgy/lubTjgIIiLCJjb21wYXJpc29uIjpbeyJkaW1lbnNpb24iOiLlrprkvY0iLCJjYW5kaWRhdGUiOiLllYbkuJrlj6/op4bljJbliIbmnpDlubPlj7AiLCJjdXJyZW50Ijoi5pys5Zyw6Ieq5Yqo5YyW5bel5YW3In0seyJkaW1lbnNpb24iOiLmlbDmja7opobnm5YiLCJjYW5kaWRhdGUiOiIxMuS4hyvogqHnpajvvIzlhajnkIM5MCvluILlnLoiLCJjdXJyZW50Ijoi55CG6K665LiK5Lu75oSP6IKh56WoIn0seyJkaW1lbnNpb24iOiLkvLDlgLzmqKHlnosiLCJjYW5kaWRhdGUiOiJEQ0Yr6LaF6aKd5pS255uK5qih5Z6L77yM5L2G5YGH6K6+6YCP5piO5bqm5pyJ6ZmQIiwiY3VycmVudCI6IuaXoCJ9LHsiZGltZW5zaW9uIjoi5oql5ZGK5b2i5byPIiwiY2FuZGlkYXRlIjoi5Y+v6KeG5YyW5Zu+6KGo5ZKM6Zuq6Iqx6K+E5YiGIiwiY3VycmVudCI6IuaWh+acrOaKpeWRiiJ9LHsiZGltZW5zaW9uIjoi5pWw5o2u5rqv5rqQIiwiY2FuZGlkYXRlIjoi5pyq5by66LCD57uG57KS5bqm5rqv5rqQIiwiY3VycmVudCI6IuaXoCJ9LHsiZGltZW5zaW9uIjoi5a6a5Yi25oCnIiwiY2FuZGlkYXRlIjoi562b6YCJ5Zmo5ZKM6YOo5YiG5Y+C5pWw5Y+v6LCDIiwiY3VycmVudCI6IuWujOWFqOWPr+WumuWItiJ9LHsiZGltZW5zaW9uIjoi5a6a5Lu3IiwiY2FuZGlkYXRlIjoi57qmMTIw576O5YWDL+W5tO+8jOacieWFjei0ueeJiCIsImN1cnJlbnQiOiLlhY3otLkifSx7ImRpbWVuc2lvbiI6Iuebruagh+eUqOaItyIsImNhbmRpZGF0ZSI6IuinhuinieWtpuS5oOiAheWSjOWIneWtpuiAhSIsImN1cnJlbnQiOiLpnIDopoHnvJbnqIvog73lipvnmoTnlKjmiLcifV0sIm5vdGFibGVEZXNpZ25zIjpbeyJ0aXRsZSI6IumbquiKseivhOWIhuezu+e7nyIsImRldGFpbCI6IuWkmue7tOW6puWPr+inhuWMluivhOS8sCjku7flgLzjgIHotKLliqHlgaXlurfjgIHlop7plb/jgIHliIbnuqLnrYkp77yM55u06KeC5L2G566A5YyWIn0seyJ0aXRsZSI6IuWFrOWFgeS7t+WAvOS8sOeulyIsImRldGFpbCI6IuiHquWKqERDRuS8sOWAvOW5tuS4juW4guS7t+WvueavlO+8jOagh+azqOi2heS5sC/kvY7kvLAifSx7InRpdGxlIjoi5oqV6LWE57uE5ZCI6L+96LiqIiwiZGV0YWlsIjoi55yf5a6e5Zue5oql546H6K6h566X5ZKM5oyB5LuT55uR5o6nIn1dLCJyZXVzYWJsZUxlc3NvbnMiOlsi5Y+v6KeG5YyW5ZGI546w5a+56Z2e5LiT5Lia55So5oi35Y+L5aW977yM5L2G5L2g6ZyA6KaB55qE5piv6K+m57uG5Y+v5aSN5qC455qE5oql5ZGKIiwi6Ieq5Yqo5Lyw5YC85pa55L6/5L2G54m654my5LqG6YCP5piO5bqm77yM5LiN56ym5ZCI5L2g55qE5qC45b+D6ZyA5rGCIiwi6YCC5ZCI5b+r6YCf562b6YCJ77yM5LiN6YCC5ZCI5rex5bqm5Z+65pys6Z2i56CU56m2Il0sInN1bW1hcnkiOiLpnaLlkJHlpKfkvJfnmoTlj6/op4bljJblt6XlhbfvvIzkvYbkvLDlgLzmqKHlnovpgI/mmI7luqbkuI3otrPvvIzml6Dms5Xmu6HotrPkvaDlr7nlj6/lpI3moLjmgKflkozmlbDmja7muq/mupDnmoTopoHmsYLjgIIiLCJjb3ZlcmFnZU5vdGUiOiIiLCJzb3VyY2VzIjpbXX1dLCJ1bmtub3ducyI6WyLmmK/lkKbpnIDopoHlrozlhajoh6rliqjljJbnmoTnq6/liLDnq6/mtYHnqIvvvIzov5jmmK/lj6/ku6XmjqXlj5fljYroh6rliqjljJYoTExN6L6F5Yqp5L2G6ZyA5Lq65bel5a6h5qC4KSIsIuWvueaKpeWRiuagvOW8j+eahOWFt+S9k+imgeaxgihNYXJrZG93buOAgVBERuOAgUV4Y2Vs44CB5Lqk5LqS5byP572R6aG1KSIsIuaYr+WQpumcgOimgeWOhuWPsuaVsOaNruWvueavlOWSjOWkmuWto+W6pui2i+WKv+WIhuaekCIsIuWFt+S9k+mcgOimgeWTquS6m+S8sOWAvOaooeWeiyhEQ0bkvJjlhYjnuqcgdnMg5YCN5pWw5rOV5LyY5YWI57qnKSIsIuaYr+WQpumcgOimgeaUr+aMgeWFtuS7luW4guWcuijmuK/ogqHjgIFB6IKhKeaIluS7hemZkOe+juiCoSJdLCJsYWJlbHMiOnt9fQ==";
+        const bytes = Uint8Array.from(atob(encodedReport), (character) => character.charCodeAt(0));
+        const report = JSON.parse(new TextDecoder().decode(bytes));
+
+        const dictionaries = {
+          zh: {
+            skipToContent: "跳到主要内容",
+            assessment: "想法评估",
+            comparisonMode: "项目比较",
+            report: "研究简报",
+            project: "当前对象",
+            recommendation: "最终建议",
+            strongestReuse: "最值得复用",
+            biggestUnknown: "最大未知项",
+            generated: "生成时间",
+            temporaryNotice: "临时查看器 · 仅在主动保存时导出报告",
+            contextKicker: "01 / Context",
+            context: "问题轮廓",
+            contextDescription: "研究所依据的用户、任务、工作流与关键约束。",
+            coverageKicker: "02 / Evidence",
+            coverage: "检索覆盖",
+            coverageDescription: "本次实际使用的证据渠道，以及无法覆盖或发生降级的部分。",
+            matrixKicker: "03 / Fit",
+            comparison: "能力对比",
+            comparisonDescription: "只保留会影响选择的关键能力；未知不等于不支持。",
+            capability: "关键能力",
+            currentProject: "当前项目",
+            candidatesKicker: "04 / Alternatives",
+            candidates: "候选详析",
+            candidatesDescription: "逐一查看强候选的工作方式、差异、可复用设计与证据来源。",
+            overview: "概览",
+            comparisonWithProject: "与当前项目对比",
+            dimension: "维度",
+            notableDesigns: "值得关注的设计",
+            reusableLessons: "可复用经验",
+            summary: "总结",
+            sources: "来源",
+            officialAddress: "官方网站",
+            coverageNote: "覆盖说明",
+            saveMarkdown: "保存 Markdown",
+            copyMarkdown: "复制 Markdown",
+            openOfficial: "打开官网",
+            unknownsKicker: "05 / Unknowns",
+            unknowns: "仍需验证",
+            unknownsDescription: "这些事实可能改变最终判断，适合在投入实现前优先验证。",
+            used: "已使用",
+            limited: "受限",
+            unavailable: "不可用",
+            notCompared: "未比较",
+            noCandidates: "没有足够强的候选可进入详细比较。",
+            noData: "本次没有记录该项。",
+            saved: "报告已进入浏览器保存流程。",
+            copied: "Markdown 已复制。",
+            saveFailed: "无法保存，请尝试复制 Markdown。",
+            copyFailed: "复制失败，请使用保存按钮。",
+            theme: "切换明暗主题",
+          },
+          en: {
+            skipToContent: "Skip to content",
+            assessment: "Idea assessment",
+            comparisonMode: "Project comparison",
+            report: "Research brief",
+            project: "Subject",
+            recommendation: "Final recommendation",
+            strongestReuse: "Best reuse option",
+            biggestUnknown: "Biggest unknown",
+            generated: "Generated",
+            temporaryNotice: "Temporary viewer · export only when you choose",
+            contextKicker: "01 / Context",
+            context: "Problem fingerprint",
+            contextDescription: "The user, task, and constraints behind the search.",
+            coverageKicker: "02 / Evidence",
+            coverage: "Search coverage",
+            coverageDescription: "Evidence routes used and any coverage limits.",
+            matrixKicker: "03 / Fit",
+            comparison: "Capability comparison",
+            comparisonDescription: "Decision-relevant capabilities only. Unknown is not unsupported.",
+            capability: "Capability",
+            currentProject: "Current project",
+            candidatesKicker: "04 / Alternatives",
+            candidates: "Candidate details",
+            candidatesDescription: "Review fit, constraints, reuse, and sources.",
+            overview: "Overview",
+            comparisonWithProject: "Project comparison",
+            dimension: "Dimension",
+            notableDesigns: "Notable designs",
+            reusableLessons: "Reusable lessons",
+            summary: "Summary",
+            sources: "Sources",
+            officialAddress: "Official address",
+            coverageNote: "Coverage note",
+            saveMarkdown: "Save Markdown",
+            copyMarkdown: "Copy Markdown",
+            openOfficial: "Official site",
+            unknownsKicker: "05 / Unknowns",
+            unknowns: "Still unverified",
+            unknownsDescription: "These facts could still change the decision.",
+            used: "Used",
+            limited: "Limited",
+            unavailable: "Unavailable",
+            notCompared: "Not compared",
+            noCandidates: "No candidate was strong enough for a detailed comparison.",
+            noData: "No item was recorded for this section.",
+            saved: "The browser save flow has started.",
+            copied: "Markdown copied.",
+            saveFailed: "Could not save. Try copying the Markdown instead.",
+            copyFailed: "Copy failed. Use the save button instead.",
+            theme: "Toggle light or dark theme",
+          },
+        };
+        dictionaries.zh.exportPdf = "导出完整 PDF";
+        dictionaries.en.exportPdf = "Export full PDF";
+
+        const languageFamily = report.language.toLowerCase().startsWith("zh")
+          ? "zh"
+          : report.language.toLowerCase().startsWith("en")
+            ? "en"
+            : "custom";
+        const labels = languageFamily === "custom"
+          ? report.labels
+          : { ...dictionaries[languageFamily], ...(report.labels || {}) };
+        const supportLabels = languageFamily === "zh"
+          ? {
+              native: "原生支持",
+              partial: "部分支持",
+              extensible: "可通过扩展实现",
+              unsupported: "不支持",
+              unverified: "尚未验证",
+            }
+          : {
+              native: "Native",
+              partial: "Partial",
+              extensible: "Extensible",
+              unsupported: "Unsupported",
+              unverified: "Unverified",
+            };
+
+        const $ = (id) => document.getElementById(id);
+        const element = (tag, className, text) => {
+          const node = document.createElement(tag);
+          if (className) node.className = className;
+          if (text !== undefined) node.textContent = text;
+          return node;
+        };
+        const safeUrl = (value) => {
+          try {
+            const url = new URL(value);
+            return ["http:", "https:"].includes(url.protocol) ? url.href : null;
+          } catch {
+            return null;
+          }
+        };
+        const displayDate = (value) => {
+          try {
+            return new Intl.DateTimeFormat(report.language, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+          } catch {
+            return value;
+          }
+        };
+        const slug = (value) => value
+          .normalize("NFKD")
+          .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+          .replace(/^-|-$/g, "")
+          .toLowerCase() || "competitor";
+        const tableText = (value) => String(value).replace(/\|/g, "\\|").replace(/\r?\n/g, "<br>");
+        const textOrFallback = (value) => value && String(value).trim() ? value : labels.noData;
+
+        document.documentElement.lang = report.language;
+        document.documentElement.dir = /^(ar|fa|he|ur)(-|$)/i.test(report.language) ? "rtl" : "ltr";
+        document.title = `${report.topic} · Search Before Build`;
+
+        const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = preferredTheme;
+        $("theme-toggle").setAttribute("aria-label", labels.theme);
+        $("theme-toggle").title = labels.theme;
+        $("theme-toggle").addEventListener("click", () => {
+          document.documentElement.dataset.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        });
+        $("export-pdf").textContent = labels.exportPdf;
+        $("export-pdf").title = labels.exportPdf;
+        $("export-pdf").addEventListener("click", async () => {
+          if (document.fonts && document.fonts.ready) await document.fonts.ready;
+          window.print();
+        });
+
+        $("skip-link").textContent = labels.skipToContent;
+        $("mode-chip").textContent = report.mode === "assess" ? labels.assessment : labels.comparisonMode;
+        $("hero-eyebrow").textContent = labels.report;
+        $("report-topic").textContent = report.topic;
+        $("project-line").textContent = `${labels.project} · ${report.projectName}`;
+        $("decision-label").textContent = labels.recommendation;
+        $("decision-value").textContent = report.recommendation.value;
+        $("decision").dataset.value = report.recommendation.value.toLowerCase().replace(/\s+/g, "-");
+        $("decision-reason").textContent = report.recommendation.reason;
+        $("reuse-label").textContent = labels.strongestReuse;
+        $("reuse-value").textContent = report.recommendation.reusableOption;
+        $("unknown-label").textContent = labels.biggestUnknown;
+        $("unknown-value").textContent = report.recommendation.biggestUnknown;
+        $("generated-line").append(labels.generated + " · ", element("strong", "", displayDate(report.generatedAt)));
+        $("temporary-line").textContent = labels.temporaryNotice;
+
+        const sectionText = [
+          ["context-kicker", labels.contextKicker],
+          ["context-title", labels.context],
+          ["context-description", labels.contextDescription],
+          ["coverage-kicker", labels.coverageKicker],
+          ["coverage-title", labels.coverage],
+          ["coverage-description", labels.coverageDescription],
+          ["matrix-kicker", labels.matrixKicker],
+          ["matrix-title", labels.comparison],
+          ["matrix-description", labels.comparisonDescription],
+          ["candidates-kicker", labels.candidatesKicker],
+          ["candidates-title", labels.candidates],
+          ["candidates-description", labels.candidatesDescription],
+          ["unknowns-kicker", labels.unknownsKicker],
+          ["unknowns-title", labels.unknowns],
+          ["unknowns-description", labels.unknownsDescription],
+          ["footer-notice", labels.temporaryNotice],
+        ];
+        sectionText.forEach(([id, text]) => { $(id).textContent = text; });
+
+        report.fingerprint.forEach((item) => {
+          const card = element("article", "context-item");
+          card.append(element("p", "context-label", item.label), element("p", "context-value", item.value));
+          $("fingerprint-grid").append(card);
+        });
+        if (!report.fingerprint.length) {
+          $("fingerprint-grid").append(element("p", "empty-state", labels.noData));
+        }
+
+        report.coverage.forEach((item) => {
+          const card = element("article", "coverage-card");
+          const top = element("div", "coverage-top");
+          const status = element("span", "coverage-status", labels[item.status]);
+          status.dataset.status = item.status;
+          top.append(element("h3", "coverage-name", item.label), status);
+          card.append(top, element("p", "coverage-detail", item.detail));
+          $("coverage-grid").append(card);
+        });
+        if (!report.coverage.length) {
+          $("coverage-grid").append(element("p", "empty-state", labels.noData));
+        }
+
+        const supportCell = (cell) => {
+          const wrapper = element("div", "support-cell");
+          if (!cell) {
+            wrapper.append(element("span", "support-badge", labels.notCompared));
+            return wrapper;
+          }
+          const badge = element("span", "support-badge", supportLabels[cell.status]);
+          badge.dataset.status = cell.status;
+          wrapper.append(badge);
+          if (cell.note) wrapper.append(element("p", "cell-note", cell.note));
+          return wrapper;
+        };
+
+        const matrixHead = element("thead");
+        const matrixHeadRow = element("tr");
+        matrixHeadRow.append(element("th", "", labels.capability), element("th", "", report.projectName));
+        report.competitors.forEach((candidate) => matrixHeadRow.append(element("th", "", candidate.name)));
+        matrixHead.append(matrixHeadRow);
+        const matrixBody = element("tbody");
+        report.capabilities.forEach((capability) => {
+          const row = element("tr");
+          row.append(element("td", "capability-name", capability.name));
+          const current = element("td");
+          current.append(supportCell(capability.current));
+          row.append(current);
+          report.competitors.forEach((candidate) => {
+            const cell = element("td");
+            cell.append(supportCell(capability.candidates[candidate.id]));
+            row.append(cell);
+          });
+          matrixBody.append(row);
+        });
+        if (!report.capabilities.length) {
+          const row = element("tr");
+          const cell = element("td", "empty-state", labels.noData);
+          cell.colSpan = report.competitors.length + 2;
+          row.append(cell);
+          matrixBody.append(row);
+        }
+        $("capability-matrix").append(matrixHead, matrixBody);
+
+        const buildPrintMatrix = () => {
+          const container = $("print-capability-matrix");
+          if (!report.competitors.length) {
+            container.append(element("p", "empty-state", labels.noCandidates));
+            return;
+          }
+
+          report.competitors.forEach((candidate, index) => {
+            const group = element("section", "print-matrix-group");
+            const heading = element("header", "print-matrix-heading");
+            heading.append(
+              element("h3", "", candidate.name),
+              element("span", "", `${String(index + 1).padStart(2, "0")} / ${String(report.competitors.length).padStart(2, "0")}`),
+            );
+
+            const table = element("table", "print-matrix-table");
+            const head = element("thead");
+            const headRow = element("tr");
+            [labels.capability, report.projectName, candidate.name].forEach((text) => headRow.append(element("th", "", text)));
+            head.append(headRow);
+
+            const body = element("tbody");
+            report.capabilities.forEach((capability) => {
+              const row = element("tr");
+              const current = element("td");
+              const alternative = element("td");
+              current.append(supportCell(capability.current));
+              alternative.append(supportCell(capability.candidates[candidate.id]));
+              row.append(element("td", "capability-name", capability.name), current, alternative);
+              body.append(row);
+            });
+            if (!report.capabilities.length) {
+              const row = element("tr");
+              const cell = element("td", "empty-state", labels.noData);
+              cell.colSpan = 3;
+              row.append(cell);
+              body.append(row);
+            }
+
+            table.append(head, body);
+            group.append(heading, table);
+            container.append(group);
+          });
+        };
+        buildPrintMatrix();
+
+        const makeMarkdown = (candidate) => {
+          const lines = [
+            `# ${candidate.name}`,
+            "",
+          ];
+          const official = safeUrl(candidate.url);
+          if (official) lines.push(`${labels.officialAddress}: [${candidate.name}](${official})`, "");
+          lines.push(`## ${labels.overview}`, "", candidate.overview, "");
+          lines.push(`## ${labels.comparisonWithProject}`, "");
+          lines.push(`| ${labels.dimension} | ${candidate.name} | ${report.projectName} |`, "| --- | --- | --- |");
+          candidate.comparison.forEach((row) => {
+            lines.push(`| ${tableText(row.dimension)} | ${tableText(row.candidate)} | ${tableText(row.current)} |`);
+          });
+          lines.push("", `## ${labels.notableDesigns}`, "");
+          candidate.notableDesigns.forEach((item, index) => lines.push(`${index + 1}. **${item.title}**: ${item.detail}`));
+          lines.push("", `## ${labels.reusableLessons}`, "");
+          candidate.reusableLessons.forEach((item) => lines.push(`- ${item}`));
+          lines.push("", `## ${labels.summary}`, "", `> ${candidate.summary}`, "", `## ${labels.sources}`, "");
+          if (candidate.coverageNote) lines.push(`${labels.coverageNote}: ${candidate.coverageNote}`, "");
+          candidate.sources.forEach((source) => {
+            const url = safeUrl(source.url);
+            if (url) lines.push(`- [${source.label}](${url})`);
+          });
+          return `${lines.join("\n").trim()}\n`;
+        };
+
+        let toastTimer;
+        const showToast = (message) => {
+          clearTimeout(toastTimer);
+          $("toast").textContent = message;
+          $("toast").dataset.visible = "true";
+          toastTimer = setTimeout(() => { $("toast").dataset.visible = "false"; }, 2800);
+        };
+        const fallbackDownload = (contents, filename) => {
+          const url = URL.createObjectURL(new Blob([contents], { type: "text/markdown;charset=utf-8" }));
+          const link = element("a");
+          link.href = url;
+          link.download = filename;
+          document.body.append(link);
+          link.click();
+          link.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        };
+        const saveMarkdown = async (candidate) => {
+          const contents = makeMarkdown(candidate);
+          const filename = `${slug(candidate.name)}.md`;
+          try {
+            if (window.isSecureContext && "showSaveFilePicker" in window) {
+              try {
+                const handle = await window.showSaveFilePicker({
+                  suggestedName: filename,
+                  types: [{ description: "Markdown", accept: { "text/markdown": [".md"] } }],
+                });
+                const writable = await handle.createWritable();
+                await writable.write(contents);
+                await writable.close();
+                showToast(labels.saved);
+                return;
+              } catch (error) {
+                if (error && error.name === "AbortError") return;
+              }
+            }
+            fallbackDownload(contents, filename);
+            showToast(labels.saved);
+          } catch {
+            showToast(labels.saveFailed);
+          }
+        };
+        const copyMarkdown = async (candidate) => {
+          const contents = makeMarkdown(candidate);
+          try {
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(contents);
+            } else {
+              const area = element("textarea");
+              area.value = contents;
+              area.setAttribute("readonly", "");
+              area.style.position = "fixed";
+              area.style.opacity = "0";
+              document.body.append(area);
+              area.select();
+              if (!document.execCommand("copy")) throw new Error("copy failed");
+              area.remove();
+            }
+            showToast(labels.copied);
+          } catch {
+            showToast(labels.copyFailed);
+          }
+        };
+
+        const contentBlock = (title) => {
+          const block = element("section", "content-block");
+          block.append(element("h4", "content-title", title));
+          return block;
+        };
+
+        report.competitors.forEach((candidate, index) => {
+          const card = element("article", "candidate-card");
+          card.id = `candidate-${candidate.id}`;
+          const header = element("header", "candidate-header");
+          const titleGroup = element("div");
+          titleGroup.append(element("h3", "candidate-title", candidate.name), element("p", "candidate-category", candidate.category));
+          const actions = element("div", "candidate-actions");
+          const saveButton = element("button", "button button-primary", labels.saveMarkdown);
+          saveButton.type = "button";
+          saveButton.addEventListener("click", () => saveMarkdown(candidate));
+          const copyButton = element("button", "button", labels.copyMarkdown);
+          copyButton.type = "button";
+          copyButton.addEventListener("click", () => copyMarkdown(candidate));
+          actions.append(saveButton, copyButton);
+          const official = safeUrl(candidate.url);
+          if (official) {
+            const officialLink = element("a", "button", labels.openOfficial);
+            officialLink.href = official;
+            officialLink.target = "_blank";
+            officialLink.rel = "noreferrer noopener";
+            actions.append(officialLink);
+          }
+          header.append(element("span", "candidate-index", String(index + 1).padStart(2, "0")), titleGroup, actions);
+          card.append(header, element("p", "candidate-overview", candidate.overview));
+
+          const body = element("div", "candidate-body");
+          const main = element("div", "candidate-main");
+          const comparison = contentBlock(labels.comparisonWithProject);
+          const table = element("table", "comparison-table");
+          const thead = element("thead");
+          const headRow = element("tr");
+          [labels.dimension, candidate.name, report.projectName].forEach((text) => headRow.append(element("th", "", text)));
+          thead.append(headRow);
+          const tbody = element("tbody");
+          candidate.comparison.forEach((item) => {
+            const row = element("tr");
+            row.append(element("td", "", item.dimension), element("td", "", item.candidate), element("td", "", item.current));
+            tbody.append(row);
+          });
+          table.append(thead, tbody);
+          comparison.append(table);
+          main.append(comparison);
+
+          const designs = contentBlock(labels.notableDesigns);
+          const designList = element("ol", "design-list");
+          candidate.notableDesigns.forEach((item, itemIndex) => {
+            const row = element("li", "design-item");
+            const copy = element("div");
+            copy.append(element("strong", "", item.title), element("p", "", item.detail));
+            row.append(element("span", "design-number", String(itemIndex + 1).padStart(2, "0")), copy);
+            designList.append(row);
+          });
+          designs.append(designList);
+          main.append(designs);
+
+          const side = element("aside", "candidate-side");
+          const lessons = contentBlock(labels.reusableLessons);
+          const lessonList = element("ul", "lesson-list");
+          candidate.reusableLessons.forEach((item) => lessonList.append(element("li", "", item)));
+          lessons.append(lessonList);
+          side.append(lessons);
+
+          const summary = contentBlock(labels.summary);
+          summary.append(element("blockquote", "summary-quote", candidate.summary));
+          side.append(summary);
+
+          const sources = contentBlock(labels.sources);
+          if (candidate.coverageNote) sources.append(element("p", "coverage-note", `${labels.coverageNote}: ${candidate.coverageNote}`));
+          const sourceList = element("ul", "source-list");
+          candidate.sources.forEach((source) => {
+            const url = safeUrl(source.url);
+            if (!url) return;
+            const item = element("li");
+            const link = element("a", "source-link", source.label);
+            link.href = url;
+            link.target = "_blank";
+            link.rel = "noreferrer noopener";
+            item.append(link);
+            sourceList.append(item);
+          });
+          sources.append(sourceList);
+          side.append(sources);
+
+          body.append(main, side);
+          card.append(body);
+          $("candidate-stack").append(card);
+        });
+        if (!report.competitors.length) {
+          $("candidate-stack").append(element("p", "empty-state", labels.noCandidates));
+        }
+
+        const unknowns = report.unknowns.length ? report.unknowns : [report.recommendation.biggestUnknown];
+        unknowns.forEach((item) => $("unknown-list").append(element("li", "", textOrFallback(item))));
+      })();
+    </script>
+  </body>
+</html>

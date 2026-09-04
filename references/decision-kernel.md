@@ -8,9 +8,9 @@ The kernel can:
 
 - normalize JSON, Atom XML, DuckDuckGo-style HTML, Markdown, and plain text retrieval payloads;
 - conservatively merge observations that share a stable identity;
-- rank candidates with BM25F and reciprocal rank fusion;
+- rank candidates with BM25F, reciprocal rank fusion, and activity-recency scoring;
 - keep the final list diverse and expose must-have capability mentions;
-- report failed requests, missing capability mentions, and a deterministic trace.
+- report failed requests, missing capability mentions, flattened-payload warnings, and a deterministic trace.
 
 The kernel cannot prove that a capability is supported. `candidate_mention` means only that the candidate text matched the capability lexically. Verify important capabilities against primary sources and assign the stable support enums yourself.
 
@@ -42,7 +42,17 @@ Write one temporary JSON file under the operating-system temporary directory. Do
       "providerHint": "github",
       "categoryHint": "repo",
       "outcome": "success",
-      "payload": {}
+      "payload": {
+        "items": [
+          {
+            "full_name": "owner/repo",
+            "description": "observed description",
+            "html_url": "https://github.com/owner/repo",
+            "stargazers_count": 123,
+            "pushed_at": "2026-08-01T00:00:00Z"
+          }
+        ]
+      }
     },
     {
       "requestId": "web-discovery-1",
@@ -56,7 +66,9 @@ Write one temporary JSON file under the operating-system temporary directory. Do
 }
 ```
 
-When the tool exposes its raw JSON or text result, preserve that result as `payload`. When it does not, create the smallest directly observed object containing only fields such as `title`, `url`, and `snippet`. Do not invent missing dates, scores, identifiers, or capabilities.
+Pass the provider's raw response **verbatim** as `payload`: the full JSON body, the raw item array, or the raw HTML/text exactly as received. Never re-type, rename, summarize, or flatten provider fields into a uniform `title`/`url`/`snippet` shape. Specialized sources carry structured fields that downstream identity merging and recency ranking depend on — for example GitHub `full_name`/`pushed_at`/`stargazers_count`, registry `server.name`/`repository.url`/`transports`, npm `name`/`links`/`date`, crates.io `crate`/`max_stable_version`, Maven `id`/`latestVersion`, Hugging Face `modelId`/`downloads`, arXiv `published`/`summary`. A flattened payload silently disables cross-source merging and freshness signals, and the kernel will flag it with a `flattened_payload` warning.
+
+Only when a tool genuinely cannot expose its raw output — for example a host search tool that returns its own summarized shape — pass that tool-native shape through unchanged, and do not invent missing dates, scores, identifiers, or capabilities. When a payload must be trimmed for length, drop whole items from the end; never rewrite the fields of the items you keep.
 
 For each must-have capability, add a small `capabilityAliases` list containing only short phrases that express the same requirement and are likely to appear in evidence. Include Chinese and English forms when the search is bilingual. Aliases improve deterministic lexical matching; they are not evidence that a candidate supports the capability.
 

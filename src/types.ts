@@ -37,6 +37,7 @@ export interface NormalizationWarning {
     | "invalid_date"
     | "unknown_shape"
     | "partial_item"
+    | "flattened_payload"
     | "retrieval_error";
   message: string;
   rawRef?: string;
@@ -113,6 +114,7 @@ export interface CandidateFeatureVector {
   lexicalFit: number;
   reciprocalRank: number;
   evidenceQuality: number;
+  freshnessScore: number;
   finalScore: number;
 }
 

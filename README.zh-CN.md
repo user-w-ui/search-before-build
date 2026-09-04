@@ -89,7 +89,7 @@ SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索�
 参差不齐的工具返回
           │
           ▼
-渐进式归一化 → 稳定身份去重 → BM25F + RRF 排序
+渐进式归一化 → 稳定身份去重 → BM25F + RRF + 时效排序
                                           │
                                           ▼
                          多样性 / 能力覆盖选择 → 可追踪产物
@@ -97,7 +97,7 @@ SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索�
 
 - 接受根数组、嵌套 JSON、Atom/XML、HTML 片段、纯文本及失败的检索请求。可选字段缺失只会降低可信度，不会让整批结果失效。
 - 用 URL、GitHub、软件包、DOI、arXiv、MCP 和来源自身的身份信息合并观察结果，不要求所有检索工具实现一份理想化的固定返回契约。
-- 组合中英文词法匹配、倒数排名融合与轻量多样性选择；不依赖运行时 npm 包、embedding 模型或向量数据库。
+- 组合中英文词法匹配、倒数排名融合、活跃度时效评分与轻量多样性选择；不依赖运行时 npm 包、embedding 模型或向量数据库。
 - 输出规范化候选、评分特征、告警、来源覆盖和选择轨迹。内核只提供决策支持；技能仍负责核验一手来源，并拥有最终 Build / Adapt / Use existing / Stop 建议的解释权。
 
 这个边界既保证第一版主路径容易跑通，也让检索行为变得可测试、可检查。若本地内核不可用，或某类返回暂时无法归一化，技能会继续使用原有的证据优先工作流。
@@ -204,7 +204,14 @@ python tests/validate_plugin.py
 
 ## Benchmark
 
-真实场景成对对比（5 个任务、同模型同预算双臂运行）显示插件在检索广度、证据密度和一手核验率上相较普通 Web 搜索有大幅提升。详见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
+我们做了一组真实场景成对对比：12 个任务（9 个"要不要造"的想法 + 3 个已有项目评估），每个任务跑两遍——裸 agent 一遍、加载插件一遍——覆盖 Claude Code 与 Codex 两类宿主。完整数据与方法见 [`bench/results/SUMMARY.md`](./bench/results/SUMMARY.md)。
+
+<div align="center">
+
+<img src="./assets/benchmark-radar.zh.svg" alt="Search Before Build 插件 vs 裸 Agent 6维能力雷达图" width="820">
+
+</div>
+
 
 ## 致谢
 

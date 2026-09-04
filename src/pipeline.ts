@@ -42,7 +42,9 @@ export function runPipeline(rawInput: unknown): DecisionSupportArtifact {
   if (Number.isNaN(Date.parse(generatedAt))) throw new Error("generatedAt must be an ISO-8601 date-time.");
   const normalized = input.retrievals.map((retrieval: RetrievalEnvelope) => normalizeRetrieval(retrieval));
   const records = normalized.flatMap((result) => result.records);
-  const rankResult = rankCandidates(records, input.query, input.fingerprint, input.topK ?? 5);
+  // Freshness is measured against the artifact timestamp so rankings stay
+  // deterministic for a fixed generatedAt (tests pin it; production uses now).
+  const rankResult = rankCandidates(records, input.query, input.fingerprint, input.topK ?? 5, Date.parse(generatedAt));
   const capabilities = [...new Set((input.fingerprint?.mustHaveCapabilities ?? []).map((value) => value.trim()).filter(Boolean))];
   const coverage = capabilities.map((capability) => {
     const candidateIds = rankResult.candidates

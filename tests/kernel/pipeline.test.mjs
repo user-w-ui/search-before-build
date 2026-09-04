@@ -114,3 +114,32 @@ test("keeps running when one retrieval fails", async () => {
   assert.ok(artifact.candidates.length > 0);
   assert.ok(artifact.retrieval.warnings.some((warning) => warning.code === "retrieval_error"));
 });
+
+test("favors recent activity through the freshness feature", () => {
+  const artifact = runPipeline({
+    generatedAt: "2026-08-28T00:00:00Z",
+    query: "search tool",
+    retrievals: [
+      {
+        requestId: "req-a",
+        providerHint: "github",
+        categoryHint: "repo",
+        outcome: "success",
+        payload: { items: [{ full_name: "acme/fresh-tool", description: "search tool", html_url: "https://github.com/acme/fresh-tool", pushed_at: "2026-08-01T00:00:00Z" }] },
+      },
+      {
+        requestId: "req-b",
+        providerHint: "github",
+        categoryHint: "repo",
+        outcome: "success",
+        payload: { items: [{ full_name: "acme/stale-tool", description: "search tool", html_url: "https://github.com/acme/stale-tool", pushed_at: "2020-01-01T00:00:00Z" }] },
+      },
+    ],
+    topK: 2,
+  });
+  assert.equal(artifact.candidates[0].title, "acme/fresh-tool");
+  assert.equal(artifact.candidates[0].features.freshnessScore, 1);
+  assert.equal(artifact.candidates[1].features.freshnessScore, 0);
+  assert.match(artifact.candidates[0].explanations[3], /Most recent activity 2026-08-01/);
+  assert.match(artifact.candidates[1].explanations[3], /Most recent activity 2020-01-01/);
+});

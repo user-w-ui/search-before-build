@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-04T02:54:15.269Z",
+  "query": "Is it worth building a privacy-aware household assistant for four people that reads Google Calendar, shared chores/tasks, household budget and meeting notes, sends weekday and weekly digests, and creates reviewable draft events or tasks?",
+  "candidates": [
+    {
+      "id": "github:biswasprateek/paperr",
+      "rank": 1,
+      "title": "https://github.com/biswasprateek/paperr",
+      "url": "https://github.com/biswasprateek/paperr",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "biswasprateek/paperr",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/biswasprateek/paperr",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/biswasprateek/paperr/blob/main/README.md",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "scheduled household digest",
+        "privacy-aware per-person visibility",
+        "shared calendar and task aggregation",
+        "local or consented hosted AI"
+      ],
+      "evidenceRefs": [
+        "https://github.com/biswasprateek/paperr",
+        "$.repositories[1]",
+        "$",
+        "https://github.com/biswasprateek/paperr/blob/main/README.md"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.98
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 3 observations by stable identity.",
+        "Mentions: scheduled household digest, privacy-aware per-person visibility, shared calendar and task aggregation, local or consented hosted AI."
+      ],
+      "observationCount": 3
+    },
+    {
+      "id": "url:https://familyfeed.ai/",
+      "rank": 2,
+      "title": "FamilyFeed",
+      "url": "https://familyfeed.ai/",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://familyfeed.ai/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "reviewable natural-language task or event drafts",
+        "shared calendar and task aggregation"
+      ],
+      "evidenceRefs": [
+        "https://familyfeed.ai/",
+        "$[1]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.742,
+        "reciprocalRank": 0.5145,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.6759
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: reviewable natural-language task or event drafts, shared calendar and task aggregation."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://www.nestifyapp.org/",
+      "rank": 3,
+      "title": "Nestify | Parent Copilot",
+      "url": "https://www.nestifyapp.org/",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://www.nestifyapp.org/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "privacy-aware per-person visibility",
+        "budget, maintenance, and meeting-note summaries"
+      ],
+      "evidenceRefs": [
+        "https://www.nestifyapp.org/",
+        "$[2]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.6716,
+        "reciprocalRank": 0.5069,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.6283
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: privacy-aware per-person visibility, budget, maintenance, and meeting-note summaries."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://yuvora.app/",
+      "rank": 4,
+      "title": "Yuvora",
+      "url": "https://yuvora.app/",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://yuvora.app/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "reviewable natural-language task or event drafts",
+        "shared calendar and task aggregation"
+      ],
+      "evidenceRefs": [
+        "https://yuvora.app/",
+        "$[0]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.6129,
+        "reciprocalRank": 0.5223,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.594
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: reviewable natural-language task or event drafts, shared calendar and task aggregation."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://fami-app.com/",
+      "rank": 5,
+      "title": "Fami: Free Family Organizer App for Calendar & Chores",
+      "url": "https://fami-app.com/",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://fami-app.com/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "privacy-aware per-person visibility",
+        "shared calendar and task aggregation",
+        "budget, maintenance, and meeting-note summaries"
+      ],
+      "evidenceRefs": [
+        "https://fami-app.com/",
+        "$[0]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.5895,
+        "reciprocalRank": 0.5223,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.5787
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: privacy-aware per-person visibility, shared calendar and task aggregation, budget, maintenance, and meeting-note summaries."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:rpeng666/family-organizer-all-in-one",
+      "rank": 6,
+      "title": "https://github.com/Rpeng666/family-organizer-all-in-one",
+      "url": "https://github.com/Rpeng666/family-organizer-all-in-one",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "rpeng666/family-organizer-all-in-one",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/Rpeng666/family-organizer-all-in-one",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "shared calendar and task aggregation",
+        "budget, maintenance, and meeting-note summaries",
+        "local or consented hosted AI"
+      ],
+      "evidenceRefs": [
+        "https://github.com/Rpeng666/family-organizer-all-in-one",
+        "$.repositories[0]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.5486,
+        "reciprocalRank": 0.5223,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.5672
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: shared calendar and task aggregation, budget, maintenance, and meeting-note summaries, local or consented hosted AI."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://www.plamily.co/en-us",
+      "rank": 7,
+      "title": "Plamily – Family Organiser App",
+      "url": "https://www.plamily.co/en-us",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://www.plamily.co/en-us",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "privacy-aware per-person visibility",
+        "shared calendar and task aggregation",
+        "budget, maintenance, and meeting-note summaries"
+      ],
+      "evidenceRefs": [
+        "https://www.plamily.co/en-us",
+        "$[1]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.5824,
+        "reciprocalRank": 0.5145,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.5721
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: privacy-aware per-person visibility, shared calendar and task aggregation, budget, maintenance, and meeting-note summaries."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://developers.google.com/workspace/calendar/api/guides/create-events",
+      "rank": 8,
+      "title": "Create events",
+      "url": "https://developers.google.com/workspace/calendar/api/guides/create-events",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://developers.google.com/workspace/calendar/api/guides/create-events",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "shared calendar and task aggregation"
+      ],
+      "evidenceRefs": [
+        "https://developers.google.com/workspace/calendar/api/guides/create-events",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.4385,
+        "reciprocalRank": 0.0368,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.3592
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: shared calendar and task aggregation."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "scheduled household digest",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:biswasprateek/paperr"
+      ]
+    },
+    {
+      "capability": "privacy-aware per-person visibility",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:biswasprateek/paperr",
+        "url:https://www.nestifyapp.org/",
+        "url:https://fami-app.com/",
+        "url:https://www.plamily.co/en-us"
+      ]
+    },
+    {
+      "capability": "reviewable natural-language task or event drafts",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://familyfeed.ai/",
+        "url:https://yuvora.app/"
+      ]
+    },
+    {
+      "capability": "shared calendar and task aggregation",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:biswasprateek/paperr",
+        "url:https://familyfeed.ai/",
+        "url:https://yuvora.app/",
+        "url:https://fami-app.com/",
+        "github:rpeng666/family-organizer-all-in-one",
+        "url:https://www.plamily.co/en-us",
+        "url:https://developers.google.com/workspace/calendar/api/guides/create-events"
+      ]
+    },
+    {
+      "capability": "budget, maintenance, and meeting-note summaries",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://www.nestifyapp.org/",
+        "url:https://fami-app.com/",
+        "github:rpeng666/family-organizer-all-in-one",
+        "url:https://www.plamily.co/en-us"
+      ]
+    },
+    {
+      "capability": "local or consented hosted AI",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:biswasprateek/paperr",
+        "github:rpeng666/family-organizer-all-in-one"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "strong",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [],
+    "sourceCategories": [
+      "repo",
+      "web"
+    ],
+    "needsFollowUp": false,
+    "suggestedQueries": []
+  },
+  "retrieval": {
+    "requests": 22,
+    "failedRequests": 1,
+    "normalizedRecords": 34,
+    "rejectedRecords": 0,
+    "warnings": [
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$[0]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$[0]"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$[1]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$[1]"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$[2]"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$[2]"
+      },
+      {
+        "code": "retrieval_error",
+        "message": "tls: curl schannel SEC_E_NO_CREDENTIALS while requesting Google Tasks discovery endpoint"
+      }
+    ]
+  },
+  "metrics": {
+    "uniqueCandidates": 22,
+    "returnedCandidates": 8,
+    "duplicateObservationsMerged": 9
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "34 records from 22 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "9 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "22 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "8 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "0 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

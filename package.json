@@ -1,6 +1,6 @@
 {
   "name": "@superq/search-before-build",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Install the Search Before Build Codex plugin from its official marketplace.",
   "license": "MIT",
   "type": "module",

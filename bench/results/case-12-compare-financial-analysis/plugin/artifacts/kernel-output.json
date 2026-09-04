@@ -1,0 +1,366 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03T06:57:30.579Z",
+  "query": "美股基本面分析工具，获取SEC财报数据、执行透明可复核的估值计算、生成带数据溯源的结构化报告",
+  "candidates": [
+    {
+      "id": "purl:pkg:npm/dsh-financial-analysis",
+      "rank": 1,
+      "title": "dsh-financial-analysis",
+      "kind": "package",
+      "identities": [
+        {
+          "scheme": "purl",
+          "value": "pkg:npm/dsh-financial-analysis",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "package"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$[2]"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.695
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:yennanliu/investskill",
+      "rank": 2,
+      "title": "InvestSkill - US Stock Analysis Skills",
+      "url": "https://github.com/yennanliu/InvestSkill",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "yennanliu/investskill",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/yennanliu/InvestSkill",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo",
+        "web"
+      ],
+      "matchedCapabilities": [
+        "透明可复核的估值模型计算"
+      ],
+      "evidenceRefs": [
+        "https://github.com/yennanliu/InvestSkill",
+        "$.items[0]",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.2915,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.5194
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: 透明可复核的估值模型计算."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://www.sec.gov/data-research/financial-statement-data-sets",
+      "rank": 3,
+      "title": "SEC Financial Statement Data Sets",
+      "url": "https://www.sec.gov/data-research/financial-statement-data-sets",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://www.sec.gov/data-research/financial-statement-data-sets",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "自动获取SEC财报数据并标注出处与日期"
+      ],
+      "evidenceRefs": [
+        "https://www.sec.gov/data-research/financial-statement-data-sets",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.3327,
+        "reciprocalRank": 0.0308,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.289
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 自动获取SEC财报数据并标注出处与日期."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://sec-api.io/",
+      "rank": 4,
+      "title": "SEC-API.io",
+      "url": "https://sec-api.io/",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://sec-api.io/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://sec-api.io/",
+        "$.results[2]"
+      ],
+      "features": {
+        "lexicalFit": 0.342,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.2873
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "purl:pkg:npm/sec-edgar-api",
+      "rank": 5,
+      "title": "sec-edgar-api",
+      "kind": "package",
+      "identities": [
+        {
+          "scheme": "purl",
+          "value": "pkg:npm/sec-edgar-api",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "package"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.3601,
+        "reciprocalRank": 0.0308,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.2868
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "purl:pkg:npm/@omnifolio/sec-toolkit",
+      "rank": 6,
+      "title": "@omnifolio/sec-toolkit",
+      "kind": "package",
+      "identities": [
+        {
+          "scheme": "purl",
+          "value": "pkg:npm/@omnifolio/sec-toolkit",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "package"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "$[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.3556,
+        "reciprocalRank": 0.0151,
+        "evidenceQuality": 0.45,
+        "finalScore": 0.2799
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:dafahentra/dcf-valuation-tool",
+      "rank": 7,
+      "title": "dafahentra/dcf-valuation-tool",
+      "url": "https://github.com/dafahentra/dcf-valuation-tool",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "dafahentra/dcf-valuation-tool",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/dafahentra/dcf-valuation-tool",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "透明可复核的估值模型计算"
+      ],
+      "evidenceRefs": [
+        "https://github.com/dafahentra/dcf-valuation-tool",
+        "$.results[1]"
+      ],
+      "features": {
+        "lexicalFit": 0,
+        "reciprocalRank": 0.0151,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.0688
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 透明可复核的估值模型计算."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://simplywall.st/",
+      "rank": 8,
+      "title": "Simply Wall St",
+      "url": "https://simplywall.st/",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://simplywall.st/",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "透明可复核的估值模型计算"
+      ],
+      "evidenceRefs": [
+        "https://simplywall.st/",
+        "$.results[1]"
+      ],
+      "features": {
+        "lexicalFit": 0,
+        "reciprocalRank": 0.0151,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.0688
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 透明可复核的估值模型计算."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "自动获取SEC财报数据并标注出处与日期",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://www.sec.gov/data-research/financial-statement-data-sets"
+      ]
+    },
+    {
+      "capability": "透明可复核的估值模型计算",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:yennanliu/investskill",
+        "github:dafahentra/dcf-valuation-tool",
+        "url:https://simplywall.st/"
+      ]
+    },
+    {
+      "capability": "生成结构化报告整合数字、假设和来源",
+      "status": "missing",
+      "candidateIds": []
+    }
+  ],
+  "evidence": {
+    "level": "weak",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [
+      "生成结构化报告整合数字、假设和来源"
+    ],
+    "sourceCategories": [
+      "package",
+      "repo",
+      "web"
+    ],
+    "needsFollowUp": true,
+    "suggestedQueries": [
+      "美股基本面分析工具，获取SEC财报数据、执行透明可复核的估值计算、生成带数据溯源的结构化报告 生成结构化报告整合数字、假设和来源"
+    ]
+  },
+  "retrieval": {
+    "requests": 6,
+    "failedRequests": 0,
+    "normalizedRecords": 13,
+    "rejectedRecords": 0,
+    "warnings": []
+  },
+  "metrics": {
+    "uniqueCandidates": 12,
+    "returnedCandidates": 8,
+    "duplicateObservationsMerged": 1
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "13 records from 6 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "1 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "12 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "8 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "1 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

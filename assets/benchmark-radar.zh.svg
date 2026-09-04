@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 680" width="980" height="680">
+  <defs>
+    <!-- 背景渐变 -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0d2426" stop-opacity="0.45" />
+      <stop offset="60%" stop-color="#09101b" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#06090e" stop-opacity="1" />
+    </radialGradient>
+
+    <!-- 中心微光 -->
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- 插件区域渐变填充 -->
+    <linearGradient id="pluginGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.42" />
+      <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.18" />
+    </linearGradient>
+
+    <!-- 发光滤镜 -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="radarGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#10b981" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <style>
+    text { text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; }
+  </style>
+
+  <!-- 主卡片背景 -->
+  <rect width="980" height="680" rx="18" fill="url(#bgGlow)" stroke="#1e293b" stroke-width="1.5" />
+
+  <!-- 顶部 Header 区域（左侧标题，右侧图例，绝对不重叠） -->
+  <g id="header-section">
+    <!-- 左侧标题信息 -->
+    <g transform="translate(36, 26)">
+      <!-- 徽标 -->
+      <rect x="0" y="0" width="145" height="22" rx="11" fill="#064e3b" fill-opacity="0.4" stroke="#059669" stroke-width="1" />
+      <circle cx="11" cy="11" r="3.5" fill="#34d399" />
+      <text x="22" y="15" fill="#6ee7b7" font-size="10" font-weight="700" letter-spacing="0.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">12-CASE 双臂评测</text>
+
+      <!-- 主标题 -->
+      <text x="0" y="46" fill="#f8fafc" font-size="20" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Search Before Build 插件 vs 裸 Agent 6维实测</text>
+
+      <!-- 副标题 -->
+      <text x="0" y="66" fill="#94a3b8" font-size="12" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">12 真实选型任务成对实测 · 具体实测数值 · Composite 0.592 vs 0.341</text>
+    </g>
+
+    <!-- 右侧图例 Legend（宽度 260px，左右文字极大留白，绝不撞车） -->
+    <g transform="translate(684, 26)">
+      <!-- 插件图例 -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="260" height="28" rx="8" fill="#064e3b" fill-opacity="0.25" stroke="#059669" stroke-width="1" />
+        <circle cx="14" cy="14" r="5" fill="#10b981" filter="url(#glow)" />
+        <text x="28" y="18" fill="#f1f5f9" font-size="11.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">加载插件</text>
+        <text x="246" y="18" text-anchor="end" fill="#34d399" font-size="11.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">11 胜 · 0.592</text>
+      </g>
+
+      <!-- 基线图例 -->
+      <g transform="translate(0, 34)">
+        <rect x="0" y="0" width="260" height="28" rx="8" fill="#1e293b" fill-opacity="0.4" stroke="#334155" stroke-width="1" />
+        <circle cx="14" cy="14" r="4.5" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2,2" />
+        <text x="28" y="18" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">裸 Agent</text>
+        <text x="246" y="18" text-anchor="end" fill="#64748b" font-size="11.5" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">1 胜 · 0.341</text>
+      </g>
+    </g>
+
+    <!-- Header 分割线 -->
+    <line x1="36" y1="102" x2="944" y2="102" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,4" />
+  </g>
+
+  <!-- 中心微光背景 -->
+  <circle cx="490" cy="355" r="160" fill="url(#centerGlow)" />
+
+  <!-- 雷达图网格与坐标轴 -->
+  <g id="radar-grid">
+    <polygon points="490.00,321.25 519.23,338.13 519.23,371.88 490.00,388.75 460.77,371.88 460.77,338.13" fill="none" stroke="#223249" stroke-width="1" stroke-dasharray="3,3" />
+        <polygon points="490.00,287.50 548.46,321.25 548.46,388.75 490.00,422.50 431.54,388.75 431.54,321.25" fill="none" stroke="#223249" stroke-width="1" stroke-dasharray="3,3" />
+        <polygon points="490.00,253.75 577.69,304.38 577.69,405.63 490.00,456.25 402.31,405.63 402.31,304.38" fill="none" stroke="#223249" stroke-width="1" stroke-dasharray="3,3" />
+        <polygon points="490.00,220.00 606.91,287.50 606.91,422.50 490.00,490.00 373.09,422.50 373.09,287.50" fill="none" stroke="#223249" stroke-width="1.5" stroke-dasharray="none" />
+    <line x1="490" y1="355" x2="490.00" y2="220.00" stroke="#273b53" stroke-width="1.2" />
+        <line x1="490" y1="355" x2="606.91" y2="287.50" stroke="#273b53" stroke-width="1.2" />
+        <line x1="490" y1="355" x2="606.91" y2="422.50" stroke="#273b53" stroke-width="1.2" />
+        <line x1="490" y1="355" x2="490.00" y2="490.00" stroke="#273b53" stroke-width="1.2" />
+        <line x1="490" y1="355" x2="373.09" y2="422.50" stroke="#273b53" stroke-width="1.2" />
+        <line x1="490" y1="355" x2="373.09" y2="287.50" stroke="#273b53" stroke-width="1.2" />
+  </g>
+
+  <!-- A 臂数据层 (Bare Agent Baseline) -->
+  <g id="baseline-layer">
+    <path d="M 490.00 349.60 L 494.68 352.30 L 541.91 384.97 L 490.00 394.56 L 460.77 371.88 L 450.13 331.98 Z" fill="#64748b" fill-opacity="0.14" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="5,4" />
+    
+      <circle cx="490.00" cy="349.60" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
+      
+    
+        
+      <circle cx="494.68" cy="352.30" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
+      
+    
+        
+      <circle cx="541.91" cy="384.97" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
+      
+      <text x="555.91" y="398.97" fill="#94a3b8" font-size="10" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" text-anchor="middle">111</text>
+    
+    
+        
+      <circle cx="490.00" cy="394.56" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
+      
+      <text x="490.00" y="380.56" fill="#94a3b8" font-size="10" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" text-anchor="middle">41</text>
+    
+    
+        
+      <circle cx="460.77" cy="371.88" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
+      
+      <text x="446.77" y="385.88" fill="#94a3b8" font-size="10" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" text-anchor="middle">3</text>
+    
+    
+        
+      <circle cx="450.13" cy="331.98" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
+      
+      <text x="434.13" y="323.98" fill="#94a3b8" font-size="10" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" text-anchor="middle">0.341</text>
+    
+    
+  </g>
+
+  <!-- B 臂数据层 (Plugin with Kernel) -->
+  <g id="plugin-layer" filter="url(#radarGlow)">
+    <path d="M 490.00 220.00 L 575.35 305.73 L 591.01 413.32 L 490.00 463.00 L 402.31 405.63 L 420.79 315.04 Z" fill="url(#pluginGrad)" stroke="#10b981" stroke-width="2.6" stroke-linejoin="round" />
+    
+      <circle cx="490.00" cy="220.00" r="7" fill="#10b981" fill-opacity="0.25" />
+      <circle cx="490.00" cy="220.00" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
+      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
+      <g transform="translate(490.00, 202.00)">
+        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
+        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">10</text>
+      </g>
+    
+        
+      <circle cx="575.35" cy="305.73" r="7" fill="#10b981" fill-opacity="0.25" />
+      <circle cx="575.35" cy="305.73" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
+      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
+      <g transform="translate(601.35, 291.73)">
+        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
+        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">2.92</text>
+      </g>
+    
+        
+      <circle cx="591.01" cy="413.32" r="7" fill="#10b981" fill-opacity="0.25" />
+      <circle cx="591.01" cy="413.32" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
+      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
+      <g transform="translate(617.01, 427.32)">
+        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
+        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">216</text>
+      </g>
+    
+        
+      <circle cx="490.00" cy="463.00" r="7" fill="#10b981" fill-opacity="0.25" />
+      <circle cx="490.00" cy="463.00" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
+      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
+      <g transform="translate(490.00, 485.00)">
+        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
+        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">112</text>
+      </g>
+    
+        
+      <circle cx="402.31" cy="405.63" r="7" fill="#10b981" fill-opacity="0.25" />
+      <circle cx="402.31" cy="405.63" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
+      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
+      <g transform="translate(376.31, 419.63)">
+        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
+        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">9</text>
+      </g>
+    
+        
+      <circle cx="420.79" cy="315.04" r="7" fill="#10b981" fill-opacity="0.25" />
+      <circle cx="420.79" cy="315.04" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
+      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
+      <g transform="translate(392.79, 301.04)">
+        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
+        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">0.592</text>
+      </g>
+    
+  </g>
+
+  <!-- 6 维度指标卡片 -->
+  <g id="metric-labels">
+    
+      <g transform="translate(490, 132)">
+        <text x="0" y="0" text-anchor="middle" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          专有检索目录
+        </text>
+        <text x="0" y="18" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
+          <tspan fill="#34d399" font-weight="800">10 个</tspan>
+          <tspan fill="#64748b" font-weight="500"> vs </tspan>
+          <tspan fill="#94a3b8" font-weight="600">0 个</tspan>
+        </text>
+        <text x="0" y="34" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          npm, crates, HF, arXiv, MCP 等
+        </text>
+      </g>
+    
+      
+      <g transform="translate(652, 268)">
+        <text x="0" y="0" text-anchor="start" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          需求澄清轮次
+        </text>
+        <text x="0" y="18" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
+          <tspan fill="#34d399" font-weight="800">2.92 轮</tspan>
+          <tspan fill="#64748b" font-weight="500"> vs </tspan>
+          <tspan fill="#94a3b8" font-weight="600">0 轮</tspan>
+        </text>
+        <text x="0" y="34" text-anchor="start" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          检索前主动对齐真实约束
+        </text>
+      </g>
+    
+      
+      <g transform="translate(652, 428)">
+        <text x="0" y="0" text-anchor="start" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          一手页面抓取
+        </text>
+        <text x="0" y="18" text-anchor="start" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
+          <tspan fill="#34d399" font-weight="800">216 篇</tspan>
+          <tspan fill="#64748b" font-weight="500"> vs </tspan>
+          <tspan fill="#94a3b8" font-weight="600">111 篇</tspan>
+        </text>
+        <text x="0" y="34" text-anchor="start" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          1.9× 一手文档与源码查验
+        </text>
+      </g>
+    
+      
+      <g transform="translate(490, 518)">
+        <text x="0" y="0" text-anchor="middle" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          引用证据密度
+        </text>
+        <text x="0" y="18" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
+          <tspan fill="#34d399" font-weight="800">112 条</tspan>
+          <tspan fill="#64748b" font-weight="500"> vs </tspan>
+          <tspan fill="#94a3b8" font-weight="600">41 条</tspan>
+        </text>
+        <text x="0" y="34" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          2.7× 一手可验证链接
+        </text>
+      </g>
+    
+      
+      <g transform="translate(328, 428)">
+        <text x="0" y="0" text-anchor="end" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          日期时效证据
+        </text>
+        <text x="0" y="18" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
+          <tspan fill="#34d399" font-weight="800">9 案</tspan>
+          <tspan fill="#64748b" font-weight="500"> vs </tspan>
+          <tspan fill="#94a3b8" font-weight="600">3 案</tspan>
+        </text>
+        <text x="0" y="34" text-anchor="end" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          75% 日期 · 2/2 识破停服死项目
+        </text>
+      </g>
+    
+      
+      <g transform="translate(328, 268)">
+        <text x="0" y="0" text-anchor="end" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          综合评测得分
+        </text>
+        <text x="0" y="18" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
+          <tspan fill="#34d399" font-weight="800">0.592</tspan>
+          <tspan fill="#64748b" font-weight="500"> vs </tspan>
+          <tspan fill="#94a3b8" font-weight="600">0.341</tspan>
+        </text>
+        <text x="0" y="34" text-anchor="end" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+          规范综合能力得分 (1.7× 提升)
+        </text>
+      </g>
+    
+  </g>
+
+  <!-- 底部汇总统计卡片 -->
+  <g id="highlight-cards">
+    
+      <g transform="translate(38, 594)">
+        <rect width="214" height="60" rx="10" fill="#0d1422" stroke="#1e293b" stroke-width="1" />
+        <text x="14" y="20" fill="#94a3b8" font-size="11" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">实测决策胜负</text>
+        <text x="14" y="43" fill="#34d399" font-size="16" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">11 / 12 胜</text>
+        <text x="200" y="43" text-anchor="end" fill="#64748b" font-size="10" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">vs 1 胜</text>
+      </g>
+    
+      
+      <g transform="translate(268, 594)">
+        <rect width="214" height="60" rx="10" fill="#0d1422" stroke="#1e293b" stroke-width="1" />
+        <text x="14" y="20" fill="#94a3b8" font-size="11" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">专有检索目录</text>
+        <text x="14" y="43" fill="#34d399" font-size="16" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">10 / 10 触达</text>
+        <text x="200" y="43" text-anchor="end" fill="#64748b" font-size="10" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">vs 0 目录</text>
+      </g>
+    
+      
+      <g transform="translate(498, 594)">
+        <rect width="214" height="60" rx="10" fill="#0d1422" stroke="#1e293b" stroke-width="1" />
+        <text x="14" y="20" fill="#94a3b8" font-size="11" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">停服陷阱防御</text>
+        <text x="14" y="43" fill="#34d399" font-size="16" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">2 / 2 识破</text>
+        <text x="200" y="43" text-anchor="end" fill="#64748b" font-size="10" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">vs 0 识破</text>
+      </g>
+    
+      
+      <g transform="translate(728, 594)">
+        <rect width="214" height="60" rx="10" fill="#0d1422" stroke="#1e293b" stroke-width="1" />
+        <text x="14" y="20" fill="#94a3b8" font-size="11" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">纯记忆零检索</text>
+        <text x="14" y="43" fill="#34d399" font-size="16" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">0 案</text>
+        <text x="200" y="43" text-anchor="end" fill="#64748b" font-size="10" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">裸 agent 发生 2 案</text>
+      </g>
+    
+  </g>
+</svg>

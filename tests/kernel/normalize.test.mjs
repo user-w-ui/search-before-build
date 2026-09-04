@@ -163,3 +163,63 @@ test("unknown and failed payloads degrade observably instead of throwing", () =>
   assert.equal(failed.records.length, 0);
   assert.equal(failed.batchWarnings[0].code, "retrieval_error");
 });
+
+test("flags flattened specialized payloads while raw and host-tool shapes stay silent", async () => {
+  const flattened = normalizeRetrieval({
+    requestId: "gh-flat",
+    providerHint: "github",
+    categoryHint: "repo",
+    outcome: "success",
+    payload: { results: [{ title: "acme/tool", url: "https://github.com/acme/tool", snippet: "A tool.", stars: 12 }] },
+  });
+  assert.ok(flattened.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+
+  const raw = normalizeRetrieval({
+    requestId: "gh-raw",
+    providerHint: "github",
+    categoryHint: "repo",
+    outcome: "success",
+    payload: await fixture("github-search.json"),
+  });
+  assert.ok(!raw.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+
+  const hostWeb = normalizeRetrieval({
+    requestId: "web-native",
+    providerHint: "host-web",
+    categoryHint: "web",
+    outcome: "success",
+    payload: { results: [{ title: "Page", url: "https://example.com", snippet: "Snippet." }] },
+  });
+  assert.ok(!hostWeb.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+});
+
+test("derives Maven purl identity from group:artifact id and keeps it mergeable", () => {
+  const maven = normalizeRetrieval({
+    requestId: "maven-1",
+    providerHint: "maven",
+    categoryHint: "package",
+    outcome: "success",
+    payload: { results: [{ id: "org.openapitools:openapi-generator", latestVersion: "7.14.0", timestamp: 1750000000000 }] },
+  });
+  assert.ok(maven.records[0].identities.some(
+    (identity) => identity.scheme === "purl" && identity.value === "pkg:maven/org.openapitools/openapi-generator",
+  ));
+  assert.equal(maven.records[0].status, "partial");
+  assert.equal(maven.records[0].dates.updatedAt, new Date(1750000000000).toISOString());
+  assert.ok(!maven.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+});
+
+test("derives Hugging Face model kind, URL, and title from modelId", () => {
+  const hf = normalizeRetrieval({
+    requestId: "hf-1",
+    providerHint: "hf",
+    outcome: "success",
+    payload: [{ modelId: "openai/whisper-large-v3", downloads: 12345, likes: 99, lastModified: "2026-07-01T00:00:00Z" }],
+  });
+  assert.equal(hf.records[0].kind, "model");
+  assert.equal(hf.records[0].title, "openai/whisper-large-v3");
+  assert.equal(hf.records[0].url, "https://huggingface.co/openai/whisper-large-v3");
+  assert.equal(hf.records[0].attributes.downloads, 12345);
+  assert.equal(hf.records[0].dates.updatedAt, "2026-07-01T00:00:00.000Z");
+  assert.ok(!hf.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+});
