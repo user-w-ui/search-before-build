@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "query": "For a personal Immich library of about 80,000 photos, can a local monthly batch select one representative photo per configurable timestamp window for a face-focused timelapse, using existing quality signals or simple sharpness/exposure heuristics, while preserving originals and producing a reviewable reversible album/list?",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "timestamp-window selection of one representative photo per window",
+      "quality-aware representative selection",
+      "non-destructive reviewable reversible Immich output"
+    ],
+    "capabilityAliases": {
+      "timestamp-window selection of one representative photo per window": [
+        "configurable time window",
+        "timestamp proximity",
+        "minimum spacing",
+        "seconds minutes hours",
+        "time interval"
+      ],
+      "quality-aware representative selection": [
+        "sharpest",
+        "best-exposed",
+        "quality score",
+        "sharpness",
+        "brightness",
+        "best photo"
+      ],
+      "non-destructive reviewable reversible Immich output": [
+        "preview",
+        "undo",
+        "reversible",
+        "album",
+        "list",
+        "originals untouched",
+        "trash"
+      ]
+    },
+    "desiredOutcome": "A monthly overnight local batch for a home server that consumes an Immich person selection and emits a reviewable list or alternate album for the timelapse without moving, deleting, or editing source photos.",
+    "operatingMode": "local Docker or CLI/Immich API batch on a home server"
+  },
+  "retrievals": [
+    {
+      "requestId": "web-discovery-1",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "GitHub - agross/immich-duplicates",
+            "url": "https://github.com/agross/immich-duplicates",
+            "snippet": "Find image and video duplicates in Immich; perceptive hashes on thumbnails; optional Hamming distance; best duplicate by file size; Keep best asset adds to albums and deletes non-best to Immich Trash."
+          },
+          {
+            "title": "GitHub - RazgrizHsu/immich-deduper",
+            "url": "https://github.com/RazgrizHsu/immich-deduper",
+            "snippet": "Immich duplicate finder using deep learning; visual similarity, thresholds, auto-selection; removed photos go to Immich trash."
+          },
+          {
+            "title": "GitHub - kotyzap/Photo-Curator",
+            "url": "https://github.com/kotyzap/Photo-Curator",
+            "snippet": "Local browser tool; sharpness culling, perceptual-hash burst clustering, EXIF capture-time tightening, ORB matching, sharpest frame kept; review before moving."
+          },
+          {
+            "title": "FolioSort Best Shots",
+            "url": "https://www.foliosort.app/features/best-shots",
+            "snippet": "Groups near-identical photos taken within about 3 seconds and scores sharpness, face quality and open eyes; review mode."
+          },
+          {
+            "title": "Immich FAQ",
+            "url": "https://immich.app/docs/FAQ",
+            "snippet": "Immich upload duplicate checking uses file hash; external-library metadata and deletion behavior have constraints."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-immich-1",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "Immich Duplicates Utility",
+            "url": "https://docs.immich.app/features/duplicates-utility/",
+            "snippet": "ML visually similar duplicate utility; review individually, preselect by image size and EXIF count; resolving can trash selected assets and sync metadata."
+          },
+          {
+            "title": "Immich External Libraries",
+            "url": "https://docs.immich.app/features/libraries/",
+            "snippet": "External assets can be viewed and added to albums; metadata stored in Immich; read-only volume disallows deletion and XMP writes; periodic scan is configurable."
+          },
+          {
+            "title": "Immich API",
+            "url": "https://docs.immich.app/api/",
+            "snippet": "OpenAPI docs and generated TypeScript/Dart SDK; published API docs at api.immich.app."
+          },
+          {
+            "title": "Immich CLI",
+            "url": "https://docs.immich.app/features/command-line-interface/",
+            "snippet": "CLI supports API key, albums and dry-run for uploads; Docker image available."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-candidates-2",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "Best Photo Picker",
+            "url": "https://github.com/Arkalogy/best-photo-picker",
+            "snippet": "Local-first Python app scores sharpness, lighting, faces and composition, clusters near duplicates, and exports picks; MIT."
+          },
+          {
+            "title": "Immich Selfie Timelapse",
+            "url": "https://github.com/ArnaudCrl/immich-automated-selfie-timelapse",
+            "snippet": "Uses Immich face recognition; crops/aligns/filter faces, blur/brightness/head pose/eye filters, compiles video; API key; one-shot Docker app; MIT."
+          },
+          {
+            "title": "Photo Curator",
+            "url": "https://github.com/kotyzap/Photo-Curator",
+            "snippet": "Local browser culling/ranking; all processing local; review and move workflow; MIT."
+          },
+          {
+            "title": "Excire Search 2026 review",
+            "url": "https://www.digitalcameraworld.com/tech/software/excire-search-2026-review-ai-powered-image-searching-in-lightroom-classic",
+            "snippet": "Local Lightroom plugin with face sharpness, best-shot and near-duplicate capabilities; initialization of 70,000 photos took several hours."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-packages-3",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "sharp-phash - npm",
+            "url": "https://www.npmjs.com/package/sharp-phash",
+            "snippet": "Sharp based perceptual hash; Hamming distance helper; MIT; npm i sharp sharp-phash."
+          },
+          {
+            "title": "image-hash - npm",
+            "url": "https://www.npmjs.com/package/image-hash",
+            "snippet": "Node wrapper around blockhash; supports JPG PNG WebP; MIT."
+          },
+          {
+            "title": "ImageHash - PyPI",
+            "url": "https://pypi.org/project/ImageHash/",
+            "snippet": "Python aHash/pHash/dHash/wHash/colorhash/crop-resistant hash; Hamming distance; BSD-2-Clause."
+          },
+          {
+            "title": "opencv-python-headless - PyPI",
+            "url": "https://pypi.org/project/opencv-python-headless/",
+            "snippet": "CPU-only headless OpenCV wheels for server environments; Apache 2/OpenCV and MIT packaging."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-research-4",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "Evolution of a Web-Scale Near Duplicate Image Detection System",
+            "url": "https://arxiv.org/abs/2209.08433",
+            "snippet": "Near-duplicate detection uses candidate generation, candidate selection and clustering; dataset released."
+          },
+          {
+            "title": "State of the Art: Image Hashing",
+            "url": "https://arxiv.org/abs/2108.11794",
+            "snippet": "Perceptual image hashing is used for retrieval and duplicate or near-duplicate images from large collections."
+          },
+          {
+            "title": "Effective near-duplicate image detection using perceptual hashing and deep learning",
+            "url": "https://www.sciencedirect.com/science/article/pii/S0306457325000287",
+            "snippet": "Combines perceptual hashing and deep learning for complex near duplicates."
+          },
+          {
+            "title": "Immich album service source",
+            "url": "https://github.com/immich-app/immich/blob/main/server/src/services/album.service.ts",
+            "snippet": "Album service adds assets with album asset create permission and asset IDs."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-bilingual-5",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "Perceptual hash npm search",
+            "url": "https://www.npmjs.com/search?q=keywords%3A%22perceptual+hash%22",
+            "snippet": "npm search shows image-hash and other perceptual hash packages."
+          },
+          {
+            "title": "Immich GitHub topic search",
+            "url": "https://github.com/topics/immich",
+            "snippet": "Community ecosystem includes selfie timelapse and folder album creator."
+          },
+          {
+            "title": "Immich duplicate detection discussion",
+            "url": "https://github.com/immich-app/immich/discussions/26661",
+            "snippet": "Duplicate detection flags assets for review rather than automatically deleting them."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "github-issue-40",
+      "providerHint": "github-app",
+      "categoryHint": "issue",
+      "outcome": "success",
+      "payload": {
+        "issue": {
+          "title": "[Feature Request] Filter near-duplicate photos within a configurable time window",
+          "url": "https://github.com/ArnaudCrl/immich-automated-selfie-timelapse/issues/40",
+          "snippet": "Burst shots and retakes seconds apart stutter; requested configurable seconds/minutes/hours window, keep first or best quality score; manual deselection is tedious and per-day/week/month too coarse."
+        }
+      }
+    },
+    {
+      "requestId": "github-repos-1",
+      "providerHint": "github-app",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "repositories": [
+          {
+            "full_name": "agross/immich-duplicates",
+            "html_url": "https://github.com/agross/immich-duplicates",
+            "description": "Find image and video duplicates in Immich.",
+            "archived": true,
+            "stars": 154,
+            "default_branch": "master"
+          },
+          {
+            "full_name": "RazgrizHsu/immich-deduper",
+            "html_url": "https://github.com/RazgrizHsu/immich-deduper",
+            "description": "duplicate photo finder and remover for Immich",
+            "archived": false,
+            "stars": 532,
+            "default_branch": "main"
+          },
+          {
+            "full_name": "kotyzap/Photo-Curator",
+            "html_url": "https://github.com/kotyzap/Photo-Curator",
+            "description": "Browser-based tool for culling and ranking large photo libraries",
+            "archived": false,
+            "stars": 8,
+            "license": "MIT",
+            "default_branch": "main"
+          },
+          {
+            "full_name": "Arkalogy/best-photo-picker",
+            "html_url": "https://github.com/Arkalogy/best-photo-picker",
+            "description": "Pick the best photos from large libraries",
+            "archived": false,
+            "stars": 14,
+            "license": "MIT",
+            "default_branch": "main"
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "github-readmes-2",
+      "providerHint": "github-app",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "ArnaudCrl/immich-automated-selfie-timelapse README",
+            "url": "https://github.com/ArnaudCrl/immich-automated-selfie-timelapse",
+            "snippet": "Immich face metadata, blur/brightness/head pose/eye filters, monthly limits, web UI and Docker; recommends manual gallery review because quality filtering is not 100% accurate; MIT."
+          },
+          {
+            "title": "RazgrizHsu/immich-deduper README",
+            "url": "https://github.com/RazgrizHsu/immich-deduper",
+            "snippet": "ResNet152 vectors in Qdrant; configurable visual similarity threshold; pending groups review; safe deletion to Immich trash; snapshot needs refetch; GPL-3.0."
+          },
+          {
+            "title": "Salvoxia/immich-folder-album-creator README",
+            "url": "https://github.com/Salvoxia/immich-folder-album-creator",
+            "snippet": "Creates/populates Immich albums from external folder structure through immichpy; Docker/cron; has dry-run for deletion modes; API permissions; GPL-3.0."
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "web-followup-6",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {
+        "results": [
+          {
+            "title": "FolioSort Best Shots",
+            "url": "https://www.foliosort.app/features/best-shots",
+            "snippet": "Groups shots within about 3 seconds that also look alike; scores sharpness, face quality and open eyes; review before removal and fully undoable."
+          },
+          {
+            "title": "Photiva Duplicate Detection",
+            "url": "https://photiva.app/",
+            "snippet": "Time-based burst grouping for photos taken seconds apart; exact, visual and burst modes; auto-selects best shot based on sharpness, exposure and resolution."
+          },
+          {
+            "title": "Whittle",
+            "url": "https://github.com/surendranb/whittle",
+            "snippet": "Local macOS app; time clustering for bursts; human reviews suggested keepers."
+          },
+          {
+            "title": "PhotoSweep",
+            "url": "https://techlosoft.com/tools/photosweep/",
+            "snippet": "Groups near duplicates by perceptual fingerprint and threshold; prints each group for review."
+          },
+          {
+            "title": "shutter-cull",
+            "url": "https://github.com/keivanmalhani/shutter-cull",
+            "snippet": "Groups bursts by EXIF timestamp proximity confirmed by perceptual hash; scores sharpness, eye openness and aesthetics; writes XMP decisions."
+          }
+        ]
+      }
+    }
+  ],
+  "topK": 5
+}

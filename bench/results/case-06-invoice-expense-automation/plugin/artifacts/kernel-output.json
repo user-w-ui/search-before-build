@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-04T02:30:01.089Z",
+  "query": "在公司发票不出陌生云服务的前提下，为每月50至150张混合PDF/照片（含偶发火车票和出租车行程单）建立可逐张核对、可编辑不确定字段、去重校验并导出Excel的个人发票报销助手，研究可直接使用、可改造、可复用组件和无开发工作流。",
+  "candidates": [
+    {
+      "id": "github:zhangdexuan/fp-reimbursement-system",
+      "rank": 1,
+      "title": "FP reimbursement system",
+      "url": "https://github.com/zhangdexuan/fp-reimbursement-system",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "zhangdexuan/fp-reimbursement-system",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/zhangdexuan/fp-reimbursement-system",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web",
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "逐张人工复核原图与可编辑字段",
+        "中国增值税发票字段抽取与校验",
+        "去重并导出Excel",
+        "本地或私有服务器部署",
+        "发送/删除/提交前人工确认"
+      ],
+      "evidenceRefs": [
+        "https://github.com/zhangdexuan/fp-reimbursement-system",
+        "$[0]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.884,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.9046
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 4 observations by stable identity.",
+        "Mentions: 逐张人工复核原图与可编辑字段, 中国增值税发票字段抽取与校验, 去重并导出Excel, 本地或私有服务器部署, 发送/删除/提交前人工确认."
+      ],
+      "observationCount": 4
+    },
+    {
+      "id": "url:https://cloud.tencent.cn/document/product/866/90802",
+      "rank": 2,
+      "title": "腾讯云通用票据识别（高级版）",
+      "url": "https://cloud.tencent.cn/document/product/866/90802",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://cloud.tencent.cn/document/product/866/90802",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "中国增值税发票字段抽取与校验"
+      ],
+      "evidenceRefs": [
+        "https://cloud.tencent.cn/document/product/866/90802",
+        "$[1]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 0.335,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.7987
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: 中国增值税发票字段抽取与校验."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:stone16/invoice-manager",
+      "rank": 3,
+      "title": "Invoice Manager",
+      "url": "https://github.com/stone16/Invoice-Manager",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "stone16/invoice-manager",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/stone16/Invoice-Manager",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web",
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "逐张人工复核原图与可编辑字段",
+        "本地或私有服务器部署"
+      ],
+      "evidenceRefs": [
+        "https://github.com/stone16/Invoice-Manager",
+        "$[2]",
+        "$[1]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.402,
+        "reciprocalRank": 0.9789,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.586
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 4 observations by stable identity.",
+        "Mentions: 逐张人工复核原图与可编辑字段, 本地或私有服务器部署."
+      ],
+      "observationCount": 4
+    },
+    {
+      "id": "url:https://inv-veri.chinatax.gov.cn/?p=51",
+      "rank": 4,
+      "title": "国家税务总局全国增值税发票查验平台",
+      "url": "https://inv-veri.chinatax.gov.cn/?p=51",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://inv-veri.chinatax.gov.cn/?p=51",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "中国增值税发票字段抽取与校验"
+      ],
+      "evidenceRefs": [
+        "https://inv-veri.chinatax.gov.cn/?p=51",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.5482,
+        "reciprocalRank": 0.0105,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.424
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 中国增值税发票字段抽取与校验."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://cloud.baidu.com/doc/ocr/s/nk3h7xy2t",
+      "rank": 5,
+      "title": "百度增值税发票识别",
+      "url": "https://cloud.baidu.com/doc/OCR/s/nk3h7xy2t",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://cloud.baidu.com/doc/OCR/s/nk3h7xy2t",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "中国增值税发票字段抽取与校验"
+      ],
+      "evidenceRefs": [
+        "https://cloud.baidu.com/doc/OCR/s/nk3h7xy2t",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.5649,
+        "reciprocalRank": 0.0105,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.4348
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: 中国增值税发票字段抽取与校验."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:auromix/expense-reimbursement-skill",
+      "rank": 6,
+      "title": "Auromix expense-reimbursement-skill",
+      "url": "https://github.com/Auromix/expense-reimbursement-skill",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "auromix/expense-reimbursement-skill",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/Auromix/expense-reimbursement-skill",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "去重并导出Excel"
+      ],
+      "evidenceRefs": [
+        "https://github.com/Auromix/expense-reimbursement-skill",
+        "$[2]",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.1783,
+        "reciprocalRank": 0.3298,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.2784
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: 去重并导出Excel."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://learn.microsoft.com/en-au/connectors/excelonlinebusiness",
+      "rank": 7,
+      "title": "Excel Online (Business) connector",
+      "url": "https://learn.microsoft.com/en-au/connectors/excelonlinebusiness",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://learn.microsoft.com/en-au/connectors/excelonlinebusiness",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://learn.microsoft.com/en-au/connectors/excelonlinebusiness",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.1563,
+        "reciprocalRank": 0.0105,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.1692
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "url:https://pypi.org/project/invoice2data",
+      "rank": 8,
+      "title": "invoice2data",
+      "url": "https://pypi.org/project/invoice2data",
+      "kind": "package",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://pypi.org/project/invoice2data",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "package"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://pypi.org/project/invoice2data",
+        "$[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.0612,
+        "reciprocalRank": 0.0052,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.1211
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "逐张人工复核原图与可编辑字段",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:zhangdexuan/fp-reimbursement-system",
+        "github:stone16/invoice-manager"
+      ]
+    },
+    {
+      "capability": "中国增值税发票字段抽取与校验",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:zhangdexuan/fp-reimbursement-system",
+        "url:https://cloud.tencent.cn/document/product/866/90802",
+        "url:https://inv-veri.chinatax.gov.cn/?p=51",
+        "url:https://cloud.baidu.com/doc/ocr/s/nk3h7xy2t"
+      ]
+    },
+    {
+      "capability": "去重并导出Excel",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:zhangdexuan/fp-reimbursement-system",
+        "github:auromix/expense-reimbursement-skill"
+      ]
+    },
+    {
+      "capability": "本地或私有服务器部署",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:zhangdexuan/fp-reimbursement-system",
+        "github:stone16/invoice-manager"
+      ]
+    },
+    {
+      "capability": "发送/删除/提交前人工确认",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:zhangdexuan/fp-reimbursement-system"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "strong",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [],
+    "sourceCategories": [
+      "web",
+      "repo",
+      "package"
+    ],
+    "needsFollowUp": false,
+    "suggestedQueries": []
+  },
+  "retrieval": {
+    "requests": 16,
+    "failedRequests": 0,
+    "normalizedRecords": 23,
+    "rejectedRecords": 0,
+    "warnings": []
+  },
+  "metrics": {
+    "uniqueCandidates": 15,
+    "returnedCandidates": 8,
+    "duplicateObservationsMerged": 8
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "23 records from 16 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "8 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "15 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "8 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "0 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

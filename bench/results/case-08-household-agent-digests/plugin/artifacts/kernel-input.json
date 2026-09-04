@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "query": "Is it worth building a privacy-aware household assistant for four people that reads Google Calendar, shared chores/tasks, household budget and meeting notes, sends weekday and weekly digests, and creates reviewable draft events or tasks?",
+  "fingerprint": {
+    "mustHaveCapabilities": [
+      "scheduled household digest",
+      "privacy-aware per-person visibility",
+      "reviewable natural-language task or event drafts",
+      "shared calendar and task aggregation",
+      "budget, maintenance, and meeting-note summaries",
+      "local or consented hosted AI"
+    ],
+    "capabilityAliases": {
+      "scheduled household digest": ["Morning Brief", "daily summary", "weekly digest", "scheduled digest", "每日简报"],
+      "privacy-aware per-person visibility": ["private-by-default", "privacy", "visibility", "parental controls", "隐私"],
+      "reviewable natural-language task or event drafts": ["voice create", "AI books it", "approve", "draft", "natural language"],
+      "shared calendar and task aggregation": ["shared calendar", "tasks", "to-do lists", "calendar events", "共享日历"],
+      "budget, maintenance, and meeting-note summaries": ["budget", "finances", "maintenance", "meeting notes", "summaries"],
+      "local or consented hosted AI": ["self-hosted", "local AI", "Nothing ever leaves your LAN", "opt-in", "hosted"]
+    },
+    "desiredOutcome": "A short weekday morning briefing and Sunday report that respect private notes and require review before any task or calendar write.",
+    "operatingMode": "household web/mobile assistant layered on existing Google Calendar and shared task tools; self-hosted preferred, hosted only with visible opt-in"
+  },
+  "retrievals": [
+    {
+      "requestId": "web-discovery-1",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": [
+        {"title": "Fami: Free Family Organizer App for Calendar & Chores", "url": "https://fami-app.com/", "snippet": "Shared calendar, chore charts, family budget, AI assistant, iOS Android Web."},
+        {"title": "Plamily – Family Organiser App", "url": "https://www.plamily.co/en-us/", "snippet": "Shared calendar, tasks, budget, shopping lists, Google Calendar import."},
+        {"title": "Nestify | Parent Copilot", "url": "https://www.nestifyapp.org/", "snippet": "Smart family copilot with synced calendars, voice input, invite-only visibility."},
+        {"title": "Famio", "url": "https://famio.cc/", "snippet": "Family calendar, chores, lists, meals, and money in one place."},
+        {"title": "Cozi Family Organizer", "url": "https://www.cozi.com/", "snippet": "Shared calendar, to-dos, automatic notifications and agenda emails."},
+        {"title": "家庭管理应用搜索", "url": "https://momplan.life/zh", "snippet": "共享日历、家务分配、AI助手、预算管理。"}
+      ]
+    },
+    {
+      "requestId": "web-primary-fami",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Fami", "url": "https://fami-app.com/", "description": "Shared calendar, chores, budget, AI assistant, multi-platform; Google Calendar import and export; premium AI $4.99/month or $44.99/year; privacy details not established."}
+    },
+    {
+      "requestId": "web-primary-plamily",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Plamily", "url": "https://www.plamily.co/en-us/", "description": "Shared calendar, tasks, chores, budget, Google Calendar import, personal and family items, invited-member visibility; no AI digest documented."}
+    },
+    {
+      "requestId": "web-primary-cozi",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Cozi Family Organizer", "url": "https://www.cozi.com/", "description": "Shared family calendar, color coding, automatic notifications and agenda emails, grocery list and to-dos; hosted product and AI/privacy boundaries not documented on overview page."}
+    },
+    {
+      "requestId": "web-primary-nestify",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Nestify", "url": "https://www.nestifyapp.org/", "description": "Smart family copilot with synced calendars, voice event input, invite-only family circle, parental controls, deletion/export claims; task/weekly budget/meeting-note scope unverified."}
+    },
+    {
+      "requestId": "web-primary-google-calendar",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Google Calendar API overview", "url": "https://developers.google.com/workspace/calendar/api/guides/overview", "description": "REST API exposes most Calendar web features, events, recurring events, calendars, and ACL access rules."}
+    },
+    {
+      "requestId": "web-primary-google-calendar-create",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Create events", "url": "https://developers.google.com/workspace/calendar/api/guides/create-events", "description": "events.insert creates events; OAuth calendar scope and write access are required; attendees can receive email notifications; event IDs help avoid duplicate creation."}
+    },
+    {
+      "requestId": "web-primary-gmail",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Gmail API: Create and send email messages", "url": "https://developers.google.com/workspace/gmail/api/guides/sending", "description": "Gmail API can send directly with messages.send or from a draft with drafts.send."}
+    },
+    {
+      "requestId": "web-primary-apps-script",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Apps Script installable triggers", "url": "https://developers.google.com/apps-script/guides/triggers/installable", "description": "Time-driven triggers run functions automatically on recurring schedules; timing can be slightly randomized; triggers run under creator authorization and have quotas."}
+    },
+    {
+      "requestId": "github-discovery-1",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {"repositories": [
+        {"repository_full_name": "Rpeng666/family-organizer-all-in-one", "description": "Open-source self-hosted family management — shared family calendar, chores, curriculum, messages, and finances.", "default_branch": "master", "html_url": "https://github.com/Rpeng666/family-organizer-all-in-one"},
+        {"repository_full_name": "biswasprateek/paperr", "description": "Private self-hosted platform for household or team — tasks, calendar, notes, routines, shared dashboard, built-in AI assistant.", "default_branch": "main", "html_url": "https://github.com/biswasprateek/paperr"}
+      ]}
+    },
+    {
+      "requestId": "github-paperr-repo",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {"repository_full_name": "biswasprateek/paperr", "url": "https://github.com/biswasprateek/paperr", "license": "Apache-2.0", "stars": 2, "updated": "2026-08-13", "description": "Self-hosted household/team app with tasks, calendar, notes, local AI, scheduled agents."}
+    },
+    {
+      "requestId": "github-paperr-readme",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {"repository_full_name": "biswasprateek/paperr", "url": "https://github.com/biswasprateek/paperr/blob/main/README.md", "content": "Nothing ever leaves your LAN; Apache 2.0; local bundled AI or Ollama/LM Studio; private-by-default Spaces; tasks/calendar/notebooks; node-cron background agents; Morning Brief; Bulletin Board weekly digest; proposed actions wait for approval."}
+    },
+    {
+      "requestId": "github-family-organizer-repo",
+      "providerHint": "github",
+      "categoryHint": "repo",
+      "outcome": "success",
+      "payload": {"repository_full_name": "Rpeng666/family-organizer-all-in-one", "url": "https://github.com/Rpeng666/family-organizer-all-in-one", "license": "NOASSERTION/Other", "stars": 8, "updated": "2026-07-06", "description": "Self-hosted family calendar, chores, curriculum, messages, finances; no AI assistant; Apple Calendar sync."}
+    },
+    {
+      "requestId": "official-mcp-registry-calendar-1",
+      "providerHint": "official-mcp-registry",
+      "categoryHint": "mcp",
+      "outcome": "success",
+      "payload": {"servers": [
+        {"server": {"name": "ai.calendarmcp/server", "description": "Hosted Google Calendar MCP server for AI agents. No self-hosting or Google Cloud setup.", "repository": {"url": "https://github.com/Full-Vibe/calendarmcp-public"}, "websiteUrl": "https://calendarmcp.ai"}},
+        {"server": {"name": "ai.smithery/mayla-debug-mcp-google-calendar2", "description": "Schedule and manage Google Calendar events.", "repository": {"url": "https://github.com/mayla-debug/mcp-google-calendar2"}}}
+      ], "metadata": {"count": 10}}
+    },
+    {
+      "requestId": "official-mcp-registry-tasks-1",
+      "providerHint": "official-mcp-registry",
+      "categoryHint": "mcp",
+      "outcome": "success",
+      "payload": {"servers": [
+        {"server": {"name": "io.github.A1-x-Tech/mcp-google-tasks", "description": "MCP server for Google Tasks API: task lists, subtasks, due dates, complete and move tasks.", "repository": {"url": "https://github.com/A1-x-Tech/mcp-google-tasks"}, "version": "0.1.0"}},
+        {"server": {"name": "in.calmloop/tasks", "description": "Manage tasks, notes, projects, and task history from AI assistants.", "websiteUrl": "https://calmloop.in/how-to-mcp"}}
+      ], "metadata": {"count": 10}}
+    },
+    {
+      "requestId": "official-mcp-registry-notes-1",
+      "providerHint": "official-mcp-registry",
+      "categoryHint": "mcp",
+      "outcome": "success",
+      "payload": {"servers": [
+        {"server": {"name": "io.github.Abhishekkumar2021/notes", "description": "Local markdown notes with semantic search, tags, todos, wiki-link graph; read-only mode environment variable.", "repository": {"url": "https://github.com/Abhishekkumar2021/mcp-suite"}}}
+      ], "metadata": {"count": 10}}
+    },
+    {
+      "requestId": "huggingface-model-search-1",
+      "providerHint": "hugging-face",
+      "categoryHint": "model",
+      "outcome": "success",
+      "payload": [
+        {"id": "microsoft/Phi-3-mini-4k-instruct", "license": "mit", "downloads": 517240, "lastModified": "2025-12-10", "pipeline_tag": "text-generation"},
+        {"id": "microsoft/Phi-3.5-mini-instruct", "license": "mit", "downloads": 297093, "lastModified": "2025-12-10", "pipeline_tag": "text-generation"},
+        {"id": "bartowski/Phi-3.5-mini-instruct-GGUF", "license": "mit", "downloads": 65761, "lastModified": "2024-09-15", "pipeline_tag": "text-generation"}
+      ]
+    },
+    {
+      "requestId": "hacker-news-demand-1",
+      "providerHint": "hacker-news-algolia",
+      "categoryHint": "discussion",
+      "outcome": "success",
+      "payload": {"hits": [
+        {"title": "Always on eInk display (kindle?) + react website", "url": "https://news.ycombinator.com/item?id=24078411", "snippet": "Ask HN describes high-friction family chore post-its and desire to hook a display to calendar events and task list."}
+      ]}
+    },
+    {
+      "requestId": "google-tasks-docs-1",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "error",
+      "error": {"kind": "tls", "message": "curl schannel SEC_E_NO_CREDENTIALS while requesting Google Tasks discovery endpoint"}
+    },
+    {
+      "requestId": "web-followup-natural-language-1",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": [
+        {"title": "Yuvora", "url": "https://yuvora.app/", "snippet": "Voice and camera commands become draft events, tasks, reminders and spending entries; drafts are reviewable and require approval before saving."},
+        {"title": "FamilyFeed", "url": "https://familyfeed.ai/", "snippet": "AskAI drafts lists, appointments, events, todos and reminders from natural-language prompts for review before saving."},
+        {"title": "FamilyPlan", "url": "https://familyplan.cloud/en/ai-family-assistant/", "snippet": "Review-first AI assistant for calendars, tasks, budgeting and family planning; requests produce drafts."},
+        {"title": "Winnie", "url": "https://winniehq.com/", "snippet": "Household PA via WhatsApp; every calendar entry or task is a draft requiring approval."}
+      ]
+    },
+    {
+      "requestId": "web-followup-yuvora",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "Yuvora", "url": "https://yuvora.app/", "description": "Family organizer with voice/camera capture, draft events/tasks/reminders/spending entries, approval before saving, encrypted EU hosting; beta and iOS/TestFlight only."}
+    },
+    {
+      "requestId": "web-followup-familyfeed",
+      "providerHint": "host-web",
+      "categoryHint": "web",
+      "outcome": "success",
+      "payload": {"title": "FamilyFeed", "url": "https://familyfeed.ai/", "description": "Natural-language AskAI drafts family lists, appointments, events, todos and reminders for review; page states calendar integration and email automation are not yet available."}
+    }
+  ],
+  "topK": 8
+}

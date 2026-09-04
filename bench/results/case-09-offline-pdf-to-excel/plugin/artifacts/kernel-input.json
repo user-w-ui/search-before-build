@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "query": "Assess whether to build an offline Debian Linux desktop workflow for extracting structured tables from text PDFs and scanned PDFs into reviewable XLSX/CSV exports.",
+  "fingerprint": {
+    "mustHaveCapabilities": ["structured table extraction with offline OCR path and reviewable export"],
+    "capabilityAliases": {"structured table extraction with offline OCR path and reviewable export": ["table extraction", "structured tables", "OCR", "offline", "XLSX", "CSV", "preview", "cell-level edits"]},
+    "desiredOutcome": "Clean enough XLSX or CSV for manual reconciliation in LibreOffice Calc, with preview, cell edits, and low-confidence warnings.",
+    "operatingMode": "local Linux desktop on Debian 13 x86_64; bundled local web UI acceptable"
+  },
+  "retrievals": [
+    {"requestId":"github-camelot","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"id":194679925,"name":"camelot","full_name":"camelot-dev/camelot","html_url":"https://github.com/camelot-dev/camelot","description":"A Python library to extract tabular data from PDFs","stargazers_count":3815,"pushed_at":"2026-09-02T12:27:14Z","license":{"key":"mit","name":"MIT License"}}},
+    {"requestId":"github-tabula","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"name":"tabula","full_name":"tabulapdf/tabula","html_url":"https://github.com/tabulapdf/tabula","description":"Extract tables from PDF files","language":"Java","license":{"key":"mit","name":"MIT License"}}},
+    {"requestId":"github-pdfplumber","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"name":"pdfplumber","full_name":"jsvine/pdfplumber","html_url":"https://github.com/jsvine/pdfplumber","description":"Plumb a PDF for detailed information about each char, line, rectangle, curve, and image","language":"Python","license":{"key":"mit","name":"MIT License"}}},
+    {"requestId":"github-ocrmypdf","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"name":"OCRmyPDF","full_name":"ocrmypdf/OCRmyPDF","html_url":"https://github.com/ocrmypdf/OCRmyPDF","description":"OCRmyPDF adds an OCR text layer to scanned PDF files, allowing them to be searched","language":"Python","license":{"key":"mpl-2.0","name":"Mozilla Public License 2.0"}}},
+    {"requestId":"github-excalibur","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"name":"excalibur","full_name":"camelot-dev/excalibur","html_url":"https://github.com/camelot-dev/excalibur","description":"A web interface to extract tabular data from PDFs","language":"Python"}},
+    {"requestId":"github-intellifill","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"name":"intellifill-ocr","full_name":"Abijspy/intellifill-ocr","html_url":"https://github.com/Abijspy/intellifill-ocr","description":"Offline OCR document automation desktop app for template table filling, Tesseract extraction, SQLite storage, validation, and traceable PDF, Word, Excel, and CSV exports.","language":"C#","license":{"key":"mit","name":"MIT License"}}},
+    {"requestId":"pypi-camelot","providerHint":"pypi","categoryHint":"package","outcome":"success","payload":{"info":{"name":"camelot-py","summary":"PDF Table Extraction for Humans","license":"MIT","home_page":"https://camelot-py.readthedocs.io/"},"releases":{}}},
+    {"requestId":"pypi-pdfplumber","providerHint":"pypi","categoryHint":"package","outcome":"success","payload":{"info":{"name":"pdfplumber","summary":"Plumb a PDF for detailed information about each char, line, rectangle, curve, and image","license":"MIT","home_page":"https://github.com/jsvine/pdfplumber"},"releases":{}}},
+    {"requestId":"pypi-tabula","providerHint":"pypi","categoryHint":"package","outcome":"success","payload":{"info":{"name":"tabula-py","summary":"Simple wrapper for tabula-java: extract tables from PDFs","license":"MIT","home_page":"https://github.com/chezou/tabula-py"},"releases":{}}},
+    {"requestId":"pypi-ocrmypdf","providerHint":"pypi","categoryHint":"package","outcome":"success","payload":{"info":{"name":"ocrmypdf","summary":"OCRmyPDF adds an OCR text layer to scanned PDF files","license":"MPL-2.0","home_page":"https://ocrmypdf.readthedocs.io/"},"releases":{}}},
+    {"requestId":"hf-table-detection","providerHint":"huggingface","categoryHint":"model","outcome":"success","payload":{"modelId":"microsoft/table-transformer-detection","pipeline_tag":"object-detection","library_name":"transformers","downloads":0}},
+    {"requestId":"hf-table-structure","providerHint":"huggingface","categoryHint":"model","outcome":"success","payload":{"modelId":"microsoft/table-transformer-structure-recognition","pipeline_tag":"object-detection","library_name":"transformers","downloads":0}},
+    {"requestId":"web-offline-pdf","providerHint":"host-web","categoryHint":"web","outcome":"error","error":{"kind":"unavailable","message":"browser/web route unavailable in this host"}},
+    {"requestId":"web-linux-pdf","providerHint":"anonymous-web","categoryHint":"web","outcome":"error","error":{"kind":"unavailable","message":"anonymous web fallback unavailable"}},
+    {"requestId":"github-search","providerHint":"github","categoryHint":"repo","outcome":"success","payload":{"total_count":2,"incomplete_results":false,"items":[{"full_name":"Abijspy/intellifill-ocr","html_url":"https://github.com/Abijspy/intellifill-ocr","description":"Offline OCR document automation desktop app with Excel and CSV exports"},{"full_name":"camelot-dev/camelot","html_url":"https://github.com/camelot-dev/camelot","description":"A Python library to extract tabular data from PDFs"}]}}
+  ],
+  "topK": 8
+}

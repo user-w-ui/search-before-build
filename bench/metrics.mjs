@@ -192,8 +192,20 @@ function parseSession(path) {
       const searches = Array.isArray(item.input?.search_query) ? item.input.search_query : [];
       const opens = Array.isArray(item.input?.open) ? item.input.open : [];
       const resolvedUrls = Array.isArray(item.input?.resolved_urls) ? item.input.resolved_urls : [];
-      if (searches.length) o.webSearch++;
-      if (opens.length) o.webFetch++;
+      // Direct routed forms (METRICS.md §1/§4.1 口径)：{query, route} = 一次搜索；
+      // {url, route} = 一次定向抓取（与 curl 中出现的 URL 同等对待）。
+      const routedQuery = typeof item.input?.query === "string" ? item.input.query : "";
+      const routedUrl = typeof item.input?.url === "string" ? item.input.url : "";
+      if (searches.length || routedQuery) o.webSearch++;
+      if (opens.length || routedUrl) o.webFetch++;
+      if (routedQuery) {
+        o.queryCount++;
+        if (hasCJK(routedQuery)) o.zhQ++; else o.enQ++;
+      }
+      if (routedUrl && /^https?:\/\//i.test(routedUrl)) {
+        o.fetchUrls.push(routedUrl);
+        scanCatalog(routedUrl, o);
+      }
       for (const search of searches) {
         const q = search?.q || "";
         o.queryCount++;
@@ -220,8 +232,10 @@ function parseSession(path) {
       if (opens.length && directlyResolved === 0 && item.id) pendingResolvedOpenIds.add(item.id);
     }
     if (item.name === "Task" || item.name === "Agent") o.tasksAgents++;
-    if (item.name === "Bash" || item.name === "PowerShell") {
-      const cmd = [item.input?.command, item.input?.script].filter(Boolean).join(" ");
+    if (item.name === "Bash" || item.name === "PowerShell" || item.name === "curl.exe" || item.name === "curl") {
+      // curl 类工具的 URL 可能直接出现在 input.url（如 curl.exe {url}），
+      // 也嵌在 command/script 字符串里；统一按"curl 命令中出现的 URL"口径处理（METRICS.md §1）。
+      const cmd = [item.input?.command, item.input?.script, item.input?.url].filter(Boolean).join(" ");
       if (hasCJK(cmd)) o.zhQ++;
       for (const u of cmd.match(URL_RE) || []) {
         o.fetchUrls.push(u);

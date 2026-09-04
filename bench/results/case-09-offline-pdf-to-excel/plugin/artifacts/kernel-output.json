@@ -1,0 +1,430 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-04T03:53:49.123Z",
+  "query": "Assess whether to build an offline Debian Linux desktop workflow for extracting structured tables from text PDFs and scanned PDFs into reviewable XLSX/CSV exports.",
+  "candidates": [
+    {
+      "id": "github:abijspy/intellifill-ocr",
+      "rank": 1,
+      "title": "Abijspy/intellifill-ocr",
+      "url": "https://github.com/Abijspy/intellifill-ocr",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "abijspy/intellifill-ocr",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/Abijspy/intellifill-ocr",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "structured table extraction with offline OCR path and reviewable export"
+      ],
+      "evidenceRefs": [
+        "https://github.com/Abijspy/intellifill-ocr",
+        "$",
+        "$.items[0]"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.98
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: structured table extraction with offline OCR path and reviewable export."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:camelot-dev/camelot",
+      "rank": 2,
+      "title": "camelot-dev/camelot",
+      "url": "https://github.com/camelot-dev/camelot",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "camelot-dev/camelot",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/camelot-dev/camelot",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/camelot-dev/camelot",
+        "$",
+        "$.items[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.1308,
+        "reciprocalRank": 0.9839,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.411
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 2 observations by stable identity.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:ocrmypdf/ocrmypdf",
+      "rank": 3,
+      "title": "OCRmyPDF",
+      "url": "https://github.com/ocrmypdf/OCRmyPDF",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "ocrmypdf/ocrmypdf",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/ocrmypdf/OCRmyPDF",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "structured table extraction with offline OCR path and reviewable export"
+      ],
+      "evidenceRefs": [
+        "https://github.com/ocrmypdf/OCRmyPDF",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.3993,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.3395
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "Mentions: structured table extraction with offline OCR path and reviewable export."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:camelot-dev/excalibur",
+      "rank": 4,
+      "title": "excalibur",
+      "url": "https://github.com/camelot-dev/excalibur",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "camelot-dev/excalibur",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/camelot-dev/excalibur",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/camelot-dev/excalibur",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.3177,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.5,
+        "finalScore": 0.2565
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:tabulapdf/tabula",
+      "rank": 5,
+      "title": "tabula",
+      "url": "https://github.com/tabulapdf/tabula",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "tabulapdf/tabula",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/tabulapdf/tabula",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/tabulapdf/tabula",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0.1904,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.5,
+        "finalScore": 0.1738
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    },
+    {
+      "id": "github:jsvine/pdfplumber",
+      "rank": 6,
+      "title": "pdfplumber",
+      "url": "https://github.com/jsvine/pdfplumber",
+      "kind": "repo",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "jsvine/pdfplumber",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/jsvine/pdfplumber",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "repo"
+      ],
+      "matchedCapabilities": [],
+      "evidenceRefs": [
+        "https://github.com/jsvine/pdfplumber",
+        "$"
+      ],
+      "features": {
+        "lexicalFit": 0,
+        "reciprocalRank": 0,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.08
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Single-source observation.",
+        "No must-have capability mention detected."
+      ],
+      "observationCount": 1
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "structured table extraction with offline OCR path and reviewable export",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:abijspy/intellifill-ocr",
+        "github:ocrmypdf/ocrmypdf"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "weak",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [],
+    "sourceCategories": [
+      "repo"
+    ],
+    "needsFollowUp": true,
+    "suggestedQueries": []
+  },
+  "retrieval": {
+    "requests": 15,
+    "failedRequests": 2,
+    "normalizedRecords": 14,
+    "rejectedRecords": 0,
+    "warnings": [
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      },
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      },
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      },
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      },
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      },
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      },
+      {
+        "code": "retrieval_error",
+        "message": "unavailable: browser/web route unavailable in this host"
+      },
+      {
+        "code": "retrieval_error",
+        "message": "unavailable: anonymous web fallback unavailable"
+      }
+    ]
+  },
+  "metrics": {
+    "uniqueCandidates": 6,
+    "returnedCandidates": 6,
+    "duplicateObservationsMerged": 2
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "14 records from 15 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "2 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "6 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "6 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "0 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}

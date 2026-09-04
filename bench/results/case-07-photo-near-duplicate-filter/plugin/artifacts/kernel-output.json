@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-04T02:30:53.141Z",
+  "query": "For a personal Immich library of about 80,000 photos, can a local monthly batch select one representative photo per configurable timestamp window for a face-focused timelapse, using existing quality signals or simple sharpness/exposure heuristics, while preserving originals and producing a reviewable reversible album/list?",
+  "candidates": [
+    {
+      "id": "github:arnaudcrl/immich-automated-selfie-timelapse",
+      "rank": 1,
+      "title": "ArnaudCrl/immich-automated-selfie-timelapse README",
+      "url": "https://github.com/ArnaudCrl/immich-automated-selfie-timelapse",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "arnaudcrl/immich-automated-selfie-timelapse",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/ArnaudCrl/immich-automated-selfie-timelapse",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web",
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "quality-aware representative selection"
+      ],
+      "evidenceRefs": [
+        "https://github.com/ArnaudCrl/immich-automated-selfie-timelapse",
+        "$.results[1]",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 1,
+        "reciprocalRank": 0.5193,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.8598
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: quality-aware representative selection."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "url:https://www.foliosort.app/features/best-shots",
+      "rank": 2,
+      "title": "FolioSort Best Shots",
+      "url": "https://www.foliosort.app/features/best-shots",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "url",
+          "value": "https://www.foliosort.app/features/best-shots",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "quality-aware representative selection",
+        "non-destructive reviewable reversible Immich output"
+      ],
+      "evidenceRefs": [
+        "https://www.foliosort.app/features/best-shots",
+        "$.results[3]",
+        "$.results[0]"
+      ],
+      "features": {
+        "lexicalFit": 0.7198,
+        "reciprocalRank": 0.504,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.6588
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: quality-aware representative selection, non-destructive reviewable reversible Immich output."
+      ],
+      "observationCount": 2
+    },
+    {
+      "id": "github:kotyzap/photo-curator",
+      "rank": 3,
+      "title": "GitHub - kotyzap/Photo-Curator",
+      "url": "https://github.com/kotyzap/Photo-Curator",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "kotyzap/photo-curator",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/kotyzap/Photo-Curator",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web",
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "quality-aware representative selection"
+      ],
+      "evidenceRefs": [
+        "https://github.com/kotyzap/Photo-Curator",
+        "$.results[2]",
+        "$.repositories[2]"
+      ],
+      "features": {
+        "lexicalFit": 0.5621,
+        "reciprocalRank": 0.9767,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.6895
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 3 observations by stable identity.",
+        "Mentions: quality-aware representative selection."
+      ],
+      "observationCount": 3
+    },
+    {
+      "id": "github:razgrizhsu/immich-deduper",
+      "rank": 4,
+      "title": "GitHub - RazgrizHsu/immich-deduper",
+      "url": "https://github.com/RazgrizHsu/immich-deduper",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "razgrizhsu/immich-deduper",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/RazgrizHsu/immich-deduper",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web",
+        "repo"
+      ],
+      "matchedCapabilities": [
+        "non-destructive reviewable reversible Immich output"
+      ],
+      "evidenceRefs": [
+        "https://github.com/RazgrizHsu/immich-deduper",
+        "$.results[1]",
+        "$.repositories[1]"
+      ],
+      "features": {
+        "lexicalFit": 0.4591,
+        "reciprocalRank": 1,
+        "evidenceQuality": 0.8,
+        "finalScore": 0.6284
+      },
+      "explanations": [
+        "Limited lexical fit; verify manually.",
+        "Merged 3 observations by stable identity.",
+        "Mentions: non-destructive reviewable reversible Immich output."
+      ],
+      "observationCount": 3
+    },
+    {
+      "id": "github:immich-app/immich",
+      "rank": 5,
+      "title": "Immich duplicate detection discussion",
+      "url": "https://github.com/immich-app/immich/blob/main/server/src/services/album.service.ts",
+      "kind": "web",
+      "identities": [
+        {
+          "scheme": "github",
+          "value": "immich-app/immich",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/immich-app/immich/blob/main/server/src/services/album.service.ts",
+          "confidence": "derived"
+        },
+        {
+          "scheme": "url",
+          "value": "https://github.com/immich-app/immich/discussions/26661",
+          "confidence": "derived"
+        }
+      ],
+      "sourceCategories": [
+        "web"
+      ],
+      "matchedCapabilities": [
+        "non-destructive reviewable reversible Immich output"
+      ],
+      "evidenceRefs": [
+        "https://github.com/immich-app/immich/blob/main/server/src/services/album.service.ts",
+        "$.results[3]",
+        "https://github.com/immich-app/immich/discussions/26661",
+        "$.results[2]"
+      ],
+      "features": {
+        "lexicalFit": 0.6475,
+        "reciprocalRank": 0.4882,
+        "evidenceQuality": 0.65,
+        "finalScore": 0.6079
+      },
+      "explanations": [
+        "Strong lexical fit with the functional fingerprint.",
+        "Merged 2 observations by stable identity.",
+        "Mentions: non-destructive reviewable reversible Immich output."
+      ],
+      "observationCount": 2
+    }
+  ],
+  "coverage": [
+    {
+      "capability": "timestamp-window selection of one representative photo per window",
+      "status": "missing",
+      "candidateIds": []
+    },
+    {
+      "capability": "quality-aware representative selection",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "github:arnaudcrl/immich-automated-selfie-timelapse",
+        "url:https://www.foliosort.app/features/best-shots",
+        "github:kotyzap/photo-curator"
+      ]
+    },
+    {
+      "capability": "non-destructive reviewable reversible Immich output",
+      "status": "candidate_mention",
+      "candidateIds": [
+        "url:https://www.foliosort.app/features/best-shots",
+        "github:razgrizhsu/immich-deduper",
+        "github:immich-app/immich"
+      ]
+    }
+  ],
+  "evidence": {
+    "level": "weak",
+    "basis": "heuristic_candidate_coverage",
+    "missingCapabilities": [
+      "timestamp-window selection of one representative photo per window"
+    ],
+    "sourceCategories": [
+      "web",
+      "repo"
+    ],
+    "needsFollowUp": true,
+    "suggestedQueries": [
+      "For a personal Immich library of about 80,000 photos, can a local monthly batch select one representative photo per configurable timestamp window for a face-focused timelapse, using existing quality signals or simple sharpness/exposure heuristics, while preserving originals and producing a reviewable reversible album/list? timestamp-window selection of one representative photo per window"
+    ]
+  },
+  "retrieval": {
+    "requests": 10,
+    "failedRequests": 0,
+    "normalizedRecords": 37,
+    "rejectedRecords": 0,
+    "warnings": [
+      {
+        "code": "unknown_shape",
+        "message": "Payload shape was preserved but could not be projected into a candidate.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_identity",
+        "message": "No stable identity was found; cross-source merging is disabled.",
+        "rawRef": "$"
+      },
+      {
+        "code": "missing_text",
+        "message": "No searchable text was found.",
+        "rawRef": "$"
+      },
+      {
+        "code": "partial_item",
+        "message": "Record is unusable and will use only available signals.",
+        "rawRef": "$"
+      }
+    ]
+  },
+  "metrics": {
+    "uniqueCandidates": 27,
+    "returnedCandidates": 5,
+    "duplicateObservationsMerged": 9
+  },
+  "trace": [
+    {
+      "stage": "normalize",
+      "detail": "37 records from 10 retrieval requests."
+    },
+    {
+      "stage": "identity",
+      "detail": "9 duplicate observations merged conservatively."
+    },
+    {
+      "stage": "rank",
+      "detail": "27 unique candidates scored with BM25F and RRF."
+    },
+    {
+      "stage": "select",
+      "detail": "5 candidates selected with lexical diversity and capability coverage."
+    },
+    {
+      "stage": "evidence",
+      "detail": "1 must-have capabilities still missing candidate mentions."
+    }
+  ]
+}
