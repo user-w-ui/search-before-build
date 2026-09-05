@@ -133,12 +133,6 @@ docs/search-before-build/<当前项目>/<竞品>.md
 npx @superq/search-before-build install
 ```
 
-完成后新开一个 Codex 任务：
-
-```text
-$search-before-build-assess <你的想法、计划或文件路径>
-$search-before-build-compare <计划书、原型或仓库路径>
-```
 
 **Codex（开发安装，跟随 `main`）**
 

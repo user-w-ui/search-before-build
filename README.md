@@ -132,12 +132,6 @@ Persisted reports remain one file per competitor and contain only the overview, 
 npx @superq/search-before-build install
 ```
 
-Then open a new Codex task:
-
-```text
-$search-before-build-assess <your idea, plan, or file path>
-$search-before-build-compare <path to a plan, prototype, or repository>
-```
 
 **Codex (development install, tracks `main`)**
 
