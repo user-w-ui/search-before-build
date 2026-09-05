@@ -80,37 +80,6 @@ The plugin first determines what it needs to find, then chooses where to look. I
 
 For SaaS products, commercial tools, app-store listings, and other solutions outside those catalogs, it supplements the research with web search and official product pages. When the target market is unclear, it searches in both Chinese and English. Stars and download counts help assess maturity, but never replace functional matching, and similar names alone are not treated as evidence that two products compete.
 
-### A deterministic decision kernel
-
-The first version includes a small TypeScript kernel for the parts that should not depend on prompt wording:
-
-```text
-uneven tool output
-       │
-       ▼
-progressive normalization → stable-identity deduplication → BM25F + RRF + recency ranking
-                                                               │
-                                                               ▼
-                                    diversity / capability coverage → traceable artifact
-```
-
-- Accepts raw arrays, nested JSON, Atom/XML, HTML snippets, plain text, and failed retrieval envelopes. Missing optional fields reduce confidence instead of invalidating the whole result.
-- Uses URL, GitHub, package, DOI, arXiv, MCP, and provider identities to merge observations without requiring every search tool to implement one rigid response contract.
-- Combines bilingual lexical matching, reciprocal-rank fusion, activity-recency scoring, and lightweight diversity selection. It has no runtime package dependency, embedding model, or vector database.
-- Records normalized candidates, score features, warnings, source coverage, and selection traces. The kernel provides decision support; the skill still verifies primary sources and owns the final Build / Adapt / Use existing / Stop recommendation.
-
-This boundary keeps the happy path easy to run while making retrieval behavior testable and inspectable. If the local kernel is unavailable or a payload cannot be normalized, the skills continue with the existing evidence-first workflow.
-
-For local development, build the kernel and run it against a pipeline input file:
-
-```bash
-npm install
-npm run build
-node dist/cli.js run --input ./pipeline-input.json --output ./decision-support.json
-```
-
-The JSON contracts are documented in [`schemas/`](./schemas/). Representative heterogeneous payloads live in [`tests/fixtures/retrieval/`](./tests/fixtures/retrieval/).
-
 ### Optional in-depth GitHub search
 
 If a GitHub MCP server, connector, or equivalent tool is available, the plugin reuses it. Otherwise, it can still work through public APIs and web search. With your consent, it can install GitHub’s official MCP server automatically:
