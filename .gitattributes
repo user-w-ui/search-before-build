@@ -1,0 +1,4 @@
+# Generated TypeScript build output (tsc emits LF).
+# Pin dist/ to LF so a rebuild on Windows, where core.autocrlf=true checks
+# other text files out as CRLF, does not leave the tree stat-dirty.
+dist/** text eol=lf
