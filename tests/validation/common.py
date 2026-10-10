@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -28,9 +29,24 @@ def read_skill(name: str) -> tuple[dict[str, str], str]:
     return metadata, body
 
 
+def package_files() -> list[Path]:
+    # Skip git-ignored local workspaces (video builds, virtualenvs) that are not
+    # part of the package and may hold non-UTF-8 third-party files.
+    try:
+        listed = subprocess.run(
+            ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout.decode("utf-8")
+        return [ROOT / name for name in listed.split("\0") if name]
+    except (OSError, subprocess.CalledProcessError):
+        return [path for path in ROOT.rglob("*") if ".git" not in path.parts]
+
+
 def assert_legacy_name_removed() -> None:
-    for path in ROOT.rglob("*"):
-        if ".git" in path.parts or not path.is_file():
+    for path in package_files():
+        if not path.is_file():
             continue
         relative = path.relative_to(ROOT).as_posix()
         if relative.startswith("bench/results/"):
