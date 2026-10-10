@@ -100,6 +100,10 @@ def validate() -> None:
     assert "explain the resulting coverage limits" in research_method
     assert "Stop only when every external route is unavailable" in research_method
 
+    assert "## Query construction" in github_rules
+    assert "archived:false" in github_rules
+    assert "Keep best-match ordering for discovery" in github_rules
+    assert "verify the repository before counting it" in github_rules
     assert "PyPI's keyword search sits behind a browser challenge" in source_catalog
     assert "pypi.org/pypi/" in source_catalog
 

@@ -18,6 +18,16 @@ Before GitHub research, use this order. A route is usable only after a relevant 
 3. When no exposed or discovered plugin/app/MCP route works, check GitHub CLI availability with `gh --version` and existing authentication with `gh auth status`, then run a relevant read-only query. Suitable commands include `gh search repos`, `gh repo view`, `gh api` with its default `GET`, and `gh search code`. If any required check or query fails, continue to step 4. Do not start login, change authentication or configuration, or modify GitHub data during normal research.
 4. Only after checking pre-exposed tools, discovered plugin/app tools, registered MCP tools, and GitHub CLI, tell the user that no GitHub dedicated deep-retrieval route is currently usable, summarize the concrete result of each check, then offer the optional official MCP setup once.
 
+## Query construction
+
+These rules apply to every GitHub route, including the anonymous one.
+
+- Describe what the code does, not only the product idea: pair the core task with its technical category, then run a second query with synonyms or the output format.
+- Narrow with qualifiers instead of piling on keywords: `language:`, `topic:`, `archived:false`, and `pushed:>YYYY-MM-DD` set about a year before today to find maintained projects. Do not let the date qualifier hide an established tool that is still the best fit.
+- Keep best-match ordering for discovery. Sort by Stars only after a functional query works, to locate the established option; Stars remain a maturity signal.
+- When code search is available, search a distinctive implementation signal—a key API, configuration file name, or import of a core library—to find projects whose README does not use the user's words. Treat code hits as leads and verify the repository before counting it.
+- When the market is Chinese or unknown, also search Chinese keywords; repository descriptions and READMEs are indexed in any language.
+
 ## Offer the optional enhancement
 
 ```text

@@ -149,6 +149,10 @@ def validate() -> None:
     for trigger in source_triggers:
         assert trigger in research_method
     assert "ordinary Web search is required unless unavailable" in research_method
+    assert "at least two differently worded discovery queries" in research_method
+    assert "every candidate in the key comparison has at least one primary page read" in research_method
+    assert "dated maintenance signal" in research_method
+    assert "record maintenance as unknown instead of guessing" in research_method
     assert "route-and-language audit" in research_method
     assert "anonymous web fallback" in research_method.lower()
     assert "html.duckduckgo.com" in search_sources
