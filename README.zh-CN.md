@@ -89,7 +89,7 @@ SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索�
 启用 GitHub 深度检索
 ```
 
-安装器会下载并校验官方二进制，以 `repos` 工具集和 `--read-only` 模式运行，首次连接用浏览器 OAuth（无需 PAT、Docker 或额外包）。需要本机 Node.js 18+，Windows / macOS / Linux 通用；基础检索本身不依赖 Node。拒绝或授权失败会自动回退。
+安装器会下载并校验官方二进制，以 `repos` 工具集和 `--read-only` 模式运行，用浏览器 OAuth 登录且不额外申请权限范围（无需 PAT、Docker 或额外包）。如果你以前给 GitHub MCP Server 授权过更大的权限，GitHub 可能沿用旧授权，可在 github.com/settings/applications 撤销后重新授权；无论哪种情况，服务都只读运行。GitHub 只在内存中保存这次登录，所以每个新的 Agent 会话第一次搜索时会短暂打开 GitHub 页面；首次批准后通常无需再点确认。安装器支持 `HTTPS_PROXY` 和 Windows 系统代理，只能经代理访问 GitHub 时会把代理写入 MCP 配置；会自动升级过旧的程序并刷新旧版配置。需要本机 Node.js 18+，Windows / macOS / Linux 通用；基础检索本身不依赖 Node。拒绝或授权失败会自动回退。
 
 ## 临时研究简报与可选保存
 

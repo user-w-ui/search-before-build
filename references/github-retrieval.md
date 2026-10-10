@@ -26,13 +26,13 @@ Before GitHub research, use this order. A route is usable only after a relevant 
 是否自动配置 GitHub 官方 MCP Server？
 
 启用后将：
-- 自动下载 GitHub 官方 MCP 程序；
+- 自动下载 GitHub 官方 MCP 程序并校验完整性；
 - 自动写入当前 Agent 的 MCP 配置；
 - 只启用仓库检索与读取能力，并强制只读；
-- 首次连接时打开 GitHub 授权页面；
+- 授权时不额外申请权限范围（如果以前给 GitHub MCP Server 授权过更大权限，GitHub 可能沿用，可在 github.com/settings/applications 撤销后重新授权）；
 - 不要求创建 Personal Access Token、安装 Docker，或手动编辑配置。
 
-你只需要确认安装，并在浏览器中登录 GitHub 后授权。
+你只需要确认安装，并在浏览器中登录 GitHub 后授权。GitHub 只在内存中保存这次授权，所以之后每个新会话第一次搜索时会短暂打开 GitHub 页面，通常无需再次确认。
 ```
 
 Requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”, and “为 search-before-build 开启 GitHub 搜索增强” express enhancement intent, not installation consent. Complete the capability check first. If an existing route works, report that enhancement is already available. Otherwise, show the offer above and wait for explicit approval; do not download software, change configuration, or start OAuth before approval, and do not repeat the offer after refusal during the same task.
@@ -45,9 +45,11 @@ After consent, detect the current host and run:
 node <package-root>/scripts/setup-github-mcp.mjs --agent <claude|codex>
 ```
 
-Use the package root that contains `scripts/`. The script detects OS/CPU, reuses a working installation, downloads only from `github/github-mcp-server` official releases, verifies the published SHA-256 digest, installs to a stable user directory, registers `stdio --read-only --toolsets repos`, and performs an OAuth-backed connection test. It never requests a PAT, Docker, npm package, Python package, or environment variable.
+Use the package root that contains `scripts/`. The script detects OS/CPU, reuses a current installation and upgrades an outdated one, downloads only from `github/github-mcp-server` official releases, verifies the published SHA-256 digest, installs to a stable user directory, registers `stdio --read-only --toolsets repos` without requesting OAuth scopes, verifies that the registration the host will launch matches exactly, and performs an OAuth-backed connection test. Downloads fall back to `curl` with `HTTPS_PROXY` or the Windows system proxy when Node cannot reach GitHub directly; when GitHub is reachable only through that proxy, the script also saves it as `HTTPS_PROXY` in the MCP configuration. Requesting no scopes does not shrink an earlier, broader authorization of the same GitHub app; do not promise public-only access. It never requests a PAT, Docker, npm package, Python package, or environment variable.
 
-If the host is unsupported, configuration fails, authorization is refused, or the user declines, continue with the anonymous path below. Tell the user whether the current Agent session must be reopened before newly configured MCP tools appear.
+Run it in the foreground and relay its output plainly. If it prints GitHub sign-in instructions (a link or a device code), show them to the user verbatim and keep waiting; the test finishes once the user approves. If it reports a network failure, pass on its proxy hint instead of retrying blindly.
+
+If the host is unsupported, configuration fails, authorization is refused, or the user declines, continue with the anonymous path below. Tell the user that a new Agent session is needed before newly configured MCP tools appear, and that each new session briefly opens GitHub in the browser on its first GitHub search because the official server keeps the sign-in in memory only.
 
 ## Anonymous public REST path
 

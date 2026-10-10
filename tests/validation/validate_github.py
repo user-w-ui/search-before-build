@@ -23,6 +23,28 @@ def validate() -> None:
     assert "GITHUB_PERSONAL_ACCESS_TOKEN" not in setup_text
     assert "api.github.com/repos/github/github-mcp-server/releases" not in setup_text
     assert 'run(candidate, ["stdio", "--help"])' in setup_text
+    # Request no OAuth scopes; an earlier broader grant may still be reused, so
+    # the docs must not promise public-only access.
+    assert '"--oauth-scopes="' in setup_text
+    assert "DefaultScopes" not in setup_text
+    assert "_checksums.txt" in setup_text
+    assert "expanded_assets" in setup_text
+    assert "HTTPS_PROXY" in setup_text
+    assert "supportsScopedOAuth" in setup_text
+    assert "AbortSignal.timeout" in setup_text
+    assert "不额外申请权限范围" in github_rules
+    assert "github.com/settings/applications" in github_rules
+    assert "do not promise public-only access" in github_rules
+    assert "public data only" not in setup_text
+    assert "只会请求读取公开数据" not in github_rules
+    # Accept only an exact match of the registration the host will launch.
+    assert "sameRegistration(readRegistration(agent), executable, env)" in setup_text
+    assert '"--json"' in setup_text
+    assert "serverEnvironment" in setup_text
+    # npm installs claude/codex as .cmd shims that Node cannot spawn directly.
+    assert "windowsVerbatimArguments: true" in setup_text
+    assert "env: { ...process.env, ...env }" in setup_text
+    assert "in memory only" in github_rules
 
     assert "本次未使用 GitHub 专属深度检索工具" in github_rules
     assert "当前环境无法完成外部检索" in research_method

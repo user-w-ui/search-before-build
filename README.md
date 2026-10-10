@@ -88,7 +88,7 @@ If a GitHub MCP server, connector, or equivalent tool is available, the plugin r
 Enable in-depth GitHub search
 ```
 
-The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. The first connection uses browser-based OAuth, so no PAT, Docker, or extra package is required. It supports Windows, macOS, and Linux and requires Node.js 18 or later; the basic research workflow itself does not depend on Node.js. If installation is declined or authorization fails, it falls back automatically.
+The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. Sign-in uses browser-based OAuth that requests no extra permission scopes; no PAT, Docker, or extra package is required. If you previously authorized the GitHub MCP Server with broader permissions, GitHub may reuse them; revoke it at github.com/settings/applications to reset. The server runs read-only either way. GitHub keeps that sign-in in memory only, so each new Agent session briefly opens GitHub in the browser on its first search; after the first approval this usually needs no extra clicks. The installer also works behind an `HTTPS_PROXY` or the Windows system proxy and saves the proxy in the MCP configuration when GitHub is reachable only through it, upgrades an outdated binary, and refreshes an older registration. It supports Windows, macOS, and Linux and requires Node.js 18 or later; the basic research workflow itself does not depend on Node.js. If installation is declined or authorization fails, it falls back automatically.
 
 ## Temporary research brief and optional saving
 
