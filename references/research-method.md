@@ -41,6 +41,7 @@ Treat these fingerprint signals as strong route triggers:
 | Fingerprint signal | Route to query or specifically exclude |
 | --- | --- |
 | JavaScript, Node.js, npm package, CLI, or plugin | npm |
+| Python library, script, notebook, or data pipeline | PyPI (verify exact package names) |
 | JVM, Java, Kotlin, or Android | Maven Central |
 | Rust implementation or dependency | crates.io |
 | Agent tool, connector, or MCP server | Official MCP Registry |

@@ -71,6 +71,7 @@ The plugin first determines what it needs to find, then chooses where to look. I
 | --- | --- |
 | Open-source repositories, source code, or reusable implementations | GitHub |
 | JavaScript / Node.js dependencies, CLIs, or plugins | npm |
+| Python libraries or tools (exact package names) | PyPI |
 | Cross-ecosystem package metadata and maintenance signals | Ecosyste.ms Packages |
 | MCP tools or connectors for agents | Official MCP Registry |
 | JVM dependencies (Java / Kotlin / Android) | Maven Central |

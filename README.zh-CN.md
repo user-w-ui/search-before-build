@@ -72,6 +72,7 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 | --- | --- |
 | 开源仓库、源码或可复用实现 | GitHub |
 | JS / Node.js 依赖、CLI 或插件 | npm |
+| Python 库或工具（核对确切包名） | PyPI |
 | 跨生态软件包信息与维护信号 | Ecosyste.ms Packages |
 | Agent 可用的 MCP 工具或连接器 | Official MCP Registry |
 | JVM（Java / Kotlin / Android）依赖 | Maven Central |

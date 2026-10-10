@@ -1,0 +1,30 @@
+{
+  "info": {
+    "name": "Camelot_Py",
+    "version": "2.0.0",
+    "summary": "PDF Table Extraction for Humans.",
+    "description": "# Camelot\n\nA long README that should not become the candidate description.",
+    "home_page": null,
+    "package_url": "https://pypi.org/project/camelot-py/",
+    "project_url": "https://pypi.org/project/camelot-py/",
+    "project_urls": {
+      "Changelog": "https://github.com/camelot-dev/camelot/releases",
+      "Documentation": "https://camelot-py.readthedocs.io/",
+      "Repository": "https://github.com/camelot-dev/camelot"
+    },
+    "license": "MIT",
+    "license_expression": null,
+    "requires_python": ">=3.8",
+    "keywords": null
+  },
+  "last_serial": 1,
+  "releases": {
+    "1.0.0": [],
+    "2.0.0": []
+  },
+  "urls": [
+    { "filename": "camelot_py-2.0.0-py3-none-any.whl", "upload_time_iso_8601": "2026-06-04T16:31:27.422312Z" },
+    { "filename": "camelot_py-2.0.0.tar.gz", "upload_time_iso_8601": "2026-06-04T16:31:28.000000Z" }
+  ],
+  "vulnerabilities": []
+}

@@ -1,0 +1,73 @@
+{
+  "info": {
+    "name": "starlette",
+    "version": "1.7.0",
+    "summary": "The little ASGI library that shines.",
+    "description": "(README trimmed for the fixture)",
+    "home_page": null,
+    "package_url": "https://pypi.org/project/starlette/",
+    "project_url": "https://pypi.org/project/starlette/",
+    "project_urls": {
+      "Changelog": "https://starlette.dev/release-notes/",
+      "Documentation": "https://starlette.dev/",
+      "Funding": "https://github.com/sponsors/Kludex",
+      "Homepage": "https://github.com/Kludex/starlette",
+      "Source": "https://github.com/Kludex/starlette"
+    },
+    "license": null,
+    "license_expression": "BSD-3-Clause",
+    "requires_python": ">=3.10",
+    "keywords": null
+  },
+  "releases": {
+    "1.6.0": [
+      {
+        "filename": "starlette-1.6.0-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2026-08-08T18:27:56",
+        "upload_time_iso_8601": "2026-08-08T18:27:56.196765Z",
+        "yanked": false
+      },
+      {
+        "filename": "starlette-1.6.0.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2026-08-08T18:27:57",
+        "upload_time_iso_8601": "2026-08-08T18:27:57.512594Z",
+        "yanked": false
+      }
+    ],
+    "1.7.0": [
+      {
+        "filename": "starlette-1.7.0-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2026-09-23T07:30:24",
+        "upload_time_iso_8601": "2026-09-23T07:30:24.567239Z",
+        "yanked": false
+      },
+      {
+        "filename": "starlette-1.7.0.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2026-09-23T07:30:26",
+        "upload_time_iso_8601": "2026-09-23T07:30:26.350228Z",
+        "yanked": false
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "starlette-1.7.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "upload_time": "2026-09-23T07:30:24",
+      "upload_time_iso_8601": "2026-09-23T07:30:24.567239Z",
+      "yanked": false
+    },
+    {
+      "filename": "starlette-1.7.0.tar.gz",
+      "packagetype": "sdist",
+      "upload_time": "2026-09-23T07:30:26",
+      "upload_time_iso_8601": "2026-09-23T07:30:26.350228Z",
+      "yanked": false
+    }
+  ],
+  "vulnerabilities": []
+}

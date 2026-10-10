@@ -38,6 +38,7 @@ const TRACKING_PARAMS = new Set([
 const NATIVE_SIGNATURES: Array<[RegExp, string[]]> = [
   [/github/, ["full_name", "stargazers_count", "pushed_at", "html_url", "archived", "topics"]],
   [/npm/, ["links", "version", "keywords", "date"]],
+  [/pypi/, ["project_urls", "package_url", "summary", "requires_python"]],
   [/crates/, ["crate", "max_stable_version", "recent_downloads", "repository"]],
   [/maven/, ["latestVersion", "timestamp", "canonical_url", "version"]],
   [/registry|mcp/, ["server", "transports", "repository", "repository_url"]],
@@ -223,12 +224,81 @@ function textFragments(value: unknown): string[] {
   return object ? Object.values(object).flatMap(textFragments) : [];
 }
 
+// First path segments on code hosts that are account or site pages, never a
+// repository owner (github.com/sponsors/<user>, github.com/orgs/<org>, ...).
+const NON_REPOSITORY_OWNERS = new Set([
+  "about", "apps", "collections", "customer-stories", "enterprise", "events", "explore",
+  "features", "login", "marketplace", "notifications", "orgs", "organizations", "pricing",
+  "readme", "resources", "security", "settings", "site", "solutions", "sponsors", "topics",
+  "trending", "users",
+]);
+
+// Returns the canonical repository URL when `value` is a code-host repository
+// root (owner/repo with nothing after it), otherwise undefined.
+function repositoryRoot(value: string): string | undefined {
+  const match = value.trim().match(/^https?:\/\/(?:www\.)?(github\.com|gitlab\.com|codeberg\.org)\/([^/?#]+)\/([^/?#]+?)(?:\.git)?\/?$/i);
+  if (!match || NON_REPOSITORY_OWNERS.has((match[2] as string).toLowerCase())) return undefined;
+  return `https://${(match[1] as string).toLowerCase()}/${match[2]}/${match[3]}`;
+}
+
+// project_urls labels are free text; only these name the source repository.
+// Others (Funding, Documentation, Changelog) may point at a different repo.
+const REPOSITORY_LABELS = new Set(["source", "sources", "sourcecode", "repository", "repo", "code", "github", "gitlab", "git"]);
+
+function uploadTimes(files: unknown): number[] {
+  return (Array.isArray(files) ? files : [])
+    .map((file) => asObject(file)?.upload_time_iso_8601 ?? asObject(file)?.upload_time)
+    .map((value) => (typeof value === "string" ? Date.parse(value) : Number.NaN))
+    .filter((value) => Number.isFinite(value));
+}
+
+// PyPI's JSON API returns one project as {info, urls, releases}. Project the
+// metadata under `info`, prefer the labeled source repository as the URL (like
+// npm's links.repository) so PyPI and GitHub observations merge, and drop the
+// long README `description`. `urls` lists only the current release's files, so
+// its newest upload is the release date; the newest upload across `releases`
+// (including pre-releases) is the project's latest activity.
+function pypiProject(object: UnknownObject): UnknownObject | undefined {
+  const info = asObject(object.info);
+  if (!info || typeof info.name !== "string" || !("releases" in object || "urls" in object)) return undefined;
+  const labeled = Object.entries(asObject(info.project_urls) ?? {}).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string",
+  );
+  const label = (name: string) => name.toLowerCase().replace(/[^a-z]/g, "");
+  const repository = [
+    ...labeled.filter(([name]) => REPOSITORY_LABELS.has(label(name))).map(([, value]) => value),
+    ...labeled.filter(([name]) => label(name) === "homepage").map(([, value]) => value),
+    ...(typeof info.home_page === "string" ? [info.home_page] : []),
+  ].map(repositoryRoot).find(Boolean);
+  const released = uploadTimes(object.urls);
+  const activity = [
+    ...released,
+    ...Object.values(asObject(object.releases) ?? {}).flatMap(uploadTimes),
+  ];
+  const latest = (times: number[]) => (times.length ? new Date(Math.max(...times)).toISOString() : undefined);
+  const publishedAt = latest(released);
+  const updatedAt = latest(activity);
+  const { description: _readme, license, license_expression: licenseExpression, ...rest } = info;
+  const shortLicense = typeof licenseExpression === "string" && licenseExpression
+    ? licenseExpression
+    : typeof license === "string" && license.length <= 64 ? license : undefined;
+  return {
+    ...rest,
+    url: repository ?? info.package_url ?? info.project_url,
+    ...(publishedAt ? { published_at: publishedAt } : {}),
+    ...(updatedAt ? { updated_at: updatedAt } : {}),
+    ...(shortLicense ? { license: shortLicense } : {}),
+  };
+}
+
 function locateItems(payload: unknown): LocatedItem[] {
   if (Array.isArray(payload)) {
     return payload.map((value, index) => ({ value, rawRef: `$[${index}]`, rank: index + 1 }));
   }
   const object = asObject(payload);
   if (!object) return [{ value: payload, rawRef: "$", rank: 1 }];
+  const pypi = pypiProject(object);
+  if (pypi) return [{ value: pypi, rawRef: "$.info", rank: 1 }];
   for (const path of KNOWN_ITEM_PATHS) {
     const value = getPath(object, path);
     if (!Array.isArray(value)) continue;
@@ -280,7 +350,7 @@ function inferKind(envelope: RetrievalEnvelope, item: unknown): SourceCategory |
   const provider = providerName(envelope) ?? "";
   if (/github/.test(provider) || firstString(item, ["full_name", "stargazers_url"])) return "repo";
   if (/huggingface/.test(provider) || provider === "hf") return "model";
-  if (/npm|crates|maven|ecosystem/.test(provider)) return "package";
+  if (/npm|pypi|crates|maven|ecosystem/.test(provider)) return "package";
   if (/mcp/.test(provider)) return "mcp";
   if (/arxiv|crossref|openalex/.test(provider)) return "paper";
   if (/wikipedia/.test(provider)) return "wiki";
@@ -332,12 +402,16 @@ function collectIdentities(
         ? "maven"
         : provider?.includes("npm")
           ? "npm"
-          : undefined;
-    if (ecosystem) add({ scheme: "purl", value: `pkg:${ecosystem}/${title}`, confidence: "derived" });
+          : provider?.includes("pypi")
+            ? "pypi"
+            : undefined;
+    // PyPI names compare after PEP 503 normalization (Foo_Bar == foo-bar).
+    const name = ecosystem === "pypi" ? title.toLowerCase().replace(/[-_.]+/g, "-") : title;
+    if (ecosystem) add({ scheme: "purl", value: `pkg:${ecosystem}/${name}`, confidence: "derived" });
   }
   if (url) {
     const github = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/?#]+)/i);
-    if (github) {
+    if (github && !NON_REPOSITORY_OWNERS.has((github[1] as string).toLowerCase())) {
       add({
         scheme: "github",
         value: `${github[1]}/${github[2]?.replace(/\.git$/i, "")}`.toLowerCase(),

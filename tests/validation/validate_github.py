@@ -100,9 +100,13 @@ def validate() -> None:
     assert "explain the resulting coverage limits" in research_method
     assert "Stop only when every external route is unavailable" in research_method
 
+    assert "PyPI's keyword search sits behind a browser challenge" in source_catalog
+    assert "pypi.org/pypi/" in source_catalog
+
     for source in (
         "GitHub",
         "npm",
+        "PyPI",
         "Ecosyste.ms",
         "Official MCP Registry",
         "Maven Central",

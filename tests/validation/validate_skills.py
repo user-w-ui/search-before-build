@@ -139,6 +139,7 @@ def validate() -> None:
     assert "A bare `not necessary` or `irrelevant` is not a sufficient reason" in research_method
     source_triggers = (
         "JavaScript, Node.js, npm package, CLI, or plugin",
+        "Python library, script, notebook, or data pipeline",
         "JVM, Java, Kotlin, or Android",
         "Rust implementation or dependency",
         "Agent tool, connector, or MCP server",

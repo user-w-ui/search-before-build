@@ -1,0 +1,104 @@
+{
+  "info": {
+    "name": "httpx",
+    "version": "0.28.1",
+    "summary": "The next generation HTTP client.",
+    "description": "(README trimmed for the fixture)",
+    "home_page": null,
+    "package_url": "https://pypi.org/project/httpx/",
+    "project_url": "https://pypi.org/project/httpx/",
+    "project_urls": {
+      "Changelog": "https://github.com/encode/httpx/blob/master/CHANGELOG.md",
+      "Documentation": "https://www.python-httpx.org",
+      "Homepage": "https://github.com/encode/httpx",
+      "Source": "https://github.com/encode/httpx"
+    },
+    "license": "BSD-3-Clause",
+    "license_expression": null,
+    "requires_python": ">=3.8",
+    "keywords": null
+  },
+  "releases": {
+    "0.28.0": [
+      {
+        "filename": "httpx-0.28.0-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2024-11-28T14:54:55",
+        "upload_time_iso_8601": "2024-11-28T14:54:55.141752Z",
+        "yanked": false
+      },
+      {
+        "filename": "httpx-0.28.0.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2024-11-28T14:54:56",
+        "upload_time_iso_8601": "2024-11-28T14:54:56.977187Z",
+        "yanked": false
+      }
+    ],
+    "0.28.1": [
+      {
+        "filename": "httpx-0.28.1-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2024-12-06T15:37:21",
+        "upload_time_iso_8601": "2024-12-06T15:37:21.509172Z",
+        "yanked": false
+      },
+      {
+        "filename": "httpx-0.28.1.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2024-12-06T15:37:23",
+        "upload_time_iso_8601": "2024-12-06T15:37:23.222462Z",
+        "yanked": false
+      }
+    ],
+    "1.0.dev5": [
+      {
+        "filename": "httpx-1.0.dev5-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2026-08-21T10:59:57",
+        "upload_time_iso_8601": "2026-08-21T10:59:57.494587Z",
+        "yanked": false
+      },
+      {
+        "filename": "httpx-1.0.dev5.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2026-08-21T10:59:58",
+        "upload_time_iso_8601": "2026-08-21T10:59:58.520677Z",
+        "yanked": false
+      }
+    ],
+    "1.0.dev6": [
+      {
+        "filename": "httpx-1.0.dev6-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2026-08-31T17:59:54",
+        "upload_time_iso_8601": "2026-08-31T17:59:54.190125Z",
+        "yanked": false
+      },
+      {
+        "filename": "httpx-1.0.dev6.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2026-08-31T17:59:55",
+        "upload_time_iso_8601": "2026-08-31T17:59:55.135021Z",
+        "yanked": false
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "httpx-0.28.1-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "upload_time": "2024-12-06T15:37:21",
+      "upload_time_iso_8601": "2024-12-06T15:37:21.509172Z",
+      "yanked": false
+    },
+    {
+      "filename": "httpx-0.28.1.tar.gz",
+      "packagetype": "sdist",
+      "upload_time": "2024-12-06T15:37:23",
+      "upload_time_iso_8601": "2024-12-06T15:37:23.222462Z",
+      "yanked": false
+    }
+  ],
+  "vulnerabilities": []
+}

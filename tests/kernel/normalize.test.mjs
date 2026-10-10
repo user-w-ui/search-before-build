@@ -223,3 +223,86 @@ test("derives Hugging Face model kind, URL, and title from modelId", () => {
   assert.equal(hf.records[0].dates.updatedAt, "2026-07-01T00:00:00.000Z");
   assert.ok(!hf.batchWarnings.some((warning) => warning.code === "flattened_payload"));
 });
+
+test("projects a PyPI project payload into one mergeable package record", async () => {
+  const result = normalizeRetrieval({
+    requestId: "pypi-1",
+    providerHint: "pypi",
+    outcome: "success",
+    payload: await fixture("pypi-project.json"),
+  });
+  assert.equal(result.records.length, 1);
+  const [record] = result.records;
+  assert.equal(record.kind, "package");
+  assert.equal(record.title, "Camelot_Py");
+  assert.equal(record.url, "https://github.com/camelot-dev/camelot");
+  assert.equal(record.text.description, "PDF Table Extraction for Humans.");
+  assert.equal(record.dates.updatedAt, "2026-06-04T16:31:28.000Z");
+  assert.equal(record.attributes.license, "MIT");
+  assert.equal(record.provenance.rawRef, "$.info");
+  assert.ok(record.identities.some((identity) => identity.scheme === "github" && identity.value === "camelot-dev/camelot"));
+  assert.ok(record.identities.some((identity) => identity.scheme === "purl" && identity.value === "pkg:pypi/camelot-py"));
+  assert.ok(!result.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+
+  const flattened = normalizeRetrieval({
+    requestId: "pypi-2",
+    providerHint: "pypi",
+    outcome: "success",
+    payload: [{ title: "camelot-py", url: "https://pypi.org/project/camelot-py/", snippet: "PDF tables" }],
+  });
+  assert.ok(flattened.batchWarnings.some((warning) => warning.code === "flattened_payload"));
+});
+
+test("picks the labeled PyPI source repository and ignores funding links", async () => {
+  for (const [name, repository] of [
+    ["pypi-starlette.json", "https://github.com/Kludex/starlette"],
+    ["pypi-uvicorn.json", "https://github.com/Kludex/uvicorn"],
+  ]) {
+    const [record] = normalizeRetrieval({
+      requestId: name,
+      providerHint: "pypi",
+      outcome: "success",
+      payload: await fixture(name),
+    }).records;
+    assert.equal(record.url, repository);
+    assert.ok(!record.identities.some((identity) => identity.value.includes("sponsors")));
+  }
+
+  const sponsorOnly = normalizeRetrieval({
+    requestId: "pypi-sponsor-only",
+    providerHint: "pypi",
+    outcome: "success",
+    payload: {
+      info: {
+        name: "example",
+        package_url: "https://pypi.org/project/example/",
+        project_urls: { Funding: "https://github.com/sponsors/someone", Documentation: "https://github.com/someone/docs-site" },
+      },
+      urls: [],
+    },
+  }).records[0];
+  assert.equal(sponsorOnly.url, "https://pypi.org/project/example");
+  assert.ok(!sponsorOnly.identities.some((identity) => identity.scheme === "github"));
+});
+
+test("separates the current PyPI release date from the latest project activity", async () => {
+  const [record] = normalizeRetrieval({
+    requestId: "pypi-httpx",
+    providerHint: "pypi",
+    outcome: "success",
+    payload: await fixture("pypi-httpx.json"),
+  }).records;
+  assert.equal(record.dates.publishedAt, "2024-12-06T15:37:23.222Z");
+  assert.equal(record.dates.updatedAt, "2026-08-31T17:59:55.135Z");
+});
+
+test("does not derive GitHub repository identity from non-repository GitHub pages", () => {
+  const [record] = normalizeRetrieval({
+    requestId: "web-sponsor",
+    providerHint: "duckduckgo",
+    categoryHint: "web",
+    outcome: "success",
+    payload: [{ title: "Sponsor Kludex", url: "https://github.com/sponsors/Kludex" }],
+  }).records;
+  assert.ok(!record.identities.some((identity) => identity.scheme === "github"));
+});

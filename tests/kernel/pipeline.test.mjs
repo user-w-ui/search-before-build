@@ -37,6 +37,52 @@ test("ranks the relevant candidate and merges repository/package observations", 
   assert.equal(artifact.generatedAt, "2026-08-28T00:00:00.000Z");
 });
 
+test("merges a PyPI project into the GitHub repository it links to", async () => {
+  const artifact = runPipeline({
+    generatedAt: "2026-08-28T00:00:00Z",
+    query: "PDF table extraction",
+    fingerprint: { mustHaveCapabilities: ["PDF table extraction"] },
+    retrievals: [
+      {
+        requestId: "github",
+        providerHint: "github",
+        categoryHint: "repo",
+        outcome: "success",
+        payload: { items: [{ full_name: "camelot-dev/camelot", html_url: "https://github.com/camelot-dev/camelot", description: "A Python library to extract tabular data from PDFs", stargazers_count: 3000, pushed_at: "2026-06-01T00:00:00Z" }] },
+      },
+      {
+        requestId: "pypi",
+        providerHint: "pypi",
+        outcome: "success",
+        payload: await jsonFixture("pypi-project.json"),
+      },
+    ],
+    topK: 3,
+  });
+  assert.equal(artifact.candidates.length, 1);
+  assert.equal(artifact.candidates[0].observationCount, 2);
+  assert.equal(artifact.metrics.duplicateObservationsMerged, 1);
+});
+
+test("keeps PyPI packages that share a funding link as separate candidates", async () => {
+  const artifact = runPipeline({
+    generatedAt: "2026-10-10T00:00:00Z",
+    query: "ASGI web framework and server",
+    fingerprint: { mustHaveCapabilities: ["ASGI"] },
+    retrievals: [
+      { requestId: "pypi-starlette", providerHint: "pypi", outcome: "success", payload: await jsonFixture("pypi-starlette.json") },
+      { requestId: "pypi-uvicorn", providerHint: "pypi", outcome: "success", payload: await jsonFixture("pypi-uvicorn.json") },
+    ],
+    topK: 5,
+  });
+  assert.equal(artifact.candidates.length, 2);
+  assert.equal(artifact.metrics.duplicateObservationsMerged, 0);
+  assert.deepEqual(
+    artifact.candidates.map((candidate) => candidate.url).sort(),
+    ["https://github.com/Kludex/starlette", "https://github.com/Kludex/uvicorn"],
+  );
+});
+
 test("uses capability coverage to keep complementary candidates in top-k", () => {
   const artifact = runPipeline({
     generatedAt: "2026-08-28T00:00:00Z",

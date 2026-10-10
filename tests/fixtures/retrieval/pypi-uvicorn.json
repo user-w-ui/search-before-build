@@ -1,0 +1,72 @@
+{
+  "info": {
+    "name": "uvicorn",
+    "version": "0.54.0",
+    "summary": "The lightning-fast ASGI server.",
+    "description": "(README trimmed for the fixture)",
+    "home_page": null,
+    "package_url": "https://pypi.org/project/uvicorn/",
+    "project_url": "https://pypi.org/project/uvicorn/",
+    "project_urls": {
+      "Changelog": "https://uvicorn.dev/release-notes",
+      "Funding": "https://github.com/sponsors/Kludex",
+      "Homepage": "https://uvicorn.dev/",
+      "Source": "https://github.com/Kludex/uvicorn"
+    },
+    "license": null,
+    "license_expression": "BSD-3-Clause",
+    "requires_python": ">=3.10",
+    "keywords": null
+  },
+  "releases": {
+    "0.53.0": [
+      {
+        "filename": "uvicorn-0.53.0-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2026-09-14T07:44:22",
+        "upload_time_iso_8601": "2026-09-14T07:44:22.179111Z",
+        "yanked": false
+      },
+      {
+        "filename": "uvicorn-0.53.0.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2026-09-14T07:44:23",
+        "upload_time_iso_8601": "2026-09-14T07:44:23.815651Z",
+        "yanked": false
+      }
+    ],
+    "0.54.0": [
+      {
+        "filename": "uvicorn-0.54.0-py3-none-any.whl",
+        "packagetype": "bdist_wheel",
+        "upload_time": "2026-09-25T06:52:35",
+        "upload_time_iso_8601": "2026-09-25T06:52:35.829563Z",
+        "yanked": false
+      },
+      {
+        "filename": "uvicorn-0.54.0.tar.gz",
+        "packagetype": "sdist",
+        "upload_time": "2026-09-25T06:52:37",
+        "upload_time_iso_8601": "2026-09-25T06:52:37.601479Z",
+        "yanked": false
+      }
+    ]
+  },
+  "urls": [
+    {
+      "filename": "uvicorn-0.54.0-py3-none-any.whl",
+      "packagetype": "bdist_wheel",
+      "upload_time": "2026-09-25T06:52:35",
+      "upload_time_iso_8601": "2026-09-25T06:52:35.829563Z",
+      "yanked": false
+    },
+    {
+      "filename": "uvicorn-0.54.0.tar.gz",
+      "packagetype": "sdist",
+      "upload_time": "2026-09-25T06:52:37",
+      "upload_time_iso_8601": "2026-09-25T06:52:37.601479Z",
+      "yanked": false
+    }
+  ],
+  "vulnerabilities": []
+}

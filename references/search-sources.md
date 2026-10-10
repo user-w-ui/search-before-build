@@ -8,6 +8,7 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 - [Anonymous Web fallback](#anonymous-web-fallback)
 - [GitHub](#github)
 - [npm](#npm)
+- [PyPI](#pypi)
 - [Ecosyste.ms Packages](#ecosystems-packages)
 - [Official MCP Registry](#official-mcp-registry)
 - [Maven Central](#maven-central)
@@ -24,6 +25,7 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 | Products, SaaS, app stores, or documentation when host Web search fails | Anonymous Web fallback |
 | Open-source repositories or code | GitHub |
 | JavaScript/Node packages | npm |
+| Python packages | PyPI (exact names) |
 | Cross-ecosystem package metadata and dependency signals | Ecosyste.ms |
 | Ready-made MCP tools for an Agent | Official MCP Registry |
 | JVM artifacts | Maven Central |
@@ -36,7 +38,7 @@ Use ordinary web search for products, SaaS, app stores, documentation, or discov
 
 **Payload fidelity rule**: when a catalog source returns JSON, XML, or HTML, capture the response body **verbatim** as the retrieval payload for the decision kernel. Do not translate or flatten it into a uniform `title`/`url`/`snippet` shape — that discards the structured fields (`full_name`, `repository.url`, `transports`, `purl`, `pushed_at`, …) that cross-source identity merging and recency ranking depend on. See `decision-kernel.md` for the input contract.
 
-The catalog commands were originally verified anonymously on 2026-07-12; the anonymous Web, Hugging Face REST, and Hacker News routes were rechecked on 2026-08-29. Replace literal query values and URL-encode them. Respect rate limits and identify the client with a useful `User-Agent` for HTTP APIs.
+The catalog commands were originally verified anonymously on 2026-07-12; the anonymous Web, Hugging Face REST, and Hacker News routes were rechecked on 2026-08-29; the PyPI routes were verified on 2026-10-10. Replace literal query values and URL-encode them. Respect rate limits and identify the client with a useful `User-Agent` for HTTP APIs.
 
 ## Anonymous Web fallback
 
@@ -66,6 +68,19 @@ The response is HTML. Preserve it as the retrieval payload; the decision kernel 
 npm search vite --json --searchlimit=3
 npm search sindresorhus --json --searchlimit=3
 ```
+
+## PyPI
+
+**Main content:** Python package metadata: summary, versions, release upload dates, license, supported Python versions, and project links that usually point to the source repository.
+
+**Use when:** The capability could be a Python library, CLI, or framework, or the project itself is written in Python. PyPI's keyword search sits behind a browser challenge, so discover Python candidates through GitHub (`language:python`) and Web search, then verify exact package names here.
+
+```bash
+curl -L -H "User-Agent: search-before-build" "https://pypi.org/pypi/camelot-py/json"
+curl -L -H "User-Agent: search-before-build" "https://pypistats.org/api/packages/camelot-py/recent"
+```
+
+Pass the PyPI JSON with `providerHint: "pypi"`. The kernel reads the summary and the source repository from the `Source`/`Repository`-style `project_urls` label (never funding or documentation links), takes the current release date from `urls`, and takes the latest project activity, including pre-releases, from `releases`. When the payload must be shortened, drop `info.description` first; drop the `releases` map only if still necessary and record that latest activity may then be understated. Keep the other `info` fields and `urls` unchanged. pypistats reports recent download counts, which are an adoption signal, not functional evidence.
 
 ## Ecosyste.ms Packages
 
