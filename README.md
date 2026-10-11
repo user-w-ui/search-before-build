@@ -55,7 +55,7 @@ It ends with a clear recommendation that you remain free to override:
 
 | Skill | Best for | What it does |
 | --- | --- | --- |
-| `assess` | Deciding whether to build an idea, or whether to keep building an existing plan, prototype, or repository | Reads whatever you supply first (repository, docs, screenshots), asks only about what is still missing (one question at a time, up to five), confirms its understanding, then researches and recommends a direction with a full brief |
+| `assess` | A full check of whether an idea is worth building, or finding competitors and references for existing work | Reads whatever you supply first (repository, docs, screenshots), asks only about what is still missing (one question at a time, up to five), confirms its understanding, then researches and recommends a direction with a full brief |
 | `quick-search` | A fast "does something like this already exist?" check | Asks nothing unless it must, checks a few relevant sources, and answers in the chat with up to five candidates and a clearly marked preliminary view |
 
 ```text
@@ -79,21 +79,21 @@ The plugin first determines what it needs to find, then chooses where to look. I
 | Models, datasets, or reusable AI applications | Hugging Face Hub |
 | Algorithms, papers, or academic precedents | arXiv |
 
-For SaaS products, commercial tools, app-store listings, and other solutions outside those catalogs, it supplements the research with web search and official product pages. When the target market is unclear, it searches in both Chinese and English. Stars and download counts help assess maturity, but never replace functional matching, and similar names alone are not treated as evidence that two products compete.
+For SaaS products, commercial tools, app-store listings, and other solutions outside those catalogs, it supplements the research with web search and official product pages. When the target market is unclear, it searches in both Chinese and English. Stars and download counts help assess maturity, but never replace functional matching.
 
 ### Optional in-depth GitHub search
 
-If a GitHub MCP server, connector, or equivalent tool is available, the plugin reuses it. Otherwise, it can still work through public APIs and web search. On Claude Code and Codex, `assess` can install GitHub’s official MCP server automatically with your consent:
+The plugin looks for your GitHub tools automatically; without them it still works through public APIs and web search. If you agree, `assess` can also install GitHub’s official MCP server automatically on Claude Code and Codex:
 
 ```text
 Enable in-depth GitHub search
 ```
 
-The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. Sign-in uses browser-based OAuth that requests no extra permission scopes; no PAT, Docker, or extra package is required. If you previously authorized the GitHub MCP Server with broader permissions, GitHub may reuse them; revoke it at github.com/settings/applications to reset. The server runs read-only either way. GitHub keeps that sign-in in memory only, so each new Agent session briefly opens GitHub in the browser on its first search; after the first approval this usually needs no extra clicks.
+The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode, signing in through browser-based OAuth that requests no extra permission scopes. GitHub keeps that sign-in in memory only, so each new Agent session briefly opens GitHub in the browser on its first search; after the first approval this usually needs no extra clicks.
 
-## Temporary research brief and optional saving
+## Temporary research brief
 
-After research, `assess` renders a polished local HTML brief containing the final recommendation, search coverage, capability matrix, strongest candidates, reusable lessons, and unknowns. The page is a self-contained offline file with no CDN dependency. It is written to the OS temporary directory, so a casual question does not leave reports in the current project.
+After research, `assess` renders a local visual HTML brief containing the final recommendation, search coverage, capability matrix, strongest candidates, reusable lessons, and unknowns. The page is a self-contained offline file with no CDN dependency. It is written to the OS temporary directory, so a casual question does not leave reports in the current project.
 
 ### Read a research brief in three steps
 
