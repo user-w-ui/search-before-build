@@ -36,9 +36,9 @@ function loadSkills() {
 
 export default {
   id: PREFIX,
-  setup(ctx) {
+  async setup(ctx) {
     const skills = loadSkills();
-    ctx.skill.transform((editor) => {
+    await ctx.skill.transform((editor) => {
       for (const skill of skills) editor.add(skill);
     });
   },
