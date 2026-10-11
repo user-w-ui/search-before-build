@@ -166,7 +166,7 @@ claude --plugin-dir /path/to/search-before-build
 opencode plugin add github:user-w-ui/search-before-build
 ```
 
-技能名为 `search-before-build-assess` 和 `search-before-build-quick-search`。
+技能名为 `search-before-build-assess` 和 `search-before-build-quick-search`。OpenCode 用 `@` 而不是 `/` 调用技能，例如 `@search-before-build-assess 我想做一个自动整理收藏内容的工具`。
 
 **pi（未实测）**
 

@@ -165,7 +165,7 @@ claude --plugin-dir /path/to/search-before-build
 opencode plugin add github:user-w-ui/search-before-build
 ```
 
-The skills appear as `search-before-build-assess` and `search-before-build-quick-search`.
+The skills appear as `search-before-build-assess` and `search-before-build-quick-search`. OpenCode attaches skills with `@` rather than `/`, for example `@search-before-build-assess I want to build a tool that automatically organizes saved content`.
 
 **pi (not yet tested)**
 
