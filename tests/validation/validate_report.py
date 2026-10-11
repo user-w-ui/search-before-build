@@ -79,6 +79,16 @@ def validate() -> None:
     assert "node ../scripts/render-report.mjs" in report_viewer
     assert "<package-root>" not in report_viewer
     assert "schemaVersion" in report_viewer
+    # Wide matrices: sticky header and first column, collapsible notes, and
+    # product names that keep their own casing.
+    assert 'id="matrix-notes-toggle"' in viewer_asset
+    assert '.matrix-shell[data-notes="hidden"] .cell-note' in viewer_asset
+    matrix_head_rule = viewer_asset.split("      .matrix thead th {", 1)[1].split("}", 1)[0]
+    assert "position: sticky;" in matrix_head_rule
+    assert "text-transform" not in matrix_head_rule
+    # CJK labels drop the uppercase tracking used for Latin scripts.
+    assert 'html:is([lang^="zh"], [lang^="ja"], [lang^="ko"])' in viewer_asset
+    assert 'matrixKicker: "03 / 匹配"' in viewer_asset
     assert "REQUIRED_CUSTOM_LABELS" in report_viewer
     assert "tmpdir()" in viewer_script
     assert '"latest.html"' in viewer_script

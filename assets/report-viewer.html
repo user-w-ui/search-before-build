@@ -565,7 +565,14 @@
       }
 
       .matrix-scroll {
-        overflow-x: auto;
+        max-height: min(78vh, 920px);
+        overflow: auto;
+      }
+
+      .matrix-toolbar {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0 0 14px;
       }
 
       .print-matrix {
@@ -597,12 +604,18 @@
       }
 
       .matrix thead th {
-        background: color-mix(in srgb, var(--paper) 82%, transparent);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: var(--paper);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 740;
+        line-height: 1.4;
+      }
+
+      .matrix thead th:first-child {
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 780;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
       }
 
       .matrix thead th:first-child,
@@ -615,8 +628,34 @@
       }
 
       .matrix thead th:first-child {
-        z-index: 2;
+        z-index: 3;
         background: var(--paper);
+      }
+
+      .matrix .current-column {
+        background: color-mix(in srgb, var(--mint) 7%, var(--paper-raised));
+      }
+
+      .matrix thead th.current-column {
+        background: color-mix(in srgb, var(--mint) 10%, var(--paper));
+      }
+
+      .matrix-shell[data-notes="hidden"] .cell-note {
+        display: none;
+      }
+
+      .matrix-shell[data-notes="hidden"] .matrix th,
+      .matrix-shell[data-notes="hidden"] .matrix td {
+        padding: 16px 18px;
+      }
+
+      .matrix-shell[data-notes="hidden"] .support-cell {
+        min-width: 120px;
+      }
+
+      .not-compared {
+        color: var(--faint);
+        font-weight: 600;
       }
 
       .capability-name {
@@ -847,8 +886,7 @@
         color: var(--faint);
         font-size: 12px;
         font-weight: 780;
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
+        letter-spacing: 0.01em;
       }
 
       .comparison-table td:first-child {
@@ -1085,13 +1123,26 @@
         letter-spacing: 0.08em;
       }
 
+      html:is([lang^="zh"], [lang^="ja"], [lang^="ko"]) :is(
+        .mode-chip,
+        .eyebrow,
+        .decision-label,
+        .note-label,
+        .section-kicker,
+        .context-label,
+        .coverage-status,
+        .content-title
+      ) {
+        letter-spacing: 0.02em;
+        text-transform: none;
+      }
+
       html[lang^="en"] .section-description {
         font-size: 17px;
       }
 
       html[lang^="en"] .matrix thead th {
-        font-size: 13px;
-        letter-spacing: 0.06em;
+        font-size: 14px;
       }
 
       html[lang^="en"] .capability-name {
@@ -1124,7 +1175,6 @@
 
       html[lang^="en"] .comparison-table th {
         font-size: 13px;
-        letter-spacing: 0.05em;
       }
 
       html[lang^="en"] .design-item strong,
@@ -1378,6 +1428,7 @@
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
+        .matrix-toolbar,
         .matrix-shell {
           display: none;
         }
@@ -1601,7 +1652,10 @@
           </div>
           <p class="section-description" id="matrix-description"></p>
         </header>
-        <div class="matrix-shell">
+        <div class="matrix-toolbar">
+          <button class="button" id="matrix-notes-toggle" type="button" aria-controls="capability-matrix"></button>
+        </div>
+        <div class="matrix-shell" id="matrix-shell">
           <div class="matrix-scroll">
             <table class="matrix" id="capability-matrix"></table>
           </div>
@@ -1658,18 +1712,18 @@
             biggestUnknown: "最大未知项",
             generated: "生成时间",
             temporaryNotice: "临时查看器 · 仅在主动保存时导出报告",
-            contextKicker: "01 / Context",
+            contextKicker: "01 / 背景",
             context: "问题轮廓",
             contextDescription: "研究所依据的用户、任务、工作流与关键约束。",
-            coverageKicker: "02 / Evidence",
+            coverageKicker: "02 / 证据",
             coverage: "检索覆盖",
             coverageDescription: "本次实际使用的证据渠道，以及无法覆盖或发生降级的部分。",
-            matrixKicker: "03 / Fit",
+            matrixKicker: "03 / 匹配",
             comparison: "能力对比",
             comparisonDescription: "只保留会影响选择的关键能力；未知不等于不支持。",
             capability: "关键能力",
             currentProject: "当前项目",
-            candidatesKicker: "04 / Alternatives",
+            candidatesKicker: "04 / 候选",
             candidates: "候选详析",
             candidatesDescription: "逐一查看强候选的工作方式、差异、可复用设计与证据来源。",
             overview: "概览",
@@ -1684,13 +1738,15 @@
             saveMarkdown: "保存 Markdown",
             copyMarkdown: "复制 Markdown",
             openOfficial: "打开官网",
-            unknownsKicker: "05 / Unknowns",
+            unknownsKicker: "05 / 待验证",
             unknowns: "仍需验证",
             unknownsDescription: "这些事实可能改变最终判断，适合在投入实现前优先验证。",
             used: "已使用",
             limited: "受限",
             unavailable: "不可用",
             notCompared: "未比较",
+            showNotes: "显示说明",
+            hideNotes: "只看结论",
             noCandidates: "没有足够强的候选可进入详细比较。",
             noData: "本次没有记录该项。",
             saved: "报告已进入浏览器保存流程。",
@@ -1743,6 +1799,8 @@
             limited: "Limited",
             unavailable: "Unavailable",
             notCompared: "Not compared",
+            showNotes: "Show notes",
+            hideNotes: "Hide notes",
             noCandidates: "No candidate was strong enough for a detailed comparison.",
             noData: "No item was recorded for this section.",
             saved: "The browser save flow has started.",
@@ -1885,14 +1943,22 @@
           $("coverage-grid").append(element("p", "empty-state", labels.noData));
         }
 
-        const supportCell = (cell) => {
+        const supportCell = (cell, compact = false) => {
           const wrapper = element("div", "support-cell");
           if (!cell) {
-            wrapper.append(element("span", "support-badge", labels.notCompared));
+            if (compact) {
+              const dash = element("span", "not-compared", "—");
+              dash.title = labels.notCompared;
+              dash.setAttribute("aria-label", labels.notCompared);
+              wrapper.append(dash);
+            } else {
+              wrapper.append(element("span", "support-badge", labels.notCompared));
+            }
             return wrapper;
           }
           const badge = element("span", "support-badge", supportLabels[cell.status]);
           badge.dataset.status = cell.status;
+          if (cell.note) badge.title = cell.note;
           wrapper.append(badge);
           if (cell.note) wrapper.append(element("p", "cell-note", cell.note));
           return wrapper;
@@ -1900,19 +1966,19 @@
 
         const matrixHead = element("thead");
         const matrixHeadRow = element("tr");
-        matrixHeadRow.append(element("th", "", labels.capability), element("th", "", report.projectName));
+        matrixHeadRow.append(element("th", "", labels.capability), element("th", "current-column", report.projectName));
         report.competitors.forEach((candidate) => matrixHeadRow.append(element("th", "", candidate.name)));
         matrixHead.append(matrixHeadRow);
         const matrixBody = element("tbody");
         report.capabilities.forEach((capability) => {
           const row = element("tr");
           row.append(element("td", "capability-name", capability.name));
-          const current = element("td");
-          current.append(supportCell(capability.current));
+          const current = element("td", "current-column");
+          current.append(supportCell(capability.current, true));
           row.append(current);
           report.competitors.forEach((candidate) => {
             const cell = element("td");
-            cell.append(supportCell(capability.candidates[candidate.id]));
+            cell.append(supportCell(capability.candidates[candidate.id], true));
             row.append(cell);
           });
           matrixBody.append(row);
@@ -1925,6 +1991,20 @@
           matrixBody.append(row);
         }
         $("capability-matrix").append(matrixHead, matrixBody);
+
+        // Wide matrices start with badges only; every note stays one click away.
+        const notesToggle = $("matrix-notes-toggle");
+        const setNotes = (visible) => {
+          $("matrix-shell").dataset.notes = visible ? "visible" : "hidden";
+          notesToggle.textContent = visible
+            ? labels.hideNotes || dictionaries.en.hideNotes
+            : labels.showNotes || dictionaries.en.showNotes;
+          notesToggle.setAttribute("aria-pressed", String(visible));
+        };
+        setNotes(report.competitors.length <= 2);
+        notesToggle.addEventListener("click", () => {
+          setNotes($("matrix-shell").dataset.notes === "hidden");
+        });
 
         const buildPrintMatrix = () => {
           const container = $("print-capability-matrix");
