@@ -392,7 +392,8 @@ function generateHtml(svgs) {
 }
 
 mkdirSync(ASSETS_DIR, { recursive: true });
-const svgs = { en: generateSvg("en"), zh: generateSvg("zh") };
+// Optional parts interpolate to empty strings; drop the trailing whitespace they leave.
+const svgs = Object.fromEntries(["en", "zh"].map((lang) => [lang, generateSvg(lang).replace(/[ 	]+$/gm, "")]));
 const outputs = {
   "benchmark-radar.svg": svgs.en,
   "benchmark-radar.zh.svg": svgs.zh,

@@ -71,14 +71,14 @@
     <text x="1052.00" y="249.00" font-size="12.5" font-weight="600" fill="#a1a1aa" text-anchor="end">vs 0个</text>
     <rect x="624" y="260" width="428" height="5" rx="2.5" fill="#ececf0" />
     <rect x="624" y="260" width="428.00" height="5" rx="2.5" fill="#2563eb" />
-    
+
     <text x="624.00" y="292.00" font-size="15" font-weight="650" fill="#111114" text-anchor="start">需求澄清轮次</text>
     <text x="1052" y="292" text-anchor="end" fill="#2563eb"><tspan font-size="19" font-weight="700">2.92</tspan><tspan font-size="12.5" font-weight="600">轮</tspan></text>
     <text x="624.00" y="311.00" font-size="12.5" font-weight="500" fill="#66666f" text-anchor="start">检索前主动对齐真实约束</text>
     <text x="1052.00" y="311.00" font-size="12.5" font-weight="600" fill="#a1a1aa" text-anchor="end">vs 0轮</text>
     <rect x="624" y="322" width="428" height="5" rx="2.5" fill="#ececf0" />
     <rect x="624" y="322" width="312.44" height="5" rx="2.5" fill="#2563eb" />
-    
+
     <text x="624.00" y="354.00" font-size="15" font-weight="650" fill="#111114" text-anchor="start">一手页面抓取</text>
     <text x="1052" y="354" text-anchor="end" fill="#2563eb"><tspan font-size="19" font-weight="700">216</tspan><tspan font-size="12.5" font-weight="600">篇</tspan></text>
     <text x="624.00" y="373.00" font-size="12.5" font-weight="500" fill="#66666f" text-anchor="start">1.9× 一手文档与源码查验</text>
