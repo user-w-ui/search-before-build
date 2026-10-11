@@ -54,7 +54,7 @@ Fall back to plain text when no such tool exists, when it is unavailable in the 
 
 ## Pre-research confirmation
 
-After clarification, give a concise summary of the complete current understanding. Cover the problem and situation, the project's current state when material was supplied, current approach and pain, desired outcome, core capability and boundaries, expected difference from alternatives, proposed form, material constraints, and any remaining assumptions or unknowns. Omit a dimension only when it is genuinely irrelevant.
+After clarification, give a concise summary of the complete current understanding: every material intent-model dimension, the project's current state when material was supplied, and any remaining assumptions or unknowns.
 
 Write the summary in the message, then ask the user to confirm or correct it through the question channel above before the necessity check or external research. This verification is a separate quality gate and does not count toward the five information-seeking questions. Stop the turn and wait for the user's response; with a question tool, the tool call is that wait. If a correction materially changes the understanding, update the summary and reconfirm it before proceeding.
 
@@ -74,7 +74,7 @@ Judge these gates without a numeric score:
 4. The current workaround or familiar alternatives leave meaningful trouble.
 5. Building something new is plausibly better than adopting or adapting existing work.
 
-For each gate, label the basis as:
+For each gate, label the basis (in Chinese as shown; otherwise the equivalent in the user's language):
 
 - **事实**: directly provided or verified.
 - **推断**: reasonably derived; state why.

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "language": "zh-CN",
-  "mode": "compare",
+  "subject": "project",
   "topic": "先搜索，再决定是否继续构建",
   "projectName": "Search Before Build",
   "generatedAt": "2026-07-18T09:30:00Z",
   "recommendation": {
     "value": "Adapt",
     "reason": "现有工作已经形成清晰的证据链与裁决边界，但临时展示和选择性保存仍值得补齐，无需推倒重来。",
-    "reusableOption": "保留现有 research → assess / compare 单向职责链，并复用浏览器原生下载能力。",
+    "reusableOption": "保留现有 research → assess 单向职责链，并复用浏览器原生下载能力。",
     "biggestUnknown": "不同 Agent 宿主打开本地 HTML 与触发下载时的兼容性仍需分别冒烟验证。"
   },
   "fingerprint": [

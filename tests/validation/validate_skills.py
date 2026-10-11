@@ -77,7 +77,8 @@ def validate() -> None:
     assert "search-sources.md" in research_method
     assert "select only sources relevant" in research_method.lower()
     assert "explicit user approval" in research_method.lower()
-    assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in assess
+    assert "persistence boundary in `report-template.md`" in assess
+    assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in read_text("references/report-template.md")
     assert "read and execute all of `../../references/research-method.md`" in assess.lower()
     assert "sole final decision-maker" in assess.lower()
     assert "recommendation meanings" in assess.lower()

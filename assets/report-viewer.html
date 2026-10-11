@@ -1501,27 +1501,20 @@
         const dictionaries = {
           zh: {
             skipToContent: "跳到主要内容",
-            assessment: "想法评估",
-            comparisonMode: "项目比较",
+            ideaAssessment: "想法评估",
+            projectAssessment: "项目评估",
             report: "研究简报",
             project: "当前对象",
             recommendation: "最终建议",
             strongestReuse: "最值得复用",
             biggestUnknown: "最大未知项",
             generated: "生成时间",
-            temporaryNotice: "临时查看器 · 仅在主动保存时导出报告",
-            contextKicker: "01 / 背景",
             context: "问题轮廓",
             contextDescription: "研究所依据的用户、任务、工作流与关键约束。",
-            coverageKicker: "02 / 证据",
             coverage: "检索覆盖",
-            coverageDescription: "本次实际使用的证据渠道，以及无法覆盖或发生降级的部分。",
-            matrixKicker: "03 / 匹配",
             comparison: "能力对比",
             comparisonDescription: "只保留会影响选择的关键能力；未知不等于不支持。",
             capability: "关键能力",
-            currentProject: "当前项目",
-            candidatesKicker: "04 / 候选",
             candidates: "候选详析",
             candidatesDescription: "逐一查看强候选的工作方式、差异、可复用设计与证据来源。",
             overview: "概览",
@@ -1536,7 +1529,6 @@
             saveMarkdown: "保存 Markdown",
             copyMarkdown: "复制 Markdown",
             openOfficial: "打开官网",
-            unknownsKicker: "05 / 待验证",
             unknowns: "仍需验证",
             unknownsDescription: "这些事实可能改变最终判断，适合在投入实现前优先验证。",
             used: "已使用",
@@ -1565,31 +1557,25 @@
             verdictAdapt: "改造现有方案",
             verdictUseExisting: "直接用现成的",
             verdictStop: "先不要做",
+            exportPdf: "导出完整 PDF",
             preparingPdf: "正在生成 PDF…",
           },
           en: {
             skipToContent: "Skip to content",
-            assessment: "Idea assessment",
-            comparisonMode: "Project comparison",
+            ideaAssessment: "Idea assessment",
+            projectAssessment: "Project assessment",
             report: "Research brief",
             project: "Subject",
             recommendation: "Final recommendation",
             strongestReuse: "Best reuse option",
             biggestUnknown: "Biggest unknown",
             generated: "Generated",
-            temporaryNotice: "Temporary viewer · export only when you choose",
-            contextKicker: "01 / Context",
             context: "Problem fingerprint",
             contextDescription: "The user, task, and constraints behind the search.",
-            coverageKicker: "02 / Evidence",
             coverage: "Search coverage",
-            coverageDescription: "Evidence routes used and any coverage limits.",
-            matrixKicker: "03 / Fit",
             comparison: "Capability comparison",
             comparisonDescription: "Decision-relevant capabilities only. Unknown is not unsupported.",
             capability: "Capability",
-            currentProject: "Current project",
-            candidatesKicker: "04 / Alternatives",
             candidates: "Candidate details",
             candidatesDescription: "Review fit, constraints, reuse, and sources.",
             overview: "Overview",
@@ -1604,7 +1590,6 @@
             saveMarkdown: "Save Markdown",
             copyMarkdown: "Copy Markdown",
             openOfficial: "Official site",
-            unknownsKicker: "05 / Unknowns",
             unknowns: "Still unverified",
             unknownsDescription: "These facts could still change the decision.",
             used: "Used",
@@ -1629,11 +1614,10 @@
             viewCandidate: "View details for {name}",
             previousCandidate: "Previous candidate",
             nextCandidate: "Next candidate",
+            exportPdf: "Export full PDF",
             preparingPdf: "Preparing PDF…",
           },
         };
-        dictionaries.zh.exportPdf = "导出完整 PDF";
-        dictionaries.en.exportPdf = "Export full PDF";
 
         const languageFamily = report.language.toLowerCase().startsWith("zh")
           ? "zh"
@@ -1643,7 +1627,7 @@
         const labels = languageFamily === "custom"
           ? report.labels
           : { ...dictionaries[languageFamily], ...(report.labels || {}) };
-        // Labels added after the custom-label contract fall back to English.
+        // Fill {placeholders}; a label missing from a custom-language payload falls back to English.
         const t = (key, values = {}) => String(labels[key] ?? dictionaries.en[key] ?? key)
           .replace(/\{(\w+)\}/g, (_, name) => values[name] ?? "");
         const supportLabels = languageFamily === "zh"
@@ -1798,7 +1782,7 @@
         $("hero-eyebrow").textContent = labels.report;
         $("report-topic").textContent = report.topic;
         $("project-line").textContent = `${labels.project} · ${report.projectName}`;
-        $("mode-chip").textContent = report.mode === "assess" ? labels.assessment : labels.comparisonMode;
+        $("mode-chip").textContent = report.subject === "project" ? labels.projectAssessment : labels.ideaAssessment;
         $("generated-tag").textContent = `${labels.generated} · ${displayDate(report.generatedAt)}`;
         $("decision-label").textContent = labels.recommendation;
         $("decision-value").textContent = report.recommendation.value;

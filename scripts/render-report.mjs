@@ -30,18 +30,18 @@ const COVERAGE_STATUSES = new Set(["used", "limited", "unavailable"]);
 const TRACKING_QUERY_PARAMS = new Set(["fbclid", "gclid", "msclkid"]);
 const ISO_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
 const REQUIRED_CUSTOM_LABELS = [
-  "skipToContent", "assessment", "comparisonMode", "report", "project",
+  "skipToContent", "ideaAssessment", "projectAssessment", "report", "project",
   "recommendation", "strongestReuse", "biggestUnknown", "generated",
-  "temporaryNotice", "contextKicker", "context", "contextDescription",
-  "coverageKicker", "coverage", "coverageDescription", "matrixKicker",
-  "comparison", "comparisonDescription", "capability", "currentProject",
-  "candidatesKicker", "candidates", "candidatesDescription", "overview",
-  "comparisonWithProject", "dimension", "notableDesigns", "reusableLessons",
-  "summary", "sources", "officialAddress", "coverageNote", "exportPdf", "saveMarkdown",
-  "copyMarkdown", "openOfficial", "unknownsKicker", "unknowns",
-  "unknownsDescription", "used", "limited", "unavailable", "notCompared",
-  "noCandidates", "noData", "saved", "copied", "saveFailed", "copyFailed",
-  "theme",
+  "context", "contextDescription", "fingerprint", "coverage", "comparison",
+  "comparisonDescription", "capability", "showNotes", "hideNotes",
+  "viewCandidate", "candidates", "candidatesDescription", "byCapability",
+  "overview", "comparisonWithProject", "dimension", "notableDesigns",
+  "reusableLessons", "summary", "sources", "officialAddress", "coverageNote",
+  "exportPdf", "preparingPdf", "saveMarkdown", "copyMarkdown", "openOfficial",
+  "previousCandidate", "nextCandidate", "unknowns", "unknownsDescription",
+  "statCandidates", "statCapabilities", "statRoutes", "statClosest",
+  "used", "limited", "unavailable", "notCompared", "noCandidates", "noData",
+  "saved", "copied", "saveFailed", "copyFailed", "theme",
 ];
 
 function fail(message) {
@@ -114,8 +114,8 @@ function validatePayload(payload) {
   requireObject(payload, "report");
   if (payload.schemaVersion !== 1) fail("report.schemaVersion must equal 1.");
   requireString(payload.language, "report.language");
-  if (!new Set(["assess", "compare"]).has(payload.mode)) {
-    fail("report.mode must be assess or compare.");
+  if (!new Set(["idea", "project"]).has(payload.subject)) {
+    fail("report.subject must be idea or project.");
   }
   requireString(payload.topic, "report.topic");
   requireString(payload.projectName, "report.projectName");

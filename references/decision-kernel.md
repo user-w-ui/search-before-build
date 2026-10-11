@@ -22,7 +22,7 @@ If the kernel is unavailable or exits non-zero, continue with the existing resea
 
 ## Input
 
-Write one temporary JSON file under the operating-system temporary directory. Do not place it in the user's project.
+Write the input to `kernel-input.json` in the run directory described at the end of this file, never in the user's project.
 
 ```json
 {
@@ -93,6 +93,6 @@ If `evidence.needsFollowUp` is true and a missing must-have capability could cha
 - Preserve `evidenceRefs` when building the final evidence package.
 - Keep the final Build / Adapt / Use existing / Stop recommendation in the calling Skill.
 
-The existing report schema remains authoritative. Translate verified candidate evidence into `report-template.md`; do not send the kernel artifact directly to the report viewer.
+Translate verified candidate evidence into `report-template.md` and the payload in `report-viewer.md`; never pass the kernel artifact to the viewer.
 
-Use a fresh run directory under the operating-system temporary directory for every research request: `<temp>/search-before-build/runs/<run-id>/`, where `<run-id>` combines a UTC timestamp and a short random suffix (the minting pattern is described in `report-viewer.md`). Keep `kernel-input.json`, `kernel-output.json`, and any raw payload scratch files inside that run directory. Never reuse a fixed filename across research requests: concurrent sessions share the temp directory and would overwrite each other's files. This keeps normal research from accumulating project files while staying safe under concurrency.
+Mint one run directory per research request under the operating-system temporary directory, `<temp>/search-before-build/runs/<run-id>/`, using the `<run-id>` pattern in `report-viewer.md`; the report viewer reuses it. Keep `kernel-input.json`, `kernel-output.json`, and any raw payload scratch files inside it. Never reuse a fixed filename across requests: concurrent sessions share the temp directory.

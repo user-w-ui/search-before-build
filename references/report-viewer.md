@@ -5,12 +5,12 @@ Only the `assess` Skill renders this viewer. Use it to present completed assessm
 ## Lifecycle
 
 1. Read `report-template.md` and prepare the report payload below after the final recommendation exists.
-2. Resolve the OS temp directory and mint a **fresh, unique run directory** for this research request: `<temp>/search-before-build/runs/<run-id>/`. Build `<run-id>` once as a UTC timestamp plus a short random suffix (e.g. `20260829T122007-a3f9`; on Unix `date -u +%Y%m%dT%H%M%S` plus four random hex digits, on Windows PowerShell `Get-Date -Format yyyyMMddTHHmmss` plus `Get-Random` hex). Write the payload to `<run-dir>/report-input.json`. Never reuse a fixed filename across requests: concurrent sessions share the temp directory.
-3. Run `node ../scripts/render-report.mjs --input <run-dir>/report-input.json --output <run-dir>/brief.html --consume-input`, resolving `../scripts/render-report.mjs` from the directory containing this file to an absolute path; the user's current project does not contain the renderer. Passing `--output` is required: without it the script falls back to the legacy single-session path `<temp>/search-before-build/latest.html`, which concurrent sessions overwrite. The script validates the payload and atomically writes the output file.
+2. Use this request's run directory, `<temp>/search-before-build/runs/<run-id>/`, which `decision-kernel.md` already uses when the kernel ran; otherwise mint it now under the OS temp directory. Build `<run-id>` once as a UTC timestamp plus a short random suffix (e.g. `20260829T122007-a3f9`; on Unix `date -u +%Y%m%dT%H%M%S` plus four random hex digits, on Windows PowerShell `Get-Date -Format yyyyMMddTHHmmss` plus `Get-Random` hex). Write the payload to `<run-dir>/report-input.json`. Never reuse a fixed filename across requests: concurrent sessions share the temp directory.
+3. Run `node ../scripts/render-report.mjs --input <run-dir>/report-input.json --output <run-dir>/brief.html --consume-input`, resolving `../scripts/render-report.mjs` from the directory containing this file to an absolute path; the user's current project does not contain the renderer. Always pass `--output`; the default `<temp>/search-before-build/latest.html` is shared by concurrent sessions. The script validates the payload and writes the file atomically.
 4. Open the returned HTML path when the host supports opening local files. Otherwise return its absolute path so the user can open it.
 5. Keep the recommendation in the conversation as well. The viewer supplements the answer; it must not be the only place where the final decision appears.
 
-Never write a competitor Markdown report into the current project during this workflow. Persistence is optional and happens only when the user explicitly asks for it after seeing the result. A download or copy action inside the viewer is already an explicit user choice and needs no earlier confirmation.
+Persisting competitor reports follows `report-template.md`. A download or copy action inside the viewer is already an explicit user choice and needs no earlier confirmation.
 
 If Node.js is unavailable or rendering fails, return the same information in the conversation and explain that the temporary viewer could not be generated. Do not fall back to creating reports in the project.
 
@@ -22,7 +22,7 @@ Write UTF-8 JSON with this shape. Use the target display language for every free
 {
   "schemaVersion": 1,
   "language": "zh-CN",
-  "mode": "assess",
+  "subject": "idea",
   "topic": "A short report title",
   "projectName": "Current project or idea",
   "generatedAt": "2026-07-18T10:00:00Z",
@@ -75,7 +75,7 @@ Write UTF-8 JSON with this shape. Use the target display language for every free
 }
 ```
 
-Use exactly `assess` or `compare` for `mode`: `compare` when the user supplied concrete material about their own project (a repository, prototype, plan, documentation, or promotional material), and `assess` when they brought only an idea. In `capabilities[].current`, record a capability that the material shows only as planned as `unsupported` and say in its note that it is planned. Use exactly `Build`, `Adapt`, `Use existing`, or `Stop` for `recommendation.value`. Use exactly `used`, `limited`, or `unavailable` for coverage status. Use the stable support enums from `research-method.md` in every capability cell.
+Set `subject` to `project` when the user supplied material about an existing project (repository, prototype, plan, documentation, or promotional images); otherwise set it to `idea`. In `capabilities[].current`, record a capability that the material shows only as planned as `unsupported` and say in its note that it is planned. Use exactly `Build`, `Adapt`, `Use existing`, or `Stop` for `recommendation.value`. Use exactly `used`, `limited`, or `unavailable` for coverage status. Use the stable support enums from `research-method.md` in every capability cell.
 
 Candidate IDs must be unique and must match the keys used under `capabilities[].candidates`. Omit a candidate entry when that capability was not compared; do not invent evidence to fill the matrix.
 
@@ -85,14 +85,14 @@ Keep stable support enums inside capability cells only. When a detailed `compari
 
 The viewer has built-in Chinese and English interface text. Use a language tag beginning with `zh` for Chinese or `en` for English.
 
-For English payloads, keep `topic` to a compact phrase rather than a full requirement sentence. Use the shortest unambiguous phrase for capability names and comparison dimensions. Keep each capability note and candidate overview to one compact sentence, and keep reusable lessons focused on one actionable point. Do not repeat the same point across payload fields merely to fill the layout; the viewer handles deliberate whitespace.
+For English payloads, keep `topic` to a compact phrase rather than a full requirement sentence. Use the shortest unambiguous phrase for capability names and comparison dimensions. Keep each capability note and candidate overview to one compact sentence, and keep reusable lessons focused on one actionable point. Do not repeat the same point across payload fields merely to fill the layout.
 
-For every other target language, translate the free text and provide localized interface strings in `labels`. Supply every key reported by the renderer's `REQUIRED_CUSTOM_LABELS` contract; the key names describe their UI purpose. Support-enum labels still fall back to English, as required by `report-template.md`.
+For every other target language, translate the free text and put localized interface strings in `labels`, one for every key in `REQUIRED_CUSTOM_LABELS` in `../scripts/render-report.mjs`; key names describe their UI purpose. Keep the `{name}` placeholder in `statClosest` and `viewCandidate`. Support-enum labels still fall back to English, as required by `report-template.md`.
 
 ## Visual behavior
 
-The viewer is a self-contained, responsive HTML page with no CDN or runtime network dependency. The payload contract already defines the content it presents.
+The viewer is a self-contained, responsive HTML page with no CDN or runtime network dependency.
 
-The top action bar owns an **Export full PDF** action. It lays out a desktop-width snapshot of the page with every competitor card expanded and every matrix note shown, sizes the PDF page to that snapshot, and opens the browser's print flow, so saving as PDF yields one continuous page that matches the screen. Very long reports fall back to paged output, and print-specific capability tables replace a matrix too wide to fit. The exported document includes the complete assessment and all competitor cards.
+The top bar's **Export full PDF** action prints a desktop-width snapshot of the complete report with every competitor card expanded, sized as one continuous PDF page. Very long reports fall back to paged output, and print-specific capability tables replace a matrix too wide to fit.
 
 Each competitor card owns its own **Save Markdown** and **Copy Markdown** actions. Those exports follow `report-template.md` and exclude the necessity check and final recommendation. Do not add a silent auto-save action or an action that claims to write directly into the user's repository.

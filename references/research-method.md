@@ -61,7 +61,7 @@ When a ready-made SaaS, commercial tool, mobile or desktop app, app-store listin
 5. Build four pools: ready-to-use products, adaptable projects, reusable components, and the current no-build workaround. Keep weak candidates only long enough to explain exclusion.
 6. Narrow by functional fit: prioritize the same user, situation, core task, operating mode, and must-have capability. Popularity is only a maturity signal and tie-breaker.
 7. Deeply verify the strongest candidates using primary project pages and implementation evidence. Do not infer functionality from a name, snippet, topic tag, directory name, Stars, or download count. Meet this floor before comparing: every candidate in the key comparison has at least one primary page read during this research; the leading candidate also has a second primary page—documentation, source, or release notes—that addresses the must-have capability; and every open-source project or package has a dated maintenance signal (last release, last push, or newest upload), usually already present in fetched metadata. When no date can be found, record maintenance as unknown instead of guessing.
-8. Read and follow all of `decision-kernel.md`. When the packaged kernel is available, use it to normalize, merge, rank, and expose gaps. Treat `candidate_mention` as a discovery signal, never as verified capability support.
+8. Read and follow all of `decision-kernel.md`.
 9. Compare verified behavior at the same product or technical layer using the stable support enums below.
 10. Before stopping, perform a route-and-language audit. For every matched route trigger, confirm that the route was queried or record a concrete fingerprint-based exclusion. When Chinese or an unknown market requires bilingual discovery, confirm that both Chinese and English queries were attempted. If host Web search errored or returned empty results for a material query, retry it once through the Anonymous Web fallback in `search-sources.md`. Host Web search failure does not justify skipping a matching anonymous catalog route.
 11. Stop expanding when the ready-made, adaptable, reusable, and no-build paths have representative evidence for the caller and further candidates are near-duplicates. Record coverage limits.
@@ -74,7 +74,7 @@ Stop only when every external route is unavailable, then say exactly:
 当前环境无法完成外部检索，因此不能确认是否已经存在类似方案。
 ```
 
-Never claim that no similar project exists without external search evidence. Do not claim to have searched a platform that was reached only through third-party mentions. Do not recommend installing or configuring a dependency unless it would materially improve the current search and the host permits asking the user.
+Never claim that no similar project exists without external search evidence. Do not claim to have searched a platform that was reached only through third-party mentions. Do not recommend installing or configuring a dependency outside the GitHub MCP setup flow in `github-retrieval.md`.
 
 ## Evidence package
 

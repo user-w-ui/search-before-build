@@ -5,42 +5,36 @@ description: Calmly decide whether a digital product or coding idea, or an exist
 
 # Assess Whether to Build
 
-Help a non-expert slow down before spending time and tokens. Be candid, practical, and easy to understand. The user may bring only an idea, or concrete material about a project that already exists: a plan, a prototype, a repository, documentation, or promotional images.
+Help a non-expert slow down before spending time and tokens. Be candid, practical, and easy to understand. The user may bring only an idea, or material about an existing project: a plan, prototype, repository, documentation, or promotional images.
 
 Paths to package files in this skill are relative to the directory containing this `SKILL.md`; resolve them to absolute paths before reading or running them. Paths described as being in the user's current project are relative to that project instead.
 
+Read `../../references/conversation-and-decision.md` before starting. It defines the intent model, how to ask through the question channel, research readiness, the pre-research confirmation, the necessity gates, and the recommendation meanings.
+
 ## Rules
 
-- Read the user's explicit request, the conversation, and any supplied material before asking anything. When the material includes code, prefer codebase knowledge-graph tools for code discovery when available; fall back to read-only file inspection when needed.
-- Describe an existing project from current evidence, not aspirations. Distinguish implemented, planned, and unknown capabilities. Do not use project names, README claims, promotional images, Stars, or popularity as proof of functional similarity.
-- Use accurate everyday language. Explain an unavoidable technical term in one short phrase.
-- Never ask for a "user persona," "value proposition," "market segment," or "business loop."
-- Ask only a question whose answer could materially change the problem understanding, necessity check, functional fingerprint, research direction, or recommendation. Never ask about what the supplied material already answers. Ask one question per turn.
-- Ask through the question channel in `../../references/conversation-and-decision.md`: use the host's built-in tool for asking the user when one is available, and fall back to plain text otherwise.
-- Build the intent model defined in `../../references/conversation-and-decision.md` before research. Infer details when the meaning is clear; never ask the user to repeat information already supplied or safely inferred.
-- Ask at most five information-seeking questions total. Five is a ceiling, not a target, but do not stop merely because the surface function and delivery form are known. Use the available budget while a material, user-answerable unknown still blocks a reliable fingerprint or comparison.
-- During clarification, do not narrate the workflow or use headings. Use at most one sentence to confirm the idea, optionally one sentence for the decisive unknown, then ask the single question.
-- Match the user's language and demonstrated level of expertise. When useful, use a few familiar alternatives from general knowledge as contrast prompts, not as verified research findings.
+- Read the request, the conversation, and any supplied material before asking anything. For code, prefer codebase knowledge-graph tools for code discovery when available; fall back to read-only file inspection.
+- Describe an existing project from current evidence, not aspirations: mark each capability implemented, planned, or unknown. Do not use project names, README claims, promotional images, Stars, or popularity as proof of functional similarity.
+- Ask one question per turn, and only when the answer could materially change the understanding, necessity check, fingerprint, research direction, or recommendation. Never ask about what the supplied material already answers, and never ask the user to repeat information already supplied or safely inferred.
+- Ask at most five information-seeking questions total. Five is a ceiling, not a target: do not stop merely because the surface function and delivery form are known while a material, user-answerable unknown still blocks a reliable fingerprint or comparison.
+- During clarification, do not narrate the workflow or use headings.
+- Match the user's language and demonstrated level of expertise. Explain an unavoidable technical term in one short phrase.
 - Separate facts, inferences, and unknowns. Never fill a gap with enthusiasm or guesswork.
 - Do not create files during clarification or the necessity check. Do not modify source code, plans, or unrelated documentation.
-
-Read `../../references/conversation-and-decision.md` before starting.
 
 If the user expresses GitHub deep-search enhancement intent, read and follow the enhancement flow in `../../references/github-retrieval.md`. If enhancement is the entire request, report the capability or setup result and stop without starting an assessment.
 
 ## Workflow
 
-1. Read the supplied material and build the prioritized intent brief defined in the reference, marking each item as fact, inference, or unknown. For an existing project, establish its baseline from the material: intended user, problem, main workflow, inputs and outputs, operating environment, must-have capability, current maturity, and hard constraints, with each capability marked implemented, planned, or unknown.
-2. Ask only about the gaps the material leaves. Resolve the highest-information missing dimension first. After each answer, update the whole brief and choose the next question from the remaining material unknowns. Skip questions entirely only when the research-readiness conditions in the reference are already met. After five information-seeking questions, stop asking and continue from the best current understanding with explicit unknowns.
-3. Before the necessity check or any external research, present the concise pre-research understanding summary defined in the reference, including the project's current state when material was supplied, and ask the user to verify it. This confirmation does not count toward the five-question limit. Stop the turn and wait; do not research until the user confirms. Incorporate corrections and reconfirm when they materially change the understanding.
-4. Give a short necessity check in the conversation. For an existing project, frame it as whether continuing on the current path is still worth the investment. State what is fact, inference, and unknown. If the case is weak, say so directly, but let the user choose to continue.
-5. Convert the confirmed understanding into a functional fingerprint. Do not silently add assumptions that were absent from the confirmation.
-6. Read and execute all of `../../references/research-method.md` and `../../references/decision-kernel.md` to build the evidence package before making a final recommendation. Use the packaged kernel when available, but never treat its lexical `candidate_mention` as verified capability support.
-7. Consume the research evidence package and its key comparison at the same product or technical layer. Do not relabel capabilities independently.
-8. Act as the sole final decision-maker for the assessment. Using the recommendation meanings in `../../references/conversation-and-decision.md`, combine the necessity check and research evidence into exactly one recommendation: `Build`, `Adapt`, `Use existing`, or `Stop`. Keep this decision in the conversation; do not put it or the necessity discussion in competitor reports.
-9. Once research has run, read `../../references/report-template.md` and `../../references/report-viewer.md`. Render the result to the shared temporary HTML viewer. Do not write competitor reports into the user's project unless the user explicitly asks to persist selected competitors after seeing the result.
+1. Read the supplied material and build the prioritized intent brief from the intent model, marking each item as fact, inference, or unknown. For an existing project, also establish its baseline: intended user, problem, main workflow, inputs and outputs, operating environment, must-have capability, current maturity, and hard constraints.
+2. Ask only about the gaps the material leaves, highest-information gap first, and update the whole brief after each answer. Skip questions when the research-readiness conditions are already met. After five questions, continue from the best current understanding with explicit unknowns.
+3. Before the necessity check or any external research, present the concise pre-research understanding summary, including the project's current state when material was supplied, and ask the user to verify it. This confirmation does not count toward the five-question limit. Stop the turn and wait; do not research until the user confirms. Reconfirm when a correction materially changes the understanding.
+4. Give a short necessity check in the conversation against the necessity gates. For an existing project, frame it as whether continuing on the current path is still worth the investment. If the case is weak, say so directly, but let the user choose to continue.
+5. Convert the confirmed understanding into a functional fingerprint. Do not add assumptions absent from the confirmation.
+6. Read and execute all of `../../references/research-method.md` and `../../references/decision-kernel.md` to build the evidence package.
+7. Consume the evidence package and its key comparison at the same product or technical layer. Do not relabel capabilities independently.
+8. Act as the sole final decision-maker for the assessment: combine the necessity check and the evidence into exactly one of `Build`, `Adapt`, `Use existing`, or `Stop`, using the recommendation meanings. Keep the decision and the necessity discussion in the conversation, never in competitor reports.
+9. Read `../../references/report-template.md` and `../../references/report-viewer.md`. Render the result to the shared temporary HTML viewer. Do not write competitor reports into the user's project unless the user explicitly asks to persist selected competitors after seeing the result; then follow the persistence boundary in `report-template.md` and return the file paths.
 10. Return the recommendation, the main reason, the most reusable option or pieces, the temporary viewer path, and the biggest remaining unknown. Do not begin implementation.
-
-If the user later asks to persist one or more competitors, write only those reports to `docs/search-before-build/<topic-slug>/<competitor-slug>.md` in the user's current project under the contract in `../../references/report-template.md`. Update canonical files and return their paths.
 
 The user may override the recommendation. Record that choice without weakening or rewriting the evidence.

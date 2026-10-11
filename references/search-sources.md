@@ -20,23 +20,7 @@ This is the maintained catalog of common anonymous research sources. Read it bef
 
 ## Routing rule
 
-| Need | Prefer |
-| --- | --- |
-| Products, SaaS, app stores, or documentation when host Web search fails | Anonymous Web fallback |
-| Open-source repositories or code | GitHub |
-| JavaScript/Node packages | npm |
-| Python packages | PyPI (exact names) |
-| Cross-ecosystem package metadata and dependency signals | Ecosyste.ms |
-| Ready-made MCP tools for an Agent | Official MCP Registry |
-| JVM artifacts | Maven Central |
-| Rust crates | crates.io |
-| Models, datasets, or Spaces | Hugging Face |
-| Research papers and preprints | arXiv |
-| Public demand, workflow discussion, or pain-point evidence | Hacker News Algolia |
-
-Use ordinary web search for products, SaaS, app stores, documentation, or discovery outside these catalogs. Use catalog results for discovery, then verify strong candidates from their primary project pages and implementation evidence.
-
-**Payload fidelity rule**: when a catalog source returns JSON, XML, or HTML, capture the response body **verbatim** as the retrieval payload for the decision kernel. Do not translate or flatten it into a uniform `title`/`url`/`snippet` shape — that discards the structured fields (`full_name`, `repository.url`, `transports`, `purl`, `pushed_at`, …) that cross-source identity merging and recency ranking depend on. See `decision-kernel.md` for the input contract.
+Choose catalog routes with the route-trigger table in `research-method.md`. Use GitHub for open-source repositories and code, ordinary Web search for products, SaaS, app stores, documentation, or discovery outside these catalogs, and the Anonymous Web fallback when host Web search fails. Use catalog results for discovery, then verify strong candidates from their primary project pages and implementation evidence. When a catalog returns JSON, XML, or HTML, keep the response body verbatim for the decision kernel, as `decision-kernel.md` requires.
 
 The catalog commands were originally verified anonymously on 2026-07-12; the anonymous Web, Hugging Face REST, and Hacker News routes were rechecked on 2026-08-29; the PyPI routes were verified on 2026-10-10. Replace literal query values and URL-encode them. Respect rate limits and identify the client with a useful `User-Agent` for HTTP APIs.
 
@@ -169,9 +153,9 @@ Do not install `huggingface_hub` automatically during normal research.
 **Use when:** Looking for algorithms, academic precedents, evaluations, benchmarks, or recent research—not ordinary software packages.
 
 ```bash
-curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=ti%3A%22retrieval%20augmented%20generation%22&start=0&max_results=3"
-curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=au%3AHinton_G&start=0&max_results=3"
-curl -L -H "User-Agent: search-before-build/0.1 (repository research)" "https://export.arxiv.org/api/query?search_query=cat%3Acs.AI%20AND%20all%3Aagent&start=0&max_results=3&sortBy=submittedDate&sortOrder=descending"
+curl -L -H "User-Agent: search-before-build (repository research)" "https://export.arxiv.org/api/query?search_query=ti%3A%22retrieval%20augmented%20generation%22&start=0&max_results=3"
+curl -L -H "User-Agent: search-before-build (repository research)" "https://export.arxiv.org/api/query?search_query=au%3AHinton_G&start=0&max_results=3"
+curl -L -H "User-Agent: search-before-build (repository research)" "https://export.arxiv.org/api/query?search_query=cat%3Acs.AI%20AND%20all%3Aagent&start=0&max_results=3&sortBy=submittedDate&sortOrder=descending"
 ```
 
 Wait at least three seconds between repeated calls, keep result pages small, and cache identical queries. Official manual: `https://info.arxiv.org/help/api/user-manual.html`.

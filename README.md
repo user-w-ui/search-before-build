@@ -121,7 +121,7 @@ Review adoption cost, material constraints, reusable designs, and traceable prim
 Every competitor has **Save Markdown** and **Copy Markdown** actions. A long-lived report is created only when you choose to export it after reviewing the result, or explicitly ask the plugin to persist a selected competitor:
 
 ```text
-docs/search-before-build/<current-project>/<competitor>.md
+docs/search-before-build/<topic>/<competitor>.md
 ```
 
 Persisted reports remain one file per competitor and contain only the overview, comparison with the current project, notable designs, reusable lessons, one-sentence summary, and sources. They exclude the necessity check and final verdict.

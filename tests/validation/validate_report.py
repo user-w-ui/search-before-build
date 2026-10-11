@@ -67,7 +67,8 @@ def validate() -> None:
     assert "unless the user explicitly asks to persist selected competitors" in assess.lower()
     assert "all report paths" not in assess.lower()
     assert "Only the `assess` Skill renders this viewer" in report_viewer
-    assert "`compare` when the user supplied concrete material about their own project" in report_viewer
+    assert "Set `subject` to `project` when the user supplied material about an existing project" in report_viewer
+    assert "`mode`" not in report_viewer
     assert "only as planned as `unsupported`" in report_viewer
     assert "do not write competitor reports into the current project by default" in report_template.lower()
     assert "user-initiated download or copy action" in report_template.lower()
@@ -88,8 +89,18 @@ def validate() -> None:
     assert "text-transform" not in matrix_head_rule
     # CJK labels drop the uppercase tracking used for Latin scripts.
     assert 'html:is([lang^="zh"], [lang^="ja"], [lang^="ko"])' in viewer_asset
-    assert 'matrixKicker: "03 / 匹配"' in viewer_asset
-    assert "REQUIRED_CUSTOM_LABELS" in report_viewer
+    assert "`REQUIRED_CUSTOM_LABELS` in `../scripts/render-report.mjs`" in report_viewer
+    # Custom-language payloads must cover exactly the interface labels the viewer renders.
+    required_labels = set(
+        re.findall(r'"(\w+)"', viewer_script.split("const REQUIRED_CUSTOM_LABELS = [", 1)[1].split("];", 1)[0])
+    )
+    viewer_code = viewer_asset.split("<script>", 1)[1]
+    english_labels = set(
+        re.findall(r"^ {12}(\w+):", viewer_code.split("en: {", 1)[1].split("\n          },", 1)[0], re.M)
+    )
+    rendered_labels = set(re.findall(r'(?:\blabels\.|\bt\(")(\w+)', viewer_code)) | {"used", "limited", "unavailable"}
+    assert required_labels <= english_labels, required_labels - english_labels
+    assert rendered_labels == required_labels, rendered_labels ^ required_labels
     assert "tmpdir()" in viewer_script
     assert '"latest.html"' in viewer_script
     assert "writeAtomically" in viewer_script
@@ -282,6 +293,14 @@ def validate() -> None:
         )
         assert invalid_result.returncode != 0
         assert "REQUIRED_CUSTOM_LABELS" in invalid_result.stderr
+
+        renamed_subject = dict(fixture_data)
+        renamed_subject["mode"] = "compare"
+        del renamed_subject["subject"]
+        invalid_input.write_text(json.dumps(renamed_subject), encoding="utf-8")
+        subject_result = _run_renderer(invalid_input, Path(directory) / "invalid.html")
+        assert subject_result.returncode != 0
+        assert "report.subject must be idea or project" in subject_result.stderr
 
         consume_result = _run_renderer(
             fixture,
