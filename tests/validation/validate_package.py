@@ -91,3 +91,18 @@ def validate() -> None:
     assert "packageVersion !== claudeVersion" in release_verifier
     assert "packageVersion !== codexVersion" in release_verifier
     assert "packageVersion !== agentPluginsVersion" in release_verifier
+
+    # The agent-readable install guide must match the README's manual steps.
+    install_guide = read_text("INSTALL.md")
+    readme = read_text("README.md")
+    readme_zh = read_text("README.zh-CN.md")
+    guide_url = "https://raw.githubusercontent.com/user-w-ui/search-before-build/main/INSTALL.md"
+    assert guide_url in readme and guide_url in readme_zh
+    for command in (
+        "npx @superq/search-before-build install",
+        "opencode plugin add github:user-w-ui/search-before-build",
+        "pi install git:github.com/user-w-ui/search-before-build",
+        "search-before-build@search-before-build",
+    ):
+        assert command in install_guide and command in readme and command in readme_zh, command
+    assert "Do not set up GitHub search, MCP servers" in install_guide

@@ -63,9 +63,6 @@ It ends with a clear recommendation that you remain free to override:
 /search-before-build:assess ./docs/plan.md
 /search-before-build:quick-search a CLI that converts OpenAPI specs to TypeScript clients
 ```
-
-When the host has a built-in tool for asking questions (such as `AskUserQuestion` in Claude Code or `question` in OpenCode), the skills ask through it; otherwise they ask in plain text, one question per turn.
-
 ## More than GitHub search
 
 The plugin first determines what it needs to find, then chooses where to look. It extracts a functional fingerprint from your needs and searches only relevant sources instead of scanning every platform every time.
@@ -92,7 +89,7 @@ If a GitHub MCP server, connector, or equivalent tool is available, the plugin r
 Enable in-depth GitHub search
 ```
 
-The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. Sign-in uses browser-based OAuth that requests no extra permission scopes; no PAT, Docker, or extra package is required. If you previously authorized the GitHub MCP Server with broader permissions, GitHub may reuse them; revoke it at github.com/settings/applications to reset. The server runs read-only either way. GitHub keeps that sign-in in memory only, so each new Agent session briefly opens GitHub in the browser on its first search; after the first approval this usually needs no extra clicks. The installer also works behind an `HTTPS_PROXY` or the Windows system proxy and saves the proxy in the MCP configuration when GitHub is reachable only through it, upgrades an outdated binary, and refreshes an older registration. It supports Windows, macOS, and Linux and requires Node.js 18 or later; the basic research workflow itself does not depend on Node.js. If installation is declined or authorization fails, it falls back automatically.
+The installer downloads and verifies the official binary, then runs it with the `repos` toolset in `--read-only` mode. Sign-in uses browser-based OAuth that requests no extra permission scopes; no PAT, Docker, or extra package is required. If you previously authorized the GitHub MCP Server with broader permissions, GitHub may reuse them; revoke it at github.com/settings/applications to reset. The server runs read-only either way. GitHub keeps that sign-in in memory only, so each new Agent session briefly opens GitHub in the browser on its first search; after the first approval this usually needs no extra clicks.
 
 ## Temporary research brief and optional saving
 
@@ -130,6 +127,16 @@ Persisted reports remain one file per competitor and contain only the overview, 
 
 ## Installation and usage
 
+**Let your agent install it**
+
+Send this to the agent you use (Claude Code, Codex, OpenCode, Pi, and others):
+
+```text
+Read https://raw.githubusercontent.com/user-w-ui/search-before-build/main/INSTALL.md and follow it to install Search Before Build.
+```
+
+Or install it yourself:
+
 **Codex (one command)**
 
 ```bash
@@ -153,27 +160,21 @@ codex plugin add search-before-build@search-before-build
 
 After installation, use `/search-before-build:assess` or `/search-before-build:quick-search`. Update it with `/plugin marketplace update search-before-build`.
 
-**Claude Code (local loading)**
-
-```bash
-claude --plugin-dir /path/to/search-before-build
-```
-
 **OpenCode (v2 or later)**
 
 ```bash
 opencode plugin add github:user-w-ui/search-before-build
 ```
 
-The skills appear as `search-before-build-assess` and `search-before-build-quick-search`. OpenCode attaches skills with `@` rather than `/`, for example `@search-before-build-assess I want to build a tool that automatically organizes saved content`.
+OpenCode attaches skills with `@` rather than `/`, for example `@search-before-build-assess I want to build a tool that automatically organizes saved content`.
 
-**pi (not yet tested)**
+**Pi**
 
 ```bash
 pi install git:github.com/user-w-ui/search-before-build
 ```
 
-**Cursor, GitHub Copilot, VS Code, and other Agent Plugins clients (not yet tested)**
+**Cursor, GitHub Copilot, VS Code, and other Agent Plugins clients**
 
 The repository root carries an [Agent Plugins](https://agent-plugins.org) `plugin.json`, so clients that support the format can install the repository directly.
 

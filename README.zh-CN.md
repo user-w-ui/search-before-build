@@ -56,7 +56,7 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 
 | 技能 | 适用场景 | 用法 |
 | --- | --- | --- |
-| `assess` | 判断一个想法值不值得做，或者已有的计划书、原型、仓库值不值得继续做 | 先读你给的材料（仓库、文档、截图等），只追问材料里缺的关键信息（每次一问，最多五个），确认理解后再检索，给出建议和完整简报 |
+| `assess` | 完整判断一个想法值不值得做，或者为已有工作寻找竞品和参考 | 先读你给的材料（仓库、文档、截图等），只追问材料里缺的关键信息（每次一问，最多五个），确认理解后再检索，给出建议和完整简报 |
 | `quick-search` | 快速看看“有没有类似的东西” | 非必要不提问，查几个相关来源，直接在对话里列出最多五个候选，并给一句标明“初步”的看法 |
 
 ```text
@@ -64,9 +64,6 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 /search-before-build:assess ./docs/plan.md
 /search-before-build:quick-search 把 OpenAPI 文档转成 TypeScript 客户端的命令行工具
 ```
-
-宿主自带提问工具时（比如 Claude Code 的 `AskUserQuestion`、OpenCode 的 `question`），技能会通过它提问；没有的话就用文字一问一答。
-
 ## 不只是搜索 GitHub
 
 先看要找什么，再决定去哪里找。插件从需求中提取功能指纹，只选真正相关的来源，不会每次扫遍所有平台。
@@ -83,21 +80,20 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 | 模型、数据集或可复用 AI 应用 | Hugging Face Hub |
 | 算法、论文或学术先例 | arXiv |
 
-SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索和官方页面补充。目标市场不明确时中英文同时检索。Stars、下载量只辅助判断成熟度，不代替功能匹配，也不会仅因名称相似就认定为竞品。
+SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索和官方页面补充。目标市场不明确时中英文同时检索。Stars、下载量只辅助判断成熟度，不代替功能匹配。
 
 ### 可选的 GitHub 深度检索
 
-有 GitHub MCP、Connector 或等价工具时直接复用；没有也能通过公开 API 和网页搜索正常运行。在 Claude Code 和 Codex 上，经用户同意，`assess` 可自动安装 GitHub 官方 MCP：
+插件会自动查找你的 GitHub工具；没有也能通过公开 API 和网页搜索正常运行。或者如果你同意，在 Claude Code 和 Codex 上，`assess` 也可自动安装 GitHub 官方 MCP：
 
 ```text
 启用 GitHub 深度检索
 ```
 
-安装器会下载并校验官方二进制，以 `repos` 工具集和 `--read-only` 模式运行，用浏览器 OAuth 登录且不额外申请权限范围（无需 PAT、Docker 或额外包）。如果你以前给 GitHub MCP Server 授权过更大的权限，GitHub 可能沿用旧授权，可在 github.com/settings/applications 撤销后重新授权；无论哪种情况，服务都只读运行。GitHub 只在内存中保存这次登录，所以每个新的 Agent 会话第一次搜索时会短暂打开 GitHub 页面；首次批准后通常无需再点确认。安装器支持 `HTTPS_PROXY` 和 Windows 系统代理，只能经代理访问 GitHub 时会把代理写入 MCP 配置；会自动升级过旧的程序并刷新旧版配置。需要本机 Node.js 18+，Windows / macOS / Linux 通用；基础检索本身不依赖 Node。拒绝或授权失败会自动回退。
+安装器会下载并校验官方二进制，以 `repos` 工具集和 `--read-only` 模式运行，用浏览器 OAuth 登录且不额外申请权限范围。GitHub 只在内存中保存这次登录，所以每个新的 Agent 会话第一次搜索时会短暂打开 GitHub 页面；首次批准后通常无需再点确认。
+## 临时研究简报
 
-## 临时研究简报与可选保存
-
-研究完成后，`assess` 会生成一份精心排版的本地 HTML 简报，集中展示最终建议、检索覆盖、能力矩阵、重点竞品、可复用经验和未知项。页面使用单文件离线渲染，不依赖 CDN，写入系统临时目录，因此不会因为一次随手询问就在当前项目中留下报告文件。
+研究完成后，`assess` 会生成一份本地 HTML 可视化简报，集中展示最终建议、检索覆盖、能力矩阵、重点竞品、可复用经验和未知项。页面使用单文件离线渲染，不依赖 CDN，写入系统临时目录，因此不会因为一次随手询问就在当前项目中留下报告文件。
 
 ### 三步读懂一份研究简报
 
@@ -131,6 +127,16 @@ docs/search-before-build/<当前项目>/<竞品>.md
 
 ## 安装与使用
 
+**让 Agent 帮你装**
+
+把下面这句话发给你正在用的 Agent（Claude Code、Codex、OpenCode、Pi 等）：
+
+```text
+读取 https://raw.githubusercontent.com/user-w-ui/search-before-build/main/INSTALL.md ，按里面的说明安装 Search Before Build。
+```
+
+也可以自己手动安装：
+
 **Codex（一条命令）**
 
 ```bash
@@ -154,27 +160,21 @@ codex plugin add search-before-build@search-before-build
 
 安装后即可调用 `/search-before-build:assess` 与 `/search-before-build:quick-search`；用 `/plugin marketplace update search-before-build` 更新。
 
-**Claude Code（本地加载）**
-
-```bash
-claude --plugin-dir /path/to/search-before-build
-```
-
 **OpenCode（需要 v2 及以上）**
 
 ```bash
 opencode plugin add github:user-w-ui/search-before-build
 ```
 
-技能名为 `search-before-build-assess` 和 `search-before-build-quick-search`。OpenCode 用 `@` 而不是 `/` 调用技能，例如 `@search-before-build-assess 我想做一个自动整理收藏内容的工具`。
+OpenCode 用 `@` 而不是 `/` 调用技能，例如 `@search-before-build-assess 我想做一个自动整理收藏内容的工具`。
 
-**pi（未实测）**
+**Pi**
 
 ```bash
 pi install git:github.com/user-w-ui/search-before-build
 ```
 
-**Cursor、GitHub Copilot、VS Code 等 Agent Plugins 客户端（未实测）**
+**Cursor、GitHub Copilot、VS Code 等 Agent Plugins 客户端**
 
 仓库根目录带有 [Agent Plugins](https://agent-plugins.org) 格式的 `plugin.json`，支持该格式的客户端可以直接安装这个仓库。
 
