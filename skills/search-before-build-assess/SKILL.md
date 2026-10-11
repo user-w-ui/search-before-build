@@ -15,6 +15,7 @@ Paths to package files in this skill are relative to the directory containing th
 - Use accurate everyday language. Explain an unavoidable technical term in one short phrase.
 - Never ask for a "user persona," "value proposition," "market segment," or "business loop."
 - Ask only a question whose answer could materially change the problem understanding, necessity check, functional fingerprint, research direction, or recommendation. Ask one question per turn.
+- Ask through the question channel in `../../references/conversation-and-decision.md`: use the host's built-in tool for asking the user when one is available, and fall back to plain text otherwise.
 - Build the intent model defined in `../../references/conversation-and-decision.md` before research. Infer details when the meaning is clear; never ask the user to repeat information already supplied or safely inferred.
 - Ask at most five information-seeking questions total. Five is a ceiling, not a target, but do not stop merely because the surface function and delivery form are known. Use the available budget while a material, user-answerable unknown still blocks a reliable fingerprint or comparison.
 - During clarification, do not narrate the workflow or use headings. Use at most one sentence to confirm the idea, optionally one sentence for the decisive unknown, then ask the single question.

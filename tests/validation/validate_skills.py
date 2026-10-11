@@ -207,6 +207,20 @@ def validate() -> None:
     assert "does not count toward the five information-seeking questions" in conversation_rules
     assert "Stop the turn and wait for the user's response" in conversation_rules
     assert "must not introduce as its biggest unknown" in conversation_rules
+    channel = conversation_rules[conversation_rules.index("### Question channel"):conversation_rules.index("## Pre-research confirmation")]
+    for host_tool in ("AskUserQuestion", "request_user_input", "`question` in OpenCode"):
+        assert host_tool in channel
+    assert "examples, not an exhaustive list" in channel
+    assert "tool-discovery mechanism" in channel
+    assert "Put one decision topic in each call" in channel
+    assert "Each call counts as one information-seeking question" in channel
+    assert "do not invent an answer" in channel
+    assert "it is not a confirmation" in channel
+    assert "Fall back to plain text" in channel
+    assert "ask exactly one question per turn" in channel
+    assert "through the question channel above" in conversation_rules
+    for skill in (assess, compare):
+        assert "question channel" in skill.lower()
     assert "material, foreseeable, user-answerable question" in conversation_rules
 
     forbidden_jargon = ("用户画像", "核心价值主张", "市场细分信息", "商业闭环")

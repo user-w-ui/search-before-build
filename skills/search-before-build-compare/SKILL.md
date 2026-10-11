@@ -18,6 +18,7 @@ Paths to package files in this skill are relative to the directory containing th
 - Separate two things: what is already built or written (read it from the supplied material; never re-ask it) and the real need the project is meant to serve (often vague in an early plan). Both shape the search.
 - After establishing the baseline, let the user decide whether to align the real need before searching; do not judge this yourself from how vague or complete the material looks. Offer one clear choice—align first, or compare directly—and briefly say what alignment covers.
 - If the user chooses to align, clarify only the real need behind the project: ask one focused question per turn, at most five information-seeking questions total, and only about gaps that would change the candidate set or comparison. Do not re-ask what the material already supplies. Clarify only to the depth that makes retrieval accurate; do not redesign or complete the plan. If the user declines, build the fingerprint from the baseline and search directly.
+- Ask through the question channel in `../../references/conversation-and-decision.md`: use the host's built-in tool for asking the user when one is available, and fall back to plain text otherwise.
 - Do not use project names, README claims, Stars, or popularity as proof of functional similarity.
 - Do not modify source code, plans, or unrelated documentation.
 

@@ -42,11 +42,21 @@ For questions about alternatives, you may name a few widely known, functionally 
 
 Ask no more than five information-seeking questions. Five is not a quota, but conserving questions is not more important than grounding an expensive search. Stop early only when the research-readiness conditions are met. After the fifth question, continue with explicit unknowns instead of opening another clarification loop.
 
+### Question channel
+
+Ask every clarification question, the pre-research confirmation, and any other choice that needs the user's answer through the host's built-in tool for asking the user, when one is available. Hosts name it differently, for example `AskUserQuestion` in Claude Code, `request_user_input` in Codex, `question` in OpenCode, `AskQuestion` in Cursor, or `askQuestions` in VS Code. These names are examples, not an exhaustive list: use any exposed tool whose description says it asks the user a question and returns the answer, and use the host's tool-discovery mechanism when such a tool may be loaded on demand.
+
+- Put one decision topic in each call. Offer two to four concrete, mutually exclusive options in the user's language, and allow a free-text answer when the options cannot cover the realistic answers. Each call counts as one information-seeking question.
+- Keep the visible message to the brief confirming sentence described above and put the question itself in the tool. A tool call already waits for the answer; do not repeat the question in text.
+- If the user dismisses a clarification question, treat it as unanswered and do not invent an answer. If the user dismisses the pre-research confirmation, it is not a confirmation: ask for confirmation in plain text and stop the turn.
+
+Fall back to plain text when no such tool exists, when it is unavailable in the current mode or session (for example Codex outside Plan mode, a non-interactive run, or a subagent), or when a call is denied or fails. In plain text, ask exactly one question per turn, follow the brief-turn rule above, and stop the turn to wait for the user's reply.
+
 ## Pre-research confirmation
 
 After clarification, give a concise summary of the complete current understanding. Cover the problem and situation, current approach and pain, desired outcome, core capability and boundaries, expected difference from alternatives, proposed form, material constraints, and any remaining assumptions or unknowns. Omit a dimension only when it is genuinely irrelevant.
 
-Ask the user to correct or confirm the summary before the necessity check or external research. This verification is a separate quality gate and does not count toward the five information-seeking questions. Stop the turn and wait for the user's response. If a correction materially changes the understanding, update the summary and reconfirm it before proceeding.
+Write the summary in the message, then ask the user to confirm or correct it through the question channel above before the necessity check or external research. This verification is a separate quality gate and does not count toward the five information-seeking questions. Stop the turn and wait for the user's response; with a question tool, the tool call is that wait. If a correction materially changes the understanding, update the summary and reconfirm it before proceeding.
 
 A later report must not introduce as its biggest unknown a material, foreseeable, user-answerable question that the clarification stage skipped. Report unknowns may remain when the user does not know the answer, the question budget was exhausted, the issue emerged only through research, or external evidence is insufficient.
 
