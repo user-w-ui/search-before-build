@@ -18,7 +18,7 @@ The kernel cannot prove that a capability is supported. `candidate_mention` mean
 
 Use the kernel when Node.js 18 or later and `../dist/cli.js` (relative to the directory containing this file) are available. Do not install dependencies during a research request.
 
-If the kernel is unavailable or exits non-zero, continue with the existing research workflow. Add one coverage limitation saying that deterministic candidate fusion was unavailable; do not block the assessment or comparison.
+If the kernel is unavailable or exits non-zero, continue with the existing research workflow. Add one coverage limitation saying that deterministic candidate fusion was unavailable; do not block the assessment.
 
 ## Input
 

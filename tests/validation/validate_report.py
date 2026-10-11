@@ -55,19 +55,20 @@ def _css_px(source: str, selector: str, property_name: str) -> float:
 
 
 def validate() -> None:
-    assess = read_skill("search-before-build-assess")[1]
-    compare = read_skill("search-before-build-compare")[1]
+    assess = read_skill("assess")[1]
     research_method = read_text("references/research-method.md")
     report_template = read_text("references/report-template.md")
     report_viewer = read_text("references/report-viewer.md")
     viewer_script = read_text("scripts/render-report.mjs")
     viewer_asset = read_text("assets/report-viewer.html")
 
-    for skill in (assess, compare):
-        assert "references/report-viewer.md" in skill
-        assert "shared temporary html viewer" in skill.lower()
-        assert "unless the user explicitly asks to persist selected competitors" in skill.lower()
-        assert "all report paths" not in skill.lower()
+    assert "references/report-viewer.md" in assess
+    assert "shared temporary html viewer" in assess.lower()
+    assert "unless the user explicitly asks to persist selected competitors" in assess.lower()
+    assert "all report paths" not in assess.lower()
+    assert "Only the `assess` Skill renders this viewer" in report_viewer
+    assert "`compare` when the user supplied concrete material about their own project" in report_viewer
+    assert "only as planned as `unsupported`" in report_viewer
     assert "do not write competitor reports into the current project by default" in report_template.lower()
     assert "user-initiated download or copy action" in report_template.lower()
     assert "optional persistence" in research_method.lower()

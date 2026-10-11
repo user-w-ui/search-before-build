@@ -4,18 +4,21 @@ from .common import ROOT, assert_package_paths_resolve, read_skill, read_text
 
 
 def validate() -> None:
-    assess_meta, assess = read_skill("search-before-build-assess")
-    compare_meta, compare = read_skill("search-before-build-compare")
+    assess_meta, assess = read_skill("assess")
     research_method = read_text("references/research-method.md")
     decision_kernel = read_text("references/decision-kernel.md")
     search_sources = read_text("references/search-sources.md")
 
     assert_package_paths_resolve()
-    assert {assess_meta["name"], compare_meta["name"]} == {
+    assert assess_meta["name"] == "assess"
+    for retired in (
         "search-before-build-assess",
         "search-before-build-compare",
-    }
-    assert not (ROOT / "skills" / "search-before-build-research").exists()
+        "search-before-build-research",
+    ):
+        assert not (ROOT / "skills" / retired).exists(), retired
+    description = assess_meta["description"]
+    assert "\n" not in description and ": " not in description
 
     assert "at most five information-seeking questions" in assess.lower()
     assert "ask one question per turn" in assess.lower()
@@ -23,6 +26,7 @@ def validate() -> None:
     assert "intent model" in assess.lower()
     assert "five is a ceiling, not a target" in assess.lower()
     assert "never ask the user to repeat information" in assess.lower()
+    assert "never ask about what the supplied material already answers" in assess.lower()
     assert "surface function and delivery form" in assess.lower()
     assert "material, user-answerable unknown" in assess.lower()
     assert "match the user's language and demonstrated level of expertise" in assess.lower()
@@ -32,32 +36,33 @@ def validate() -> None:
     assert "do not research until the user confirms" in assess.lower()
     assert "Do not create files during clarification or the necessity check" in assess
     assert "Do not begin implementation" in assess
-    confirmation_position = assess.index("present the concise pre-research understanding summary")
-    necessity_position = assess.index("Give a short necessity check in the conversation")
-    assess_research_position = assess.index(
-        "Read and execute all of `../../references/research-method.md`"
+    assert "Do not modify source code, plans, or unrelated documentation" in assess
+    assert "prefer codebase knowledge-graph tools for code discovery" in assess.lower()
+    assert "fall back to read-only file inspection" in assess
+    assert "promotional images, Stars, or popularity as proof of functional similarity" in assess
+    assert "implemented, planned, or unknown" in assess
+    assert "research-readiness conditions" in assess
+    # The merged skill no longer offers an opt-in alignment step.
+    assert "align first" not in assess.lower()
+    assert "compare directly" not in assess.lower()
+    ordered_steps = (
+        "Read the supplied material and build the prioritized intent brief",
+        "Ask only about the gaps the material leaves",
+        "present the concise pre-research understanding summary",
+        "Give a short necessity check in the conversation",
+        "Convert the confirmed understanding into a functional fingerprint",
+        "Read and execute all of `../../references/research-method.md`",
+        "key comparison at the same product or technical layer",
+        "Act as the sole final decision-maker for the assessment",
+        "Render the result to the shared temporary HTML viewer",
     )
-    assess_recommendation_position = assess.index(
-        "Act as the sole final decision-maker for idea assessment"
-    )
-    assert confirmation_position < necessity_position < assess_research_position
-    assert assess_research_position < assess_recommendation_position
-
-    assert "Do not modify source code, plans, or unrelated documentation" in compare
-    assert "Prefer codebase knowledge-graph tools for code discovery" in compare
-    assert "fall back to read-only file inspection" in compare
-    baseline_position = compare.index("Establish the project baseline")
-    fingerprint_position = compare.index(
-        "Turn the baseline into the functional fingerprint"
-    )
-    compare_research_position = compare.index(
-        "Read and execute all of `../../references/research-method.md`"
-    )
-    assert baseline_position < fingerprint_position < compare_research_position
+    step_positions = [assess.index(step) for step in ordered_steps]
+    assert step_positions == sorted(step_positions)
+    assert "including the project's current state when material was supplied" in assess
+    assert "whether continuing on the current path is still worth the investment" in assess
 
     assert "normal research is read-only" in research_method.lower()
     assert "references/decision-kernel.md" in assess
-    assert "references/decision-kernel.md" in compare
     assert "decision-kernel.md" in research_method
     assert "candidate_mention" in decision_kernel
     assert "cannot prove that a capability is supported" in decision_kernel
@@ -70,36 +75,25 @@ def validate() -> None:
     assert "select only sources relevant" in research_method.lower()
     assert "explicit user approval" in research_method.lower()
     assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in assess
-    assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in compare
     assert "read and execute all of `../../references/research-method.md`" in assess.lower()
-    assert "read and execute all of `../../references/research-method.md`" in compare.lower()
     assert "sole final decision-maker" in assess.lower()
-    assert "sole final decision-maker" in compare.lower()
     assert "recommendation meanings" in assess.lower()
-    assert "recommendation meanings" in compare.lower()
-    assert "key comparison" in compare.lower()
-    assert "do not relabel capabilities independently" in compare.lower()
-    for skill in (assess, compare):
-        assert "github deep-search enhancement intent" in skill.lower()
-        assert "references/github-retrieval.md" in skill
-        assert "report the capability or setup result and stop" in skill.lower()
+    assert "key comparison" in assess.lower()
+    assert "do not relabel capabilities independently" in assess.lower()
+    assert "github deep-search enhancement intent" in assess.lower()
+    assert "references/github-retrieval.md" in assess
+    assert "report the capability or setup result and stop" in assess.lower()
     assert (
         "standalone request to enable, configure, or improve github deep search"
         in assess_meta["description"].lower()
     )
-    assert (
-        "github deep-search enhancement request includes"
-        in compare_meta["description"].lower()
-    )
     assert "Do not put a Build, Adapt, Use existing, or Stop verdict" in research_method
     verdict_contract = "`Build`, `Adapt`, `Use existing`, or `Stop`"
     assert verdict_contract in assess
-    assert verdict_contract in compare
     assert verdict_contract not in research_method
-    for skill in (assess, compare):
-        assert "${CLAUDE_PLUGIN_ROOT}" not in skill
-        assert "$ARGUMENTS" not in skill
-        assert "search-before-build:research" not in skill
+    assert "${CLAUDE_PLUGIN_ROOT}" not in assess
+    assert "$ARGUMENTS" not in assess
+    assert "search-before-build:research" not in assess
 
     for reference in (
         "conversation-and-decision.md",
@@ -115,7 +109,6 @@ def validate() -> None:
     for value in support_enums:
         assert f"`{value}`" in research_method
         assert f"`{value}`" not in assess
-        assert f"`{value}`" not in compare
     assert "without translating them" in research_method
     assert "Do not translate them there" in research_method
 
@@ -219,12 +212,10 @@ def validate() -> None:
     assert "Fall back to plain text" in channel
     assert "ask exactly one question per turn" in channel
     assert "through the question channel above" in conversation_rules
-    for skill in (assess, compare):
-        assert "question channel" in skill.lower()
+    assert "question channel" in assess.lower()
     assert "material, foreseeable, user-answerable question" in conversation_rules
 
     forbidden_jargon = ("用户画像", "核心价值主张", "市场细分信息", "商业闭环")
     for phrase in forbidden_jargon:
         assert phrase not in assess
-        assert phrase not in compare
         assert phrase in conversation_rules

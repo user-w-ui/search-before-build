@@ -5,8 +5,7 @@ from .common import ROOT, read_json, read_skill, read_text
 
 def validate() -> None:
     package = read_json("package.json")
-    assess = read_skill("search-before-build-assess")[1]
-    compare = read_skill("search-before-build-compare")[1]
+    assess = read_skill("assess")[1]
     research_method = read_text("references/research-method.md")
     github_rules = read_text("references/github-retrieval.md")
     source_catalog = read_text("references/search-sources.md")
@@ -138,6 +137,5 @@ def validate() -> None:
     ):
         assert detailed_github_term in github_rules
         assert detailed_github_term not in assess
-        assert detailed_github_term not in compare
         assert detailed_github_term not in research_method
         assert detailed_github_term not in source_catalog

@@ -54,15 +54,15 @@ Fall back to plain text when no such tool exists, when it is unavailable in the 
 
 ## Pre-research confirmation
 
-After clarification, give a concise summary of the complete current understanding. Cover the problem and situation, current approach and pain, desired outcome, core capability and boundaries, expected difference from alternatives, proposed form, material constraints, and any remaining assumptions or unknowns. Omit a dimension only when it is genuinely irrelevant.
+After clarification, give a concise summary of the complete current understanding. Cover the problem and situation, the project's current state when material was supplied, current approach and pain, desired outcome, core capability and boundaries, expected difference from alternatives, proposed form, material constraints, and any remaining assumptions or unknowns. Omit a dimension only when it is genuinely irrelevant.
 
 Write the summary in the message, then ask the user to confirm or correct it through the question channel above before the necessity check or external research. This verification is a separate quality gate and does not count toward the five information-seeking questions. Stop the turn and wait for the user's response; with a question tool, the tool call is that wait. If a correction materially changes the understanding, update the summary and reconfirm it before proceeding.
 
 A later report must not introduce as its biggest unknown a material, foreseeable, user-answerable question that the clarification stage skipped. Report unknowns may remain when the user does not know the answer, the question budget was exhausted, the issue emerged only through research, or external evidence is insufficient.
 
-## Existing-project comparison
+## Supplied material
 
-`search-before-build-compare` reuses the intent model, `How to ask`, and pre-research confirmation above, with one adjustment for material that already exists. Read what is already built or written from the supplied plan, prototype, or repository, and never re-ask it. Whether to align the real need before searching is the user's choice, not a self-judgment: right after establishing the baseline, offer the choice once and let the user decide, regardless of how vague or complete the material looks. When the user opts in, clarify only the real need behind the project—the core problem, the single must-have capability, the intended user, and why existing alternatives fall short—to the depth that makes the search accurate, not to redesign or complete the plan, then confirm before researching. When the user opts out, build the fingerprint from the baseline and search directly. The necessity gates below and the Build/Adapt/Use existing/Stop decision stay with the calling Skill; comparison does not run its own necessity check.
+When the user supplies a plan, prototype, repository, documentation, promotional images, or other concrete material, treat it as the first source for the intent model and the functional fingerprint. Read what is already built or written, and never re-ask it. Record what the material shows as implemented, planned, or unknown; claims and images are evidence of intent, not proof of a working capability. Then ask only about the gaps that would change the candidate set or comparison, usually the real need behind the project: the core problem, the single must-have capability, the intended user, and why existing alternatives fall short. Clarify to the depth that makes the search accurate, not to redesign or complete the plan. The pre-research confirmation and the necessity gates below still apply.
 
 ## Necessity gates
 
@@ -86,5 +86,7 @@ For each gate, label the basis as:
 - **Adapt**: a close solution exists and modifying it is cheaper or safer than starting over.
 - **Use existing**: an existing product already covers the important need with acceptable cost and limits.
 - **Stop**: no demonstrated need, no meaningful gain over the current workaround, or costs clearly exceed the benefit.
+
+For an existing project, **Build** means continuing on its own path is justified, and **Stop** means further investment is not justified; **Adapt** and **Use existing** keep their meanings above.
 
 Choose exactly one. Do not hide behind “it depends”; put dependencies under unknowns. The recommendation is advice, not a gate.

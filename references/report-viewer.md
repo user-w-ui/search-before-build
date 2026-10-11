@@ -1,6 +1,6 @@
 # Temporary report viewer
 
-Use the shared viewer to present completed assessments and comparisons without writing persistent reports into the user's project.
+Only the `assess` Skill renders this viewer. Use it to present completed assessments without writing persistent reports into the user's project.
 
 ## Lifecycle
 
@@ -75,7 +75,7 @@ Write UTF-8 JSON with this shape. Use the target display language for every free
 }
 ```
 
-Use exactly `assess` or `compare` for `mode`. Use exactly `Build`, `Adapt`, `Use existing`, or `Stop` for `recommendation.value`. Use exactly `used`, `limited`, or `unavailable` for coverage status. Use the stable support enums from `research-method.md` in every capability cell.
+Use exactly `assess` or `compare` for `mode`: `compare` when the user supplied concrete material about their own project (a repository, prototype, plan, documentation, or promotional material), and `assess` when they brought only an idea. In `capabilities[].current`, record a capability that the material shows only as planned as `unsupported` and say in its note that it is planned. Use exactly `Build`, `Adapt`, `Use existing`, or `Stop` for `recommendation.value`. Use exactly `used`, `limited`, or `unavailable` for coverage status. Use the stable support enums from `research-method.md` in every capability cell.
 
 Candidate IDs must be unique and must match the keys used under `capabilities[].candidates`. Omit a candidate entry when that capability was not compared; do not invent evidence to fill the matrix.
 

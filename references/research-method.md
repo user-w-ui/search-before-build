@@ -1,10 +1,10 @@
 # Research workflow and evidence contract
 
-This is an internal workflow for `search-before-build-assess` and `search-before-build-compare`. The calling Skill owns clarification, the final recommendation, temporary presentation, and any explicitly requested report persistence.
+This is an internal workflow for the `assess` Skill. The calling Skill owns clarification, the final recommendation, temporary presentation, and any explicitly requested report persistence.
 
 ## Boundaries
 
-Normal research is read-only with respect to the user's project: do not create, edit, or delete project files. The local decision kernel may overwrite its fixed input and output files under the operating-system temporary directory as described in `decision-kernel.md`. The only exception outside those temporary files is the GitHub MCP setup flow in `github-retrieval.md`, which may download the official binary and update the current Agent's MCP configuration only after explicit user approval.
+Normal research is read-only with respect to the user's project: do not create, edit, or delete project files. The local decision kernel may write its input and output files in a fresh run directory under the operating-system temporary directory as described in `decision-kernel.md`. The only exception outside those temporary files is the GitHub MCP setup flow in `github-retrieval.md`, which may download the official binary and update the current Agent's MCP configuration only after explicit user approval.
 
 Research must produce an evidence package before the caller makes a final recommendation. Do not put a Build, Adapt, Use existing, or Stop verdict in the evidence package. Do not save competitor reports or render the viewer; the calling Skill owns presentation and optional persistence.
 
