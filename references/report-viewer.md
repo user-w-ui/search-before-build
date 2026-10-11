@@ -93,6 +93,6 @@ For every other target language, translate the free text and provide localized i
 
 The viewer is a self-contained, responsive HTML page with no CDN or runtime network dependency. The payload contract already defines the content it presents.
 
-The top action bar owns an **Export full PDF** action. It opens the browser's print flow and uses print-specific capability tables so every candidate remains readable without horizontal-scroll clipping. The exported document includes the complete assessment and all competitor cards.
+The top action bar owns an **Export full PDF** action. It lays out a desktop-width snapshot of the page with every competitor card expanded and every matrix note shown, sizes the PDF page to that snapshot, and opens the browser's print flow, so saving as PDF yields one continuous page that matches the screen. Very long reports fall back to paged output, and print-specific capability tables replace a matrix too wide to fit. The exported document includes the complete assessment and all competitor cards.
 
 Each competitor card owns its own **Save Markdown** and **Copy Markdown** actions. Those exports follow `report-template.md` and exclude the necessity check and final recommendation. Do not add a silent auto-save action or an action that claims to write directly into the user's repository.

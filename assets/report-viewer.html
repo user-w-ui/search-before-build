@@ -421,12 +421,6 @@
         overflow-wrap: anywhere;
       }
 
-      .temporary-line {
-        margin: 14px 2px 0;
-        color: var(--faint);
-        font-size: 13px;
-      }
-
       /* Sections. */
       .section {
         padding-top: 48px;
@@ -1075,105 +1069,105 @@
       }
 
       @media (max-width: 960px) {
-        .span-8,
-        .span-7,
-        .span-6,
-        .span-5,
-        .span-4 {
+        html:not(.snapshot) .span-8,
+        html:not(.snapshot) .span-7,
+        html:not(.snapshot) .span-6,
+        html:not(.snapshot) .span-5,
+        html:not(.snapshot) .span-4 {
           grid-column: span 12;
         }
 
-        .span-3 {
+        html:not(.snapshot) .span-3 {
           grid-column: span 6;
         }
 
-        .row-2 {
+        html:not(.snapshot) .row-2 {
           grid-row: auto;
         }
 
-        .nav-chips {
+        html:not(.snapshot) .nav-chips {
           display: none;
         }
 
-        .topbar-inner {
+        html:not(.snapshot) .topbar-inner {
           justify-content: space-between;
         }
 
-        .unknown-list {
+        html:not(.snapshot) .unknown-list {
           grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 680px) {
-        .shell {
+        html:not(.snapshot) .shell {
           padding: 0 16px;
         }
 
-        .tile {
+        html:not(.snapshot) .tile {
           padding: 22px 20px;
         }
 
-        .matrix-shell {
+        html:not(.snapshot) .matrix-shell {
           margin: 0 -20px -22px;
           padding: 0 20px 20px;
         }
 
-        .matrix .capability-name {
+        html:not(.snapshot) .matrix .capability-name {
           left: -20px;
           width: 160px;
           min-width: 150px;
         }
 
-        .fingerprint {
+        html:not(.snapshot) .fingerprint {
           grid-template-columns: 1fr;
         }
 
-        .brand-name {
+        html:not(.snapshot) .brand-name {
           display: none;
         }
 
-        .page-head {
+        html:not(.snapshot) .page-head {
           padding-top: 28px;
         }
 
-        .candidate-tab {
+        html:not(.snapshot) .candidate-tab {
           flex-basis: 170px;
         }
 
         /* Each comparison row becomes a short stack: dimension, then both sides. */
-        .comparison-table,
-        .comparison-table tbody,
-        .comparison-table tr,
-        .comparison-table td {
+        html:not(.snapshot) .comparison-table,
+        html:not(.snapshot) .comparison-table tbody,
+        html:not(.snapshot) .comparison-table tr,
+        html:not(.snapshot) .comparison-table td {
           display: block;
           width: auto;
         }
 
-        .comparison-table thead {
+        html:not(.snapshot) .comparison-table thead {
           display: none;
         }
 
-        .comparison-table tr {
+        html:not(.snapshot) .comparison-table tr {
           padding: 12px 0;
           border-top: 1px solid var(--border);
         }
 
-        .comparison-table tr:first-child {
+        html:not(.snapshot) .comparison-table tr:first-child {
           padding-top: 0;
           border-top: 0;
         }
 
-        .comparison-table td {
+        html:not(.snapshot) .comparison-table td {
           padding: 0;
           border-top: 0;
           overflow-wrap: break-word;
         }
 
-        .comparison-table td + td {
+        html:not(.snapshot) .comparison-table td + td {
           margin-top: 8px;
         }
 
-        .comparison-table td[data-label]::before {
+        html:not(.snapshot) .comparison-table td[data-label]::before {
           content: attr(data-label);
           display: block;
           color: var(--muted);
@@ -1182,14 +1176,117 @@
         }
       }
 
+      /* Per-candidate capability tables replace the wide matrix when it cannot fit a page. */
+      .print-matrix-group {
+        margin-top: 18px;
+      }
+
+      .print-matrix-group:first-child {
+        margin-top: 0;
+      }
+
+      .print-matrix-heading {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 0 0 8px;
+        font-weight: 700;
+      }
+
+      .print-matrix-heading h3 {
+        margin: 0;
+        font-size: 15px;
+      }
+
+      .print-matrix-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 13px;
+      }
+
+      .print-matrix-table th:first-child {
+        width: 24%;
+      }
+
+      .print-matrix-table th,
+      .print-matrix-table td {
+        padding: 8px 10px 8px 0;
+        border-top: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .print-matrix-table th {
+        color: var(--muted);
+        font-weight: 650;
+      }
+
+      .print-matrix-table .capability-name {
+        font-weight: 650;
+      }
+
+      /* PDF snapshot: a desktop-width copy of the page with every candidate expanded. */
+      html.snapshot {
+        scroll-behavior: auto;
+      }
+
+      html.snapshot .topbar,
+      html.snapshot .skip-link,
+      html.snapshot .toast,
+      html.snapshot .candidate-tabs,
+      html.snapshot .candidate-actions,
+      html.snapshot .candidate-pager,
+      html.snapshot .matrix-toolbar .button,
+      html.snapshot .demo-language {
+        display: none !important;
+      }
+
+      html.snapshot .matrix-shell {
+        max-height: none;
+        overflow: visible;
+      }
+
+      html.snapshot .matrix thead th,
+      html.snapshot .matrix .capability-name {
+        position: static;
+      }
+
+      html.snapshot.snapshot-split .matrix-shell {
+        display: none;
+      }
+
+      html.snapshot.snapshot-split .print-matrix {
+        display: block;
+      }
+
+      html.snapshot .candidate-panel[hidden] {
+        display: grid;
+      }
+
+      html.snapshot .candidate-panel + .candidate-panel {
+        margin-top: 40px;
+      }
+
+      html.snapshot .page-head {
+        padding-top: 56px;
+      }
+
+      html.snapshot .topic {
+        font-size: 38px;
+      }
+
+      html.snapshot .decision {
+        font-size: 92px;
+      }
+
+      html.snapshot .candidate-name {
+        font-size: 36px;
+      }
+
       @media print {
         @page {
           margin: 14mm;
-        }
-
-        html,
-        body {
-          background: #ffffff;
         }
 
         .topbar,
@@ -1203,17 +1300,9 @@
           display: none !important;
         }
 
-        .tile,
-        .unknown-list li {
-          box-shadow: none;
-          border: 1px solid #dcdce2;
-        }
-
-        .verdict-tile,
-        .support-badge,
-        .coverage-status,
-        .summary-quote,
-        .brand-mark {
+        html.snapshot,
+        html.snapshot body,
+        html.snapshot body * {
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
         }
@@ -1222,73 +1311,68 @@
           display: grid;
         }
 
-        .candidate-panel {
-          margin-top: 28px;
-        }
-
-        .tile,
-        .candidate-panel > .tile {
+        /* Keep small items whole; large tiles may split so pages never leave blank gaps. */
+        .stat,
+        .coverage-item,
+        .fingerprint div,
+        .capability-list li,
+        .design-item,
+        .lesson-list li,
+        .unknown-list li,
+        .comparison-table tr,
+        .print-matrix-table tr,
+        .section-head {
           break-inside: avoid;
         }
 
-        .matrix-shell {
-          display: none;
-        }
-
-        .print-matrix {
-          display: block;
+        .section-head,
+        .print-matrix-heading,
+        .content-title {
+          break-after: avoid;
         }
 
         .print-matrix-group {
-          margin-top: 18px;
           break-inside: auto;
-        }
-
-        .print-matrix-heading {
-          display: flex;
-          justify-content: space-between;
-          gap: 12px;
-          margin: 0 0 8px;
-          font-weight: 700;
-        }
-
-        .print-matrix-heading h3 {
-          margin: 0;
-          font-size: 15px;
-        }
-
-        .print-matrix-table {
-          width: 100%;
-          border-collapse: collapse;
-          table-layout: fixed;
-          font-size: 12.5px;
-        }
-
-        .print-matrix-table th:first-child {
-          width: 24%;
         }
 
         .print-matrix-table thead {
           display: table-header-group;
         }
 
-        .print-matrix-table th,
-        .print-matrix-table td {
-          padding: 7px 8px;
-          border-top: 1px solid #dcdce2;
-          text-align: left;
-          vertical-align: top;
+        /* Browser-menu printing without the snapshot: a plain, paginated document. */
+        html:not(.snapshot),
+        html:not(.snapshot) body {
+          background: #ffffff;
         }
 
-        .print-matrix-table tr {
-          break-inside: avoid;
+        html:not(.snapshot) .tile,
+        html:not(.snapshot) .unknown-list li {
+          box-shadow: none;
+          border: 1px solid #dcdce2;
         }
 
-        .print-matrix-table .cell-note {
+        html:not(.snapshot) .verdict-tile,
+        html:not(.snapshot) .support-badge,
+        html:not(.snapshot) .coverage-status,
+        html:not(.snapshot) .summary-quote,
+        html:not(.snapshot) .brand-mark {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        html:not(.snapshot) .candidate-panel {
+          margin-top: 28px;
+        }
+
+        html:not(.snapshot) .matrix-shell {
+          display: none;
+        }
+
+        html:not(.snapshot) .print-matrix {
           display: block;
         }
 
-        .unknown-list {
+        html:not(.snapshot) .unknown-list {
           grid-template-columns: 1fr;
         }
       }
@@ -1341,7 +1425,6 @@
         </article>
         <div class="bento span-12" id="stat-row"></div>
       </section>
-      <p class="temporary-line" id="temporary-line"></p>
 
       <section class="section" id="context-section" aria-labelledby="context-title">
         <header class="section-head">
@@ -1395,14 +1478,21 @@
     </main>
 
     <footer class="shell footer">
-      <span id="footer-notice"></span>
       <strong>Search Before Build</strong>
+      <span id="footer-generated"></span>
     </footer>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
       (() => {
         "use strict";
+
+        // PDF export re-renders this untouched document inside a hidden frame named SNAPSHOT_NAME.
+        const SNAPSHOT_NAME = "search-before-build-pdf-snapshot";
+        const SNAPSHOT_WIDTH = 1280;
+        const SNAPSHOT_MAX_HEIGHT = 19000;
+        const snapshotMode = window.name === SNAPSHOT_NAME;
+        const pristineDocument = snapshotMode ? "" : `<!doctype html>\n${document.documentElement.outerHTML}`;
 
         const encodedReport = "__SEARCH_BEFORE_BUILD_REPORT_DATA__";
         const bytes = Uint8Array.from(atob(encodedReport), (character) => character.charCodeAt(0));
@@ -1475,6 +1565,7 @@
             verdictAdapt: "改造现有方案",
             verdictUseExisting: "直接用现成的",
             verdictStop: "先不要做",
+            preparingPdf: "正在生成 PDF…",
           },
           en: {
             skipToContent: "Skip to content",
@@ -1538,6 +1629,7 @@
             viewCandidate: "View details for {name}",
             previousCandidate: "Previous candidate",
             nextCandidate: "Next candidate",
+            preparingPdf: "Preparing PDF…",
           },
         };
         dictionaries.zh.exportPdf = "导出完整 PDF";
@@ -1627,18 +1719,80 @@
         document.title = `${report.topic} · Search Before Build`;
 
         const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        document.documentElement.dataset.theme = preferredTheme;
+        document.documentElement.dataset.theme = snapshotMode ? "light" : preferredTheme;
+        if (snapshotMode) document.documentElement.classList.add("snapshot");
         $("theme-toggle").setAttribute("aria-label", labels.theme);
         $("theme-toggle").title = labels.theme;
         $("theme-toggle").addEventListener("click", () => {
           document.documentElement.dataset.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
         });
-        $("export-pdf").textContent = labels.exportPdf;
-        $("export-pdf").title = labels.exportPdf;
-        $("export-pdf").addEventListener("click", async () => {
+
+        // Export renders a desktop-width snapshot with every candidate expanded, sized as one
+        // continuous PDF page. Plain printing remains the fallback when the snapshot cannot run.
+        const exportButton = $("export-pdf");
+        let exporting = false;
+        const printPlainly = async () => {
           if (document.fonts && document.fonts.ready) await document.fonts.ready;
           window.print();
-        });
+        };
+        const exportPdf = () => {
+          if (exporting) return;
+          if (!pristineDocument || !("srcdoc" in document.createElement("iframe"))) {
+            printPlainly();
+            return;
+          }
+          exporting = true;
+          exportButton.disabled = true;
+          exportButton.textContent = t("preparingPdf");
+          const frame = document.createElement("iframe");
+          let readyTimer;
+          const finish = () => {
+            clearTimeout(readyTimer);
+            window.removeEventListener("message", onMessage);
+            frame.remove();
+            exporting = false;
+            exportButton.disabled = false;
+            exportButton.textContent = labels.exportPdf;
+          };
+          const onMessage = (event) => {
+            if (event.source !== frame.contentWindow || !event.data) return;
+            if (event.data.type === "sbb-pdf-ready") clearTimeout(readyTimer);
+            if (event.data.type === "sbb-pdf-done") finish();
+          };
+          window.addEventListener("message", onMessage);
+          readyTimer = setTimeout(() => {
+            finish();
+            printPlainly();
+          }, 20000);
+          frame.name = SNAPSHOT_NAME;
+          frame.title = labels.exportPdf;
+          frame.tabIndex = -1;
+          frame.setAttribute("aria-hidden", "true");
+          frame.style.cssText = `position: fixed; top: 0; left: -${SNAPSHOT_WIDTH * 2}px; width: ${SNAPSHOT_WIDTH}px; height: 900px; border: 0;`;
+          frame.srcdoc = pristineDocument;
+          document.body.append(frame);
+        };
+        exportButton.textContent = labels.exportPdf;
+        exportButton.title = labels.exportPdf;
+        exportButton.addEventListener("click", exportPdf);
+        if (!snapshotMode) {
+          // Paper is white: print the light palette even while the page shows the dark theme.
+          let themeBeforePrint = null;
+          window.addEventListener("beforeprint", () => {
+            themeBeforePrint = document.documentElement.dataset.theme;
+            document.documentElement.dataset.theme = "light";
+          });
+          window.addEventListener("afterprint", () => {
+            if (themeBeforePrint) document.documentElement.dataset.theme = themeBeforePrint;
+            themeBeforePrint = null;
+          });
+          window.addEventListener("keydown", (event) => {
+            if ((event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "p") {
+              event.preventDefault();
+              exportPdf();
+            }
+          });
+        }
 
         $("skip-link").textContent = labels.skipToContent;
         $("hero-eyebrow").textContent = labels.report;
@@ -1658,8 +1812,7 @@
         $("reuse-value").textContent = textOrFallback(report.recommendation.reusableOption);
         $("unknown-label").textContent = labels.biggestUnknown;
         $("unknown-value").textContent = textOrFallback(report.recommendation.biggestUnknown);
-        $("temporary-line").textContent = labels.temporaryNotice;
-        $("footer-notice").textContent = labels.temporaryNotice;
+        $("footer-generated").textContent = `${labels.generated} · ${displayDate(report.generatedAt)}`;
 
         [
           ["context-title", labels.context],
@@ -2141,11 +2294,50 @@
             tab.tabIndex = selected ? 0 : -1;
             panels[index].hidden = !selected;
           });
-          if (initial === linked) setTimeout(() => $("candidates-section").scrollIntoView({ block: "start" }), 0);
+          if (snapshotMode) {
+            panels.forEach((panel) => { panel.hidden = false; });
+          } else if (initial === linked) {
+            setTimeout(() => $("candidates-section").scrollIntoView({ block: "start" }), 0);
+          }
         }
 
         const unknowns = report.unknowns.length ? report.unknowns : [report.recommendation.biggestUnknown];
         unknowns.forEach((item) => $("unknown-list").append(element("li", "", textOrFallback(item))));
+
+        // Inside the export frame: show every note, measure the page, size the PDF page to fit, then print.
+        if (snapshotMode) {
+          setNotes(true);
+          const prepareSnapshot = async () => {
+            if (document.fonts && document.fonts.ready) await document.fonts.ready;
+            const shell = $("matrix-shell");
+            if (report.competitors.length > 6 || shell.scrollWidth > shell.clientWidth + 1) {
+              document.documentElement.classList.add("snapshot-split");
+            }
+            const height = Math.ceil(document.documentElement.scrollHeight) + 2;
+            const page = element("style");
+            if (height <= SNAPSHOT_MAX_HEIGHT) {
+              page.textContent = `@page { size: ${SNAPSHOT_WIDTH}px ${height}px; margin: 0; }`;
+            } else {
+              document.documentElement.classList.add("snapshot-paged");
+              page.textContent = `@page { size: ${SNAPSHOT_WIDTH}px ${Math.round(SNAPSHOT_WIDTH * 1.414)}px; margin: 40px 0; }`;
+            }
+            document.head.append(page);
+            document.documentElement.dataset.snapshotReady = "true";
+          };
+          prepareSnapshot().then(() => {
+            if (window.parent === window) return;
+            let done = false;
+            const finish = () => {
+              if (done) return;
+              done = true;
+              window.parent.postMessage({ type: "sbb-pdf-done" }, "*");
+            };
+            window.addEventListener("afterprint", finish, { once: true });
+            window.parent.postMessage({ type: "sbb-pdf-ready" }, "*");
+            window.print();
+            setTimeout(finish, 3000);
+          });
+        }
       })();
     </script>
   </body>
