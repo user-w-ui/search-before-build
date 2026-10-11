@@ -1,6 +1,6 @@
 # Research workflow and evidence contract
 
-This is an internal workflow for the `assess` Skill. The calling Skill owns clarification, the final recommendation, temporary presentation, and any explicitly requested report persistence.
+This is an internal workflow for the `assess` and `quick-search` Skills. `assess` runs all of it; `quick-search` runs the reduced-depth mode at the end of this file. The calling Skill owns clarification, the final recommendation, temporary presentation, and any explicitly requested report persistence.
 
 ## Boundaries
 
@@ -102,3 +102,14 @@ For every material capability use exactly one value:
 Use these exact lowercase values in the internal evidence package. Do not translate them there; `report-template.md` owns localized display labels.
 
 Also compare adoption effort, operating mode, maintenance, license/price, data or deployment constraints, and migration cost. Date time-sensitive facts. Separate verified facts from inference.
+
+## Reduced-depth mode
+
+`quick-search` uses this mode for a fast, preliminary look. It replaces the source coverage ledger and the workflow steps above as follows:
+
+- Skip the decision kernel, the four pools, the route-and-language audit, the full evidence package, and the key comparison.
+- Build a short fingerprint from the request: core task, inputs and outputs, operating mode, and the must-have capability when it is known.
+- Query at most three routes, counting Web search as one. Pick the routes from `search-sources.md` whose triggers best match the fingerprint. Search in Chinese and English when the target market is Chinese or unknown.
+- Keep at most five candidates. Read at least one primary page for each, and give a dated maintenance signal or record maintenance as unknown.
+- Still apply the rules that guard against false claims: do not infer functionality from a name, snippet, Stars, or download count; use the exact sentence above when every external route is unavailable; and say only that nothing close was found in the routes checked, never that nothing similar exists.
+- For GitHub searches, follow `github-retrieval.md` for the capability check, query construction, and fallbacks, and give its coverage statement in the conversation. Do not offer the MCP setup in this mode.

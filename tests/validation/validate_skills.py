@@ -17,8 +17,11 @@ def validate() -> None:
         "search-before-build-research",
     ):
         assert not (ROOT / "skills" / retired).exists(), retired
-    description = assess_meta["description"]
-    assert "\n" not in description and ": " not in description
+    quick_meta, quick = read_skill("quick-search")
+    assert quick_meta["name"] == "quick-search"
+    for meta in (assess_meta, quick_meta):
+        description = meta["description"]
+        assert "\n" not in description and ": " not in description, meta["name"]
 
     assert "at most five information-seeking questions" in assess.lower()
     assert "ask one question per turn" in assess.lower()
@@ -109,6 +112,7 @@ def validate() -> None:
     for value in support_enums:
         assert f"`{value}`" in research_method
         assert f"`{value}`" not in assess
+        assert f"`{value}`" not in quick
     assert "without translating them" in research_method
     assert "Do not translate them there" in research_method
 
@@ -215,7 +219,37 @@ def validate() -> None:
     assert "question channel" in assess.lower()
     assert "material, foreseeable, user-answerable question" in conversation_rules
 
+    # quick-search is a light, chat-only first look; it never reaches a verdict.
+    assert "初步" in quick
+    assert "Ask at most one question" in quick
+    assert "question channel" in quick.lower()
+    assert "reduced-depth mode" in quick
+    assert "references/research-method.md" in quick
+    assert "references/search-sources.md" in quick
+    assert "references/github-retrieval.md" in quick
+    for heavy_reference in ("report-viewer.md", "report-template.md", "decision-kernel.md"):
+        assert heavy_reference not in quick, heavy_reference
+    for verdict in ("`Build`", "`Adapt`", "`Use existing`", "`Stop`", "Use existing"):
+        assert verdict not in quick, verdict
+    assert "Do not create files, render a viewer, save reports" in quick
+    assert "suggest running the `assess` skill" in quick
+    assert "${CLAUDE_PLUGIN_ROOT}" not in quick
+    assert "$ARGUMENTS" not in quick
+    reduced = research_method[research_method.index("## Reduced-depth mode"):]
+    assert "`quick-search` runs the reduced-depth mode" in research_method
+    for rule in (
+        "Skip the decision kernel, the four pools",
+        "at most three routes, counting Web search as one",
+        "Search in Chinese and English",
+        "at most five candidates",
+        "dated maintenance signal",
+        "never that nothing similar exists",
+        "Do not offer the MCP setup in this mode",
+    ):
+        assert rule in reduced, rule
+
     forbidden_jargon = ("用户画像", "核心价值主张", "市场细分信息", "商业闭环")
     for phrase in forbidden_jargon:
         assert phrase not in assess
+        assert phrase not in quick
         assert phrase in conversation_rules

@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the shared workflow in `skills/`: `assess` evaluates an idea or an existing project from whatever material the user supplies. Its internal candidate-research workflow lives in `references/research-method.md`; source-specific rules live in the other files under `references/`. The one-time installer is `scripts/setup-github-mcp.mjs`; the temporary result viewer is rendered by `scripts/render-report.mjs` from `assets/report-viewer.html`. Keep shared skill instructions platform-neutral; naming host-specific tools is fine only as non-exhaustive examples of a capability. `tests/validate_plugin.py` checks structure and behavioral invariants. Persisted reports are optional and belong in `docs/search-before-build/<topic>/<competitor>.md` only after an explicit user request.
+This repository is a dual-agent skill package, not a compiled application. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` expose the shared workflows in `skills/`: `assess` evaluates an idea or an existing project from whatever material the user supplies, and `quick-search` gives a fast, preliminary look at what already exists. Their internal candidate-research workflow lives in `references/research-method.md`; source-specific rules live in the other files under `references/`. The one-time installer is `scripts/setup-github-mcp.mjs`; the temporary result viewer is rendered by `scripts/render-report.mjs` from `assets/report-viewer.html`. Keep shared skill instructions platform-neutral; naming host-specific tools is fine only as non-exhaustive examples of a capability. `tests/validate_plugin.py` checks structure and behavioral invariants. Persisted reports are optional and belong in `docs/search-before-build/<topic>/<competitor>.md` only after an explicit user request.
 
 ## Build, Test, and Development Commands
 
@@ -14,7 +14,7 @@ python tests/validate_plugin.py
 claude --plugin-dir /path/to/search-before-build
 ```
 
-The first command validates the Claude manifest and skill metadata. The second checks both manifests, skill boundaries, reference files, and report structure. The third loads the Claude package for an interactive smoke test. Invoke `/search-before-build:assess <idea>` or `/search-before-build:assess <path>` after loading it. Validate the Codex manifest with Codex's plugin validator before publishing a Codex marketplace entry.
+The first command validates the Claude manifest and skill metadata. The second checks both manifests, skill boundaries, reference files, and report structure. The third loads the Claude package for an interactive smoke test. Invoke `/search-before-build:assess <idea or path>` or `/search-before-build:quick-search <idea>` after loading it. Validate the Codex manifest with Codex's plugin validator before publishing a Codex marketplace entry.
 
 For a focused local check, pass one or more contract groups to the Python validator: `package`, `skills`, `github`, or `report`. Running it without arguments remains the full validation entrypoint.
 

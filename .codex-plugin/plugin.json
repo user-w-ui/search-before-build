@@ -15,7 +15,7 @@
     "capabilities": ["Interactive", "Write"],
     "defaultPrompt": [
       "Assess whether I should build an app that organizes saved links.",
-      "Assess whether this existing project is still worth continuing."
+      "Quickly check whether a tool like this already exists."
     ],
     "brandColor": "#D97706"
   }

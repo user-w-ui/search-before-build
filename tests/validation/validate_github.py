@@ -6,6 +6,7 @@ from .common import ROOT, read_json, read_skill, read_text
 def validate() -> None:
     package = read_json("package.json")
     assess = read_skill("assess")[1]
+    quick = read_skill("quick-search")[1]
     research_method = read_text("references/research-method.md")
     github_rules = read_text("references/github-retrieval.md")
     source_catalog = read_text("references/search-sources.md")
@@ -71,6 +72,7 @@ def validate() -> None:
     assert "pre-exposed tools, discovered plugin/app tools, registered MCP tools, and GitHub CLI" in github_rules
     assert "A missing pre-exposed tool is not evidence that the integration is absent" in research_method
     assert "enhancement intent, not installation consent" in github_rules
+    assert "only when the calling Skill is `assess` and the host is Claude Code or Codex" in github_rules
     assert "wait for explicit approval" in github_rules
     for exposed_route in (
         "a GitHub plugin or app",
@@ -137,5 +139,6 @@ def validate() -> None:
     ):
         assert detailed_github_term in github_rules
         assert detailed_github_term not in assess
+        assert detailed_github_term not in quick
         assert detailed_github_term not in research_method
         assert detailed_github_term not in source_catalog
