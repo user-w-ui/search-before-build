@@ -63,6 +63,7 @@ It ends with a clear recommendation that you remain free to override:
 /search-before-build:assess ./docs/plan.md
 /search-before-build:quick-search a CLI that converts OpenAPI specs to TypeScript clients
 ```
+
 ## More than GitHub search
 
 The plugin first determines what it needs to find, then chooses where to look. It extracts a functional fingerprint from your needs and searches only relevant sources instead of scanning every platform every time.

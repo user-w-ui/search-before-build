@@ -64,6 +64,7 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 /search-before-build:assess ./docs/plan.md
 /search-before-build:quick-search 把 OpenAPI 文档转成 TypeScript 客户端的命令行工具
 ```
+
 ## 不只是搜索 GitHub
 
 先看要找什么，再决定去哪里找。插件从需求中提取功能指纹，只选真正相关的来源，不会每次扫遍所有平台。
@@ -84,13 +85,14 @@ SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索�
 
 ### 可选的 GitHub 深度检索
 
-插件会自动查找你的 GitHub工具；没有也能通过公开 API 和网页搜索正常运行。或者如果你同意，在 Claude Code 和 Codex 上，`assess` 也可自动安装 GitHub 官方 MCP：
+插件会自动查找你的 GitHub 工具；没有也能通过公开 API 和网页搜索正常运行。或者如果你同意，在 Claude Code 和 Codex 上，`assess` 也可自动安装 GitHub 官方 MCP：
 
 ```text
 启用 GitHub 深度检索
 ```
 
 安装器会下载并校验官方二进制，以 `repos` 工具集和 `--read-only` 模式运行，用浏览器 OAuth 登录且不额外申请权限范围。GitHub 只在内存中保存这次登录，所以每个新的 Agent 会话第一次搜索时会短暂打开 GitHub 页面；首次批准后通常无需再点确认。
+
 ## 临时研究简报
 
 研究完成后，`assess` 会生成一份本地 HTML 可视化简报，集中展示最终建议、检索覆盖、能力矩阵、重点竞品、可复用经验和未知项。页面使用单文件离线渲染，不依赖 CDN，写入系统临时目录，因此不会因为一次随手询问就在当前项目中留下报告文件。
