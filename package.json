@@ -19,11 +19,18 @@
     "plugin",
     "claude code",
     "agent-skill",
-    "vibe-coding"
+    "vibe-coding",
+    "opencode",
+    "pi-package"
   ],
   "main": "./index.js",
   "exports": {
     ".": "./index.js"
+  },
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
   },
   "bin": {
     "search-before-build": "bin/install.mjs"
@@ -31,6 +38,7 @@
   "files": [
     "bin/",
     "index.js",
+    "plugin.json",
     "skills/",
     "references/",
     "dist/",

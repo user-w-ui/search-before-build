@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "search-before-build",
+  "version": "0.3.1",
+  "description": "A plain-language pre-build reality check and evidence-backed alternative research toolkit for vibe coders.",
+  "author": {
+    "name": "search-before-build contributors"
+  },
+  "homepage": "https://github.com/user-w-ui/search-before-build#readme",
+  "repository": "https://github.com/user-w-ui/search-before-build",
+  "license": "MIT",
+  "keywords": ["agent-skill", "research", "alternatives", "vibe-coding"]
+}

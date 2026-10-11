@@ -21,10 +21,15 @@ function git(args) {
 const packageVersion = readJson("package.json").version;
 const claudeVersion = readJson(".claude-plugin/plugin.json").version;
 const codexVersion = readJson(".codex-plugin/plugin.json").version;
+const agentPluginsVersion = readJson("plugin.json").version;
 const expectedTag = `v${packageVersion}`;
 
-if (packageVersion !== claudeVersion || packageVersion !== codexVersion) {
-  throw new Error("package.json and both plugin manifests must have the same version.");
+if (
+  packageVersion !== claudeVersion ||
+  packageVersion !== codexVersion ||
+  packageVersion !== agentPluginsVersion
+) {
+  throw new Error("package.json and all three plugin manifests must have the same version.");
 }
 if (git(["status", "--porcelain"])) {
   throw new Error("Refusing to publish from a dirty working tree.");

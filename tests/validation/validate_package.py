@@ -6,6 +6,7 @@ from .common import ROOT, read_json, read_text
 def validate() -> None:
     claude_manifest = read_json(".claude-plugin/plugin.json")
     codex_manifest = read_json(".codex-plugin/plugin.json")
+    agent_plugins_manifest = read_json("plugin.json")
     assert claude_manifest["name"] == "search-before-build"
     assert codex_manifest["name"] == "search-before-build"
     assert codex_manifest["skills"] == "./skills/"
@@ -34,7 +35,25 @@ def validate() -> None:
     assert package["name"] == "@superq/search-before-build"
     assert package["license"] == "MIT"
     assert package["bin"] == {"search-before-build": "bin/install.mjs"}
-    assert package["version"] == claude_manifest["version"] == codex_manifest["version"]
+    assert (
+        package["version"]
+        == claude_manifest["version"]
+        == codex_manifest["version"]
+        == agent_plugins_manifest["version"]
+    )
+    # Agent Plugins 1.0 manifests are closed: only these keys are allowed.
+    assert agent_plugins_manifest["$schema"] == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+    assert agent_plugins_manifest["name"] == "search-before-build"
+    assert set(agent_plugins_manifest) <= {
+        "$schema", "name", "version", "description", "author", "homepage",
+        "repository", "license", "keywords", "extensions",
+    }
+    assert package["main"] == "./index.js"
+    assert package["exports"] == {".": "./index.js"}
+    assert package["pi"] == {"skills": ["./skills"]}
+    assert "prepare" not in package["scripts"], "git installs must not trigger a build"
+    for shipped in ("index.js", "plugin.json", "skills/", "references/", "dist/"):
+        assert shipped in package["files"], shipped
     assert package["scripts"]["prepublishOnly"] == "node scripts/verify-release.mjs"
     assert package["scripts"]["build"] == "tsc -p tsconfig.json"
     assert package["scripts"]["benchmark:offline"] == "npm run build && node bench/run-offline.mjs"
@@ -71,3 +90,4 @@ def validate() -> None:
     assert 'git(["rev-parse", `${expectedTag}^{commit}`])' in release_verifier
     assert "packageVersion !== claudeVersion" in release_verifier
     assert "packageVersion !== codexVersion" in release_verifier
+    assert "packageVersion !== agentPluginsVersion" in release_verifier

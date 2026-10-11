@@ -68,6 +68,7 @@ test("npm package ships the plugin entry and everything skills reference", () =>
   const files = new Set(JSON.parse(output)[0].files.map((file) => file.path));
   for (const required of [
     "index.js",
+    "plugin.json",
     "skills/assess/SKILL.md",
     "skills/quick-search/SKILL.md",
     "references/research-method.md",
