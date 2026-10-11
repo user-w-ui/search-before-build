@@ -4,7 +4,7 @@ Use this semantic contract for each competitor card in the temporary viewer and 
 
 ## Persistence boundary
 
-Do not write competitor reports into the current project by default. After the user has seen the result, persist only the competitors they explicitly request to `docs/search-before-build/<topic-slug>/<competitor-slug>.md`. Update the canonical file when it already exists; do not create timestamped variants or a combined multi-competitor report.
+Do not write competitor reports into the current project by default. After the user has seen the result, persist only the competitors they explicitly request to `docs/search-before-build/<topic-slug>/<competitor-slug>.md` in the user's current project. Update the canonical file when it already exists; do not create timestamped variants or a combined multi-competitor report.
 
 The temporary viewer may offer a user-initiated download or copy action for each competitor. Those actions are optional exports, not project writes, and must produce this same Markdown structure.
 

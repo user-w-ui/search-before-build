@@ -52,10 +52,10 @@ Requests such as “启用 GitHub 深度检索”, “帮我配置 GitHub MCP”
 After consent, detect the current host and run:
 
 ```text
-node <package-root>/scripts/setup-github-mcp.mjs --agent <claude|codex>
+node ../scripts/setup-github-mcp.mjs --agent <claude|codex>
 ```
 
-Use the package root that contains `scripts/`. The script detects OS/CPU, reuses a current installation and upgrades an outdated one, downloads only from `github/github-mcp-server` official releases, verifies the published SHA-256 digest, installs to a stable user directory, registers `stdio --read-only --toolsets repos` without requesting OAuth scopes, verifies that the registration the host will launch matches exactly, and performs an OAuth-backed connection test. Downloads fall back to `curl` with `HTTPS_PROXY` or the Windows system proxy when Node cannot reach GitHub directly; when GitHub is reachable only through that proxy, the script also saves it as `HTTPS_PROXY` in the MCP configuration. Requesting no scopes does not shrink an earlier, broader authorization of the same GitHub app; do not promise public-only access. It never requests a PAT, Docker, npm package, Python package, or environment variable.
+Resolve `../scripts/setup-github-mcp.mjs` from the directory containing this file to an absolute path; the user's current project does not contain it. The script detects OS/CPU, reuses a current installation and upgrades an outdated one, downloads only from `github/github-mcp-server` official releases, verifies the published SHA-256 digest, installs to a stable user directory, registers `stdio --read-only --toolsets repos` without requesting OAuth scopes, verifies that the registration the host will launch matches exactly, and performs an OAuth-backed connection test. Downloads fall back to `curl` with `HTTPS_PROXY` or the Windows system proxy when Node cannot reach GitHub directly; when GitHub is reachable only through that proxy, the script also saves it as `HTTPS_PROXY` in the MCP configuration. Requesting no scopes does not shrink an earlier, broader authorization of the same GitHub app; do not promise public-only access. It never requests a PAT, Docker, npm package, Python package, or environment variable.
 
 Run it in the foreground and relay its output plainly. If it prints GitHub sign-in instructions (a link or a device code), show them to the user verbatim and keep waiting; the test finishes once the user approves. If it reports a network failure, pass on its proxy hint instead of retrying blindly.
 

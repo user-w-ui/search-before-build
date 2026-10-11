@@ -16,7 +16,7 @@ The kernel cannot prove that a capability is supported. `candidate_mention` mean
 
 ## Availability
 
-Use the kernel when Node.js 18 or later and `<package-root>/dist/cli.js` are available. Do not install dependencies during a research request.
+Use the kernel when Node.js 18 or later and `../dist/cli.js` (relative to the directory containing this file) are available. Do not install dependencies during a research request.
 
 If the kernel is unavailable or exits non-zero, continue with the existing research workflow. Add one coverage limitation saying that deterministic candidate fusion was unavailable; do not block the assessment or comparison.
 
@@ -77,10 +77,10 @@ Use a distinct `requestId` for each tool call. Set `providerHint` and `categoryH
 ## Run
 
 ```bash
-node <package-root>/dist/cli.js run --input <temp-input.json> --output <temp-output.json>
+node ../dist/cli.js run --input <temp-input.json> --output <temp-output.json>
 ```
 
-Run it after the discovery pools contain representative candidates. Rerun after primary-source verification only when those results materially change the candidate evidence.
+Resolve `../dist/cli.js` from the directory containing this file to an absolute path before running it. Run it after the discovery pools contain representative candidates. Rerun after primary-source verification only when those results materially change the candidate evidence.
 
 If `evidence.needsFollowUp` is true and a missing must-have capability could change the final recommendation, execute at most one targeted follow-up round using `evidence.suggestedQueries`. Append the new retrieval envelopes and rerun. Do not loop again.
 

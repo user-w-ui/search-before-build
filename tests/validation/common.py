@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -55,3 +56,29 @@ def assert_legacy_name_removed() -> None:
         if path.suffix.lower() in {".md", ".json", ".mjs", ".py"}:
             text = path.read_text(encoding="utf-8")
             assert not any(name in text for name in LEGACY_NAMES), relative
+
+
+PACKAGE_PATH = re.compile(r"(?<![\w./<-])((?:\.\./)+[\w./-]+)")
+REFERENCE_NAME = re.compile(r"`([a-z0-9-]+\.md)`|\]\(([a-z0-9-]+\.md)\)")
+
+
+def assert_package_paths_resolve() -> None:
+    """Every package-resource path resolves from the file that contains it.
+
+    Skills and references write package paths relative to their own file
+    (`../../references/x.md`, `../scripts/x.mjs`) and references name each
+    other by bare file name. User-project and temporary paths are not checked.
+    """
+    documents = sorted((ROOT / "skills").glob("*/SKILL.md")) + sorted((ROOT / "references").glob("*.md"))
+    for document in documents:
+        relative = document.relative_to(ROOT).as_posix()
+        text = document.read_text(encoding="utf-8")
+        assert "<package-root>" not in text, f"{relative}: use a path relative to this file"
+        assert "from this package" not in text, f"{relative}: use a path relative to this file"
+        for match in PACKAGE_PATH.finditer(text):
+            target = match.group(1).rstrip(".,;:")
+            assert (document.parent / target).exists(), f"{relative}: {target} does not resolve"
+        if document.parent.name == "references":
+            for groups in REFERENCE_NAME.findall(text):
+                name = groups[0] or groups[1]
+                assert (document.parent / name).is_file(), f"{relative}: {name} does not resolve"

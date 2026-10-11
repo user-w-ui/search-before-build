@@ -6,7 +6,7 @@ This repository is a dual-agent skill package, not a compiled application. `.cla
 
 ## Build, Test, and Development Commands
 
-There is no build step. Run these commands from the repository root:
+The decision kernel in `src/` builds to `dist/` with `npm run build`; commit the rebuilt `dist/` with kernel changes. Run these commands from the repository root:
 
 ```bash
 claude plugin validate --strict .
@@ -20,7 +20,7 @@ For a focused local check, pass one or more contract groups to the Python valida
 
 ## Coding Style & Naming Conventions
 
-Use UTF-8, LF line endings, four spaces for Python, and two spaces for JSON indentation. Skill directories and names use lowercase kebab-case. Keep `SKILL.md` instructions imperative, concise, and plain-language. Refer to package resources by their package-relative path, such as `references/research-method.md`; do not use a host-specific root variable. Put reusable detail one level deep in `references/`. Do not add product-management jargon or infer competitor capabilities from names, popularity, or search snippets.
+Use UTF-8, LF line endings, four spaces for Python, and two spaces for JSON indentation. Skill directories and names use lowercase kebab-case. Keep `SKILL.md` instructions imperative, concise, and plain-language. Write every package-resource path relative to the file that contains it: `../../references/research-method.md` from a `SKILL.md`, `../scripts/render-report.mjs` from a reference, and a bare file name between references. Name user-project paths as being in the user's current project, and keep temporary paths as `<temp>/...` or `<run-dir>/...`. Do not use a host-specific root variable. Put reusable detail one level deep in `references/`. Do not add product-management jargon or infer competitor capabilities from names, popularity, or search snippets.
 
 ## Testing Guidelines
 

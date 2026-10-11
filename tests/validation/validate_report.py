@@ -75,7 +75,8 @@ def validate() -> None:
     assert "<temp>/search-before-build/latest.html" in report_viewer
     assert "do not fall back to creating reports in the project" in report_viewer.lower()
     assert "the viewer supplements the answer" in report_viewer.lower()
-    assert "node <package-root>/scripts/render-report.mjs" in report_viewer
+    assert "node ../scripts/render-report.mjs" in report_viewer
+    assert "<package-root>" not in report_viewer
     assert "schemaVersion" in report_viewer
     assert "REQUIRED_CUSTOM_LABELS" in report_viewer
     assert "tmpdir()" in viewer_script

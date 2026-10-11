@@ -7,6 +7,8 @@ description: Compare an existing plan, prototype, repository, or half-built digi
 
 Research alternatives to an existing plan or implementation without changing product code.
 
+Paths to package files in this skill are relative to the directory containing this `SKILL.md`; resolve them to absolute paths before reading or running them. Paths described as being in the user's current project are relative to that project instead.
+
 ## Rules
 
 - Read the user's explicit request, supplied files, and the current repository before asking questions.
@@ -19,20 +21,20 @@ Research alternatives to an existing plan or implementation without changing pro
 - Do not use project names, README claims, Stars, or popularity as proof of functional similarity.
 - Do not modify source code, plans, or unrelated documentation.
 
-When the user chooses to align the real need, read and follow the intent-model, `How to ask`, and `Pre-research confirmation` sections of `references/conversation-and-decision.md` from this package to clarify just enough for accurate retrieval. Read the `Recommendation meanings` section of the same reference before making the final decision.
+When the user chooses to align the real need, read and follow the intent-model, `How to ask`, and `Pre-research confirmation` sections of `../../references/conversation-and-decision.md` to clarify just enough for accurate retrieval. Read the `Recommendation meanings` section of the same reference before making the final decision.
 
-If the user expresses GitHub deep-search enhancement intent, read and follow the enhancement flow in `references/github-retrieval.md`. If enhancement is the entire request, report the capability or setup result and stop without starting a comparison.
+If the user expresses GitHub deep-search enhancement intent, read and follow the enhancement flow in `../../references/github-retrieval.md`. If enhancement is the entire request, report the capability or setup result and stop without starting a comparison.
 
 ## Workflow
 
 1. Establish the project baseline from the supplied material and repository: intended user, problem, main workflow, inputs and outputs, operating environment, must-have capability, current maturity, and hard constraints. Distinguish what is implemented, what is only planned, and what is still unknown.
 2. Right after the baseline, ask the user once whether to align the real need before searching, or compare directly. Present it as a single clear choice and briefly name what alignment covers (the core problem, must-have capability, intended user, and why existing alternatives fall short). Do not decide this yourself from how vague or complete the material looks. Stop the turn and wait for the user's choice.
-3. If the user chooses to align, clarify the real need using the intent model and clarification rules in `references/conversation-and-decision.md`: one focused question per turn, at most five information-seeking questions, only about gaps that would change the candidate set or comparison. Do not re-ask for anything the material already supplies or that can be safely inferred. Then present a concise pre-research summary of the confirmed real need, the project's current state, and the must-have capability, and ask the user to confirm or correct it; this confirmation does not count toward the five-question limit. Stop the turn and wait; do not research until the user confirms. If the user declines alignment, proceed directly from the baseline.
-4. Turn the baseline into the functional fingerprint defined in `references/research-method.md` from this package.
-5. Read and execute all of `references/research-method.md` and `references/decision-kernel.md` to build the evidence package before making a final recommendation. Use the packaged kernel when available, but never treat its lexical `candidate_mention` as verified capability support.
+3. If the user chooses to align, clarify the real need using the intent model and clarification rules in `../../references/conversation-and-decision.md`: one focused question per turn, at most five information-seeking questions, only about gaps that would change the candidate set or comparison. Do not re-ask for anything the material already supplies or that can be safely inferred. Then present a concise pre-research summary of the confirmed real need, the project's current state, and the must-have capability, and ask the user to confirm or correct it; this confirmation does not count toward the five-question limit. Stop the turn and wait; do not research until the user confirms. If the user declines alignment, proceed directly from the baseline.
+4. Turn the baseline into the functional fingerprint defined in `../../references/research-method.md`.
+5. Read and execute all of `../../references/research-method.md` and `../../references/decision-kernel.md` to build the evidence package before making a final recommendation. Use the packaged kernel when available, but never treat its lexical `candidate_mention` as verified capability support.
 6. Consume the research evidence package and its key comparison at the same product or technical layer. Do not relabel capabilities independently.
 7. Act as the sole final decision-maker for an existing-project comparison. Recommend exactly one of `Build`, `Adapt`, `Use existing`, or `Stop` in the conversation. Do not place this verdict or a necessity discussion in competitor reports.
-8. Read `references/report-template.md` and `references/report-viewer.md` from this package. Render the result to the shared temporary HTML viewer. Do not write competitor reports into the user's project unless the user explicitly asks to persist selected competitors after seeing the result.
+8. Read `../../references/report-template.md` and `../../references/report-viewer.md`. Render the result to the shared temporary HTML viewer. Do not write competitor reports into the user's project unless the user explicitly asks to persist selected competitors after seeing the result.
 9. Return the recommendation, strongest alternatives, reusable pieces, the temporary viewer path, and material evidence gaps.
 
-If the user later asks to persist one or more competitors, write only those reports to `docs/search-before-build/<topic-slug>/<competitor-slug>.md` under the contract in `references/report-template.md`. Update canonical files and return their paths.
+If the user later asks to persist one or more competitors, write only those reports to `docs/search-before-build/<topic-slug>/<competitor-slug>.md` in the user's current project under the contract in `../../references/report-template.md`. Update canonical files and return their paths.

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .common import ROOT, read_skill, read_text
+from .common import ROOT, assert_package_paths_resolve, read_skill, read_text
 
 
 def validate() -> None:
@@ -10,6 +10,7 @@ def validate() -> None:
     decision_kernel = read_text("references/decision-kernel.md")
     search_sources = read_text("references/search-sources.md")
 
+    assert_package_paths_resolve()
     assert {assess_meta["name"], compare_meta["name"]} == {
         "search-before-build-assess",
         "search-before-build-compare",
@@ -34,7 +35,7 @@ def validate() -> None:
     confirmation_position = assess.index("present the concise pre-research understanding summary")
     necessity_position = assess.index("Give a short necessity check in the conversation")
     assess_research_position = assess.index(
-        "Read and execute all of `references/research-method.md`"
+        "Read and execute all of `../../references/research-method.md`"
     )
     assess_recommendation_position = assess.index(
         "Act as the sole final decision-maker for idea assessment"
@@ -50,7 +51,7 @@ def validate() -> None:
         "Turn the baseline into the functional fingerprint"
     )
     compare_research_position = compare.index(
-        "Read and execute all of `references/research-method.md`"
+        "Read and execute all of `../../references/research-method.md`"
     )
     assert baseline_position < fingerprint_position < compare_research_position
 
@@ -70,8 +71,8 @@ def validate() -> None:
     assert "explicit user approval" in research_method.lower()
     assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in assess
     assert "docs/search-before-build/<topic-slug>/<competitor-slug>.md" in compare
-    assert "read and execute all of `references/research-method.md`" in assess.lower()
-    assert "read and execute all of `references/research-method.md`" in compare.lower()
+    assert "read and execute all of `../../references/research-method.md`" in assess.lower()
+    assert "read and execute all of `../../references/research-method.md`" in compare.lower()
     assert "sole final decision-maker" in assess.lower()
     assert "sole final decision-maker" in compare.lower()
     assert "recommendation meanings" in assess.lower()
