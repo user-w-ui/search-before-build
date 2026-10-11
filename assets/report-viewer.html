@@ -528,6 +528,7 @@
       .support-badge[data-status="partial"] { color: var(--s-partial); background: var(--s-partial-bg); }
       .support-badge[data-status="extensible"] { color: var(--s-ext); background: var(--s-ext-bg); }
       .support-badge[data-status="unverified"] { color: var(--s-unv); background: var(--s-unv-bg); box-shadow: inset 0 0 0 1px var(--border-strong); }
+      .support-badge[data-status="planned"] { color: var(--tone); background: var(--card); border: 1px dashed var(--tone); padding: 5px 11px; }
       .support-badge[data-status="unsupported"] { color: var(--s-none); background: var(--s-none-bg); }
       .support-badge[data-status="missing"] { color: var(--faint); background: transparent; box-shadow: inset 0 0 0 1px var(--border); }
 
@@ -1637,6 +1638,7 @@
               extensible: "可通过扩展实现",
               unsupported: "不支持",
               unverified: "尚未验证",
+              planned: "计划支持",
             }
           : {
               native: "Native",
@@ -1644,8 +1646,13 @@
               extensible: "Extensible",
               unsupported: "Unsupported",
               unverified: "Unverified",
+              planned: "Planned",
             };
         const supportOrder = ["native", "partial", "extensible", "unverified", "unsupported"];
+        // `planned` only marks the user's own intended capabilities; list it when that column uses it.
+        const legendOrder = report.capabilities.some((capability) => capability.current.status === "planned")
+          ? ["planned", ...supportOrder]
+          : supportOrder;
         const verdictKeys = { Build: "build", Adapt: "adapt", "Use existing": "use-existing", Stop: "stop" };
         const verdictPlainKeys = { Build: "verdictBuild", Adapt: "verdictAdapt", "Use existing": "verdictUseExisting", Stop: "verdictStop" };
 
@@ -1908,7 +1915,7 @@
           return wrapper;
         };
 
-        supportOrder.forEach((status) => {
+        legendOrder.forEach((status) => {
           const badge = element("span", "support-badge", supportLabels[status]);
           badge.dataset.status = status;
           $("matrix-legend").append(badge);

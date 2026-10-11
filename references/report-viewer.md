@@ -75,7 +75,7 @@ Write UTF-8 JSON with this shape. Use the target display language for every free
 }
 ```
 
-Set `subject` to `project` when the user supplied material about an existing project (repository, prototype, plan, documentation, or promotional images); otherwise set it to `idea`. In `capabilities[].current`, record a capability that the material shows only as planned as `unsupported` and say in its note that it is planned. Use exactly `Build`, `Adapt`, `Use existing`, or `Stop` for `recommendation.value`. Use exactly `used`, `limited`, or `unavailable` for coverage status. Use the stable support enums from `research-method.md` in every capability cell.
+Set `subject` to `project` when the user supplied material about an existing project (repository, prototype, plan, documentation, or promotional images); otherwise set it to `idea`. In `capabilities[].current`, use `planned` as `research-method.md` defines it; when `subject` is `idea`, every current cell is `planned`. Use exactly `Build`, `Adapt`, `Use existing`, or `Stop` for `recommendation.value`. Use exactly `used`, `limited`, or `unavailable` for coverage status. Use the stable support enums from `research-method.md` in every capability cell.
 
 Candidate IDs must be unique and must match the keys used under `capabilities[].candidates`. Omit a candidate entry when that capability was not compared; do not invent evidence to fill the matrix.
 

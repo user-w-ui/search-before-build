@@ -69,7 +69,8 @@ def validate() -> None:
     assert "Only the `assess` Skill renders this viewer" in report_viewer
     assert "Set `subject` to `project` when the user supplied material about an existing project" in report_viewer
     assert "`mode`" not in report_viewer
-    assert "only as planned as `unsupported`" in report_viewer
+    assert "when `subject` is `idea`, every current cell is `planned`" in report_viewer
+    assert "Never use `planned` for a candidate" in read_text("references/research-method.md")
     assert "do not write competitor reports into the current project by default" in report_template.lower()
     assert "user-initiated download or copy action" in report_template.lower()
     assert "optional persistence" in research_method.lower()
@@ -301,6 +302,30 @@ def validate() -> None:
         subject_result = _run_renderer(invalid_input, Path(directory) / "invalid.html")
         assert subject_result.returncode != 0
         assert "report.subject must be idea or project" in subject_result.stderr
+
+        # An idea has nothing implemented yet: its own column must read `planned`.
+        unplanned_idea = deepcopy(fixture_data)
+        unplanned_idea["subject"] = "idea"
+        invalid_input.write_text(json.dumps(unplanned_idea), encoding="utf-8")
+        idea_result = _run_renderer(invalid_input, Path(directory) / "invalid.html")
+        assert idea_result.returncode != 0
+        assert "must be planned when report.subject is idea" in idea_result.stderr
+
+        planned_idea = deepcopy(unplanned_idea)
+        for capability in planned_idea["capabilities"]:
+            capability["current"]["status"] = "planned"
+        planned_input = Path(directory) / "planned-idea.json"
+        planned_input.write_text(json.dumps(planned_idea), encoding="utf-8")
+        planned_result = _run_renderer(planned_input, Path(directory) / "planned.html")
+        assert planned_result.returncode == 0, planned_result.stderr
+
+        planned_candidate = deepcopy(fixture_data)
+        first_capability = planned_candidate["capabilities"][0]
+        first_capability["candidates"][next(iter(first_capability["candidates"]))]["status"] = "planned"
+        invalid_input.write_text(json.dumps(planned_candidate), encoding="utf-8")
+        candidate_result = _run_renderer(invalid_input, Path(directory) / "invalid.html")
+        assert candidate_result.returncode != 0
+        assert ".candidates." in candidate_result.stderr
 
         consume_result = _run_renderer(
             fixture,

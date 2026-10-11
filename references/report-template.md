@@ -31,6 +31,7 @@ Research evidence uses stable enums. Never expose a raw enum in the report when 
 | `extensible` | 可通过扩展实现 | Extensible |
 | `unsupported` | 不支持 | Unsupported |
 | `unverified` | 尚未验证 | Unverified |
+| `planned` | 计划支持 | Planned |
 
 ## Semantic report structure
 

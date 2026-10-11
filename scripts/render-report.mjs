@@ -102,10 +102,12 @@ function optionalString(value, path) {
   return requireString(value, path, { allowEmpty: true });
 }
 
-function validateSupportCell(cell, path) {
+// `planned` describes the user's own intended capability, so only the current column may use it.
+function validateSupportCell(cell, path, { allowPlanned = false } = {}) {
   requireObject(cell, path);
-  if (!SUPPORT_ENUMS.has(cell.status)) {
-    fail(`${path}.status must be one of: ${[...SUPPORT_ENUMS].join(", ")}.`);
+  const allowed = allowPlanned ? [...SUPPORT_ENUMS, "planned"] : [...SUPPORT_ENUMS];
+  if (!allowed.includes(cell.status)) {
+    fail(`${path}.status must be one of: ${allowed.join(", ")}.`);
   }
   optionalString(cell.note, `${path}.note`);
 }
@@ -188,7 +190,10 @@ function validatePayload(payload) {
     const path = `report.capabilities[${index}]`;
     requireObject(capability, path);
     requireString(capability.name, `${path}.name`);
-    validateSupportCell(capability.current, `${path}.current`);
+    validateSupportCell(capability.current, `${path}.current`, { allowPlanned: true });
+    if (payload.subject === "idea" && capability.current.status !== "planned") {
+      fail(`${path}.current.status must be planned when report.subject is idea.`);
+    }
     const candidates = requireObject(capability.candidates, `${path}.candidates`);
     for (const [candidateId, cell] of Object.entries(candidates)) {
       if (!candidateIds.has(candidateId)) {

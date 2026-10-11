@@ -99,6 +99,8 @@ For every material capability use exactly one value:
 - **`unsupported`**: reliable evidence shows the capability is absent or incompatible.
 - **`unverified`**: evidence is insufficient. Never silently convert this to `unsupported`.
 
+The current project's own column may also use **`planned`**: the user intends the capability but it is not implemented. Use it for every capability of an idea and for each capability an existing project shows only as planned. Never use `planned` for a candidate.
+
 Use these exact lowercase values in the internal evidence package. Do not translate them there; `report-template.md` owns localized display labels.
 
 Also compare adoption effort, operating mode, maintenance, license/price, data or deployment constraints, and migration cost. Date time-sensitive facts. Separate verified facts from inference.
