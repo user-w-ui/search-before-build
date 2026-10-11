@@ -7,3 +7,13 @@ tests/.tmp-cli-*/
 bench/results/*.json
 bench/results/**/session.jsonl
 assets/benchmark-radar.html
+
+# Video workspace (local demo-video production, not part of the plugin)
+video/
+video-v2/
+
+# Local report design prototypes and the archived original viewer
+design/
+
+# Local Claude Code workspace settings
+.claude/
