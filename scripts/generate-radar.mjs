@@ -1,893 +1,404 @@
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+// Render the README benchmark radar (SVG, en + zh) and an interactive preview page.
+// Usage: node scripts/generate-radar.mjs
+import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { execFileSync } from "node:child_process";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const ASSETS_DIR = join(ROOT, "assets");
 
-// 安全转义 XML 特殊字符
-function escapeXml(unsafe) {
-  if (unsafe === null || unsafe === undefined) return "";
-  return String(unsafe)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
+const escapeXml = (value) => String(value ?? "")
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&apos;");
 
-// 6 核心具体数值维度（去掉了量程行，气泡彻底避开端点，绝对不遮挡）
-const METRICS_DATA = [
+// Measured means from bench/results/SUMMARY.md. `plugin` and `baseline` are the
+// raw values; `pluginVal` and `baselineVal` place them on each axis's own scale.
+const METRICS = [
   {
     key: "catalogs",
-    angleDeg: -90, // Top
-    align: "middle",
-    labelX: 490,
-    labelY: 132,
-    scaleMax: 10,
-    unit: { en: "catalogs", zh: "个" },
-    pluginRaw: 10,
-    baselineRaw: 0,
-    // 气泡放在端点正上方外侧，彻底不遮挡端点圆圈
-    pluginValDx: 0,
-    pluginValDy: -18,
-    baselineValDx: 0,
-    baselineValDy: 0,
-    en: {
-      name: "Specialized Catalogs",
-      pluginStat: "10",
-      baselineStat: "0",
-      detail: "npm, crates, HF, arXiv, MCP...",
-    },
-    zh: {
-      name: "专有检索目录",
-      pluginStat: "10",
-      baselineStat: "0",
-      detail: "npm, crates, HF, arXiv, MCP 等",
-    },
+    plugin: "10",
+    baseline: "0",
     pluginVal: 1.0,
-    baselineVal: 0.04,
+    baselineVal: 0,
+    unit: { en: "catalogs", zh: "个" },
+    en: { name: "Specialized catalogs", short: "Catalogs", detail: "npm, crates, HF, arXiv, MCP…" },
+    zh: { name: "专有检索目录", short: "检索目录", detail: "npm、crates、HF、arXiv、MCP 等" },
   },
   {
     key: "clarification",
-    angleDeg: -30, // Top-Right
-    align: "start",
-    labelX: 652,
-    labelY: 268,
-    scaleMax: 4.0,
-    unit: { en: "rounds", zh: "轮" },
-    pluginRaw: 2.92,
-    baselineRaw: 0,
-    // 气泡放在端点右上方外侧
-    pluginValDx: 26,
-    pluginValDy: -14,
-    baselineValDx: 0,
-    baselineValDy: 0,
-    en: {
-      name: "Clarification Rounds",
-      pluginStat: "2.92",
-      baselineStat: "0",
-      detail: "Pre-search intent alignment",
-    },
-    zh: {
-      name: "需求澄清轮次",
-      pluginStat: "2.92",
-      baselineStat: "0",
-      detail: "检索前主动对齐真实约束",
-    },
+    plugin: "2.92",
+    baseline: "0",
     pluginVal: 0.73,
-    baselineVal: 0.04,
+    baselineVal: 0,
+    unit: { en: "rounds", zh: "轮" },
+    en: { name: "Clarification rounds", short: "Clarification", detail: "Aligns real constraints before searching" },
+    zh: { name: "需求澄清轮次", short: "需求澄清", detail: "检索前主动对齐真实约束" },
   },
   {
     key: "crawled",
-    angleDeg: 30, // Bottom-Right
-    align: "start",
-    labelX: 652,
-    labelY: 428,
-    scaleMax: 250,
-    unit: { en: "pages", zh: "篇" },
-    pluginRaw: 216,
-    baselineRaw: 111,
-    // 气泡放在端点右下方外侧
-    pluginValDx: 26,
-    pluginValDy: 14,
-    baselineValDx: 14,
-    baselineValDy: 14,
-    en: {
-      name: "Pages Crawled",
-      pluginStat: "216",
-      baselineStat: "111",
-      detail: "1.9× primary docs and code",
-    },
-    zh: {
-      name: "一手页面抓取",
-      pluginStat: "216",
-      baselineStat: "111",
-      detail: "1.9× 一手文档与源码查验",
-    },
+    plugin: "216",
+    baseline: "111",
     pluginVal: 0.864,
     baselineVal: 0.444,
+    unit: { en: "pages", zh: "篇" },
+    en: { name: "Primary pages read", short: "Pages read", detail: "1.9× primary docs and source checked" },
+    zh: { name: "一手页面抓取", short: "页面抓取", detail: "1.9× 一手文档与源码查验" },
   },
   {
     key: "citations",
-    angleDeg: 90, // Bottom
-    align: "middle",
-    labelX: 490,
-    labelY: 518,
-    scaleMax: 140,
-    unit: { en: "URLs", zh: "条" },
-    pluginRaw: 112,
-    baselineRaw: 41,
-    // 气泡放在端点正下方外侧
-    pluginValDx: 0,
-    pluginValDy: 22,
-    baselineValDx: 0,
-    baselineValDy: -14,
-    en: {
-      name: "Citation Density",
-      pluginStat: "112",
-      baselineStat: "41",
-      detail: "2.7× verifiable primary links",
-    },
-    zh: {
-      name: "引用证据密度",
-      pluginStat: "112",
-      baselineStat: "41",
-      detail: "2.7× 一手可验证链接",
-    },
-    pluginVal: 0.80,
+    plugin: "112",
+    baseline: "41",
+    pluginVal: 0.8,
     baselineVal: 0.293,
+    unit: { en: "URLs", zh: "条" },
+    en: { name: "Citation density", short: "Citations", detail: "2.7× verifiable primary links" },
+    zh: { name: "引用证据密度", short: "引用证据", detail: "2.7× 一手可验证链接" },
   },
   {
-    key: "date_evidence",
-    angleDeg: 150, // Bottom-Left
-    align: "end",
-    labelX: 328,
-    labelY: 428,
-    scaleMax: 12,
-    unit: { en: "cases", zh: "案" },
-    pluginRaw: 9,
-    baselineRaw: 3,
-    // 气泡放在端点左下方外侧
-    pluginValDx: -26,
-    pluginValDy: 14,
-    baselineValDx: -14,
-    baselineValDy: 14,
-    en: {
-      name: "Date Evidence",
-      pluginStat: "9",
-      baselineStat: "3",
-      detail: "75% dates · caught 2/2 dead tools",
-    },
-    zh: {
-      name: "日期时效证据",
-      pluginStat: "9",
-      baselineStat: "3",
-      detail: "75% 日期 · 2/2 识破停服死项目",
-    },
+    key: "dates",
+    plugin: "9",
+    baseline: "3",
     pluginVal: 0.75,
     baselineVal: 0.25,
+    unit: { en: "cases", zh: "案" },
+    en: { name: "Date evidence", short: "Dates", detail: "75% dated · caught 2/2 dead tools" },
+    zh: { name: "日期时效证据", short: "日期证据", detail: "75% 有日期 · 2/2 识破停服项目" },
   },
   {
     key: "composite",
-    angleDeg: 210, // Top-Left
-    align: "end",
-    labelX: 328,
-    labelY: 268,
-    scaleMax: 1.0,
-    unit: { en: "", zh: "" },
-    pluginRaw: 0.592,
-    baselineRaw: 0.341,
-    // 气泡放在端点左上方外侧
-    pluginValDx: -28,
-    pluginValDy: -14,
-    baselineValDx: -16,
-    baselineValDy: -8,
-    en: {
-      name: "Composite Score",
-      pluginStat: "0.592",
-      baselineStat: "0.341",
-      detail: "Overall benchmark score (1.7×)",
-    },
-    zh: {
-      name: "综合评测得分",
-      pluginStat: "0.592",
-      baselineStat: "0.341",
-      detail: "规范综合能力得分 (1.7× 提升)",
-    },
+    plugin: "0.592",
+    baseline: "0.341",
     pluginVal: 0.592,
     baselineVal: 0.341,
+    unit: { en: "", zh: "" },
+    en: { name: "Composite score", short: "Composite", detail: "Overall benchmark score, 1.7×" },
+    zh: { name: "综合评测得分", short: "综合得分", detail: "综合能力得分，1.7× 提升" },
   },
 ];
 
 const HIGHLIGHTS = {
   en: [
-    { label: "Win Rate", val: "11 / 12", sub: "vs 1 win" },
-    { label: "Catalogs Reached", val: "10 / 10", sub: "vs 0 catalogs" },
-    { label: "Shutdowns Caught", val: "2 / 2", sub: "vs 0 caught" },
-    { label: "Zero-Search Blind", val: "0 Cases", sub: "vs 2 on baseline" },
+    { value: "11", suffix: "/12", label: "Tasks won", sub: "Bare agent won 1" },
+    { value: "10", suffix: "/10", label: "Specialized catalogs reached", sub: "Bare agent: 0" },
+    { value: "2", suffix: "/2", label: "Shut-down tools caught", sub: "Bare agent: 0" },
+    { value: "0", suffix: "", label: "Answers from memory alone", sub: "Bare agent: 2" },
   ],
   zh: [
-    { label: "实测决策胜负", val: "11 / 12 胜", sub: "vs 1 胜" },
-    { label: "专有检索目录", val: "10 / 10 触达", sub: "vs 0 目录" },
-    { label: "停服陷阱防御", val: "2 / 2 识破", sub: "vs 0 识破" },
-    { label: "纯记忆零检索", val: "0 案", sub: "裸 agent 发生 2 案" },
+    { value: "11", suffix: "/12", label: "任务胜出", sub: "裸 Agent 胜 1 个" },
+    { value: "10", suffix: "/10", label: "触达专有检索目录", sub: "裸 Agent：0 个" },
+    { value: "2", suffix: "/2", label: "识破已停服工具", sub: "裸 Agent：0 个" },
+    { value: "0", suffix: "", label: "纯凭记忆、零检索作答", sub: "裸 Agent：2 次" },
   ],
 };
 
-const WIDTH = 980;
-const HEIGHT = 680;
-const CX = 490;
-const CY = 355;
-const R = 135;
-// 4 等分工程标尺环：0.25, 0.50, 0.75, 1.00
-const LEVELS = [0.25, 0.5, 0.75, 1.0];
+const COPY = {
+  en: {
+    eyebrow: "Benchmark · 12 paired real tasks",
+    title: "With the plugin vs. a bare agent",
+    subtitle: "Same tasks on Claude Code and Codex · composite score 0.592 vs 0.341",
+    plugin: "With plugin",
+    pluginStat: "11 wins",
+    baseline: "Bare agent",
+    baselineStat: "1 win",
+    radar: "Six measures",
+    radarNote: "Each axis uses its own scale",
+    list: "Measured means per task",
+  },
+  zh: {
+    eyebrow: "评测 · 12 个成对真实任务",
+    title: "加载插件 vs 裸 Agent",
+    subtitle: "同一批任务，覆盖 Claude Code 与 Codex · 综合得分 0.592 vs 0.341",
+    plugin: "加载插件",
+    pluginStat: "11 胜",
+    baseline: "裸 Agent",
+    baselineStat: "1 胜",
+    radar: "六个维度",
+    radarNote: "各轴按自身量程归一化",
+    list: "逐项实测均值",
+  },
+};
 
-function polarToCartesian(cx, cy, r, angleDeg) {
-  const rad = (angleDeg * Math.PI) / 180;
-  return {
-    x: cx + r * Math.cos(rad),
-    y: cy + r * Math.sin(rad),
-  };
-}
+const COLORS = {
+  bg: "#f2f2f4",
+  card: "#ffffff",
+  border: "#e8e8ec",
+  line: "#ececf0",
+  lineStrong: "#d6d6dc",
+  text: "#111114",
+  muted: "#66666f",
+  faint: "#a1a1aa",
+  tone: "#2563eb",
+  toneSoft: "#eaf1fe",
+  base: "#8b8b95",
+  baseBar: "#c9c9d1",
+};
+const FONT = "'SF Pro Display', Inter, 'Segoe UI Variable Display', 'Segoe UI', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif";
 
-function buildPolygonPath(values) {
-  return values
-    .map((v, i) => {
-      const pt = polarToCartesian(CX, CY, R * v, METRICS_DATA[i].angleDeg);
-      return `${i === 0 ? "M" : "L"} ${pt.x.toFixed(2)} ${pt.y.toFixed(2)}`;
-    })
-    .join(" ") + " Z";
-}
+const WIDTH = 1120;
+const HEIGHT = 788;
+const PAD = 40;
+const ROW_Y = 150;
+const ROW_H = 470;
+const RADAR_CARD = { x: PAD, w: 540 };
+const LIST_CARD = { x: PAD + 540 + 16, w: WIDTH - PAD * 2 - 540 - 16 };
+const CX = RADAR_CARD.x + RADAR_CARD.w / 2;
+const CY = ROW_Y + ROW_H / 2 + 22;
+const R = 150;
+const ANGLES = [-90, -30, 30, 90, 150, 210];
+const STAT_Y = ROW_Y + ROW_H + 16;
+const STAT_H = 112;
 
-function generateSvg(lang = "en") {
-  const isZh = lang === "zh";
-  const t = {
-    badge: isZh ? "12-CASE 双臂评测" : "12-CASE BENCHMARK",
-    badgeWidth: isZh ? 145 : 155,
-    title: isZh ? "Search Before Build 插件 vs 裸 Agent 6维实测" : "Search Before Build vs Bare Agent: 6D Radar",
-    subtitle: isZh
-      ? "12 真实选型任务成对实测 · 具体实测数值 · Composite 0.592 vs 0.341"
-      : "12 Paired Real-World Tasks · Concrete Measurements · Composite 0.592 vs 0.341",
-    pluginLegend: isZh ? "加载插件" : "With Plugin",
-    pluginLegendStat: isZh ? "11 胜 · 0.592" : "11 Wins · 0.592",
-    baselineLegend: isZh ? "裸 Agent" : "Bare Agent",
-    baselineLegendStat: isZh ? "1 胜 · 0.341" : "1 Win · 0.341",
-  };
+const point = (radius, angle) => {
+  const radians = (angle * Math.PI) / 180;
+  return { x: CX + radius * Math.cos(radians), y: CY + radius * Math.sin(radians) };
+};
+const fmt = (value) => value.toFixed(2);
+const polygon = (values) => values
+  .map((value, index) => {
+    const p = point(R * value, ANGLES[index]);
+    return `${fmt(p.x)},${fmt(p.y)}`;
+  })
+  .join(" ");
+const text = (x, y, content, { size = 14, weight = 500, fill = COLORS.text, anchor = "start", extra = "" } = {}) =>
+  `<text x="${fmt(x)}" y="${fmt(y)}" font-size="${size}" font-weight="${weight}" fill="${fill}" text-anchor="${anchor}"${extra}>${content}</text>`;
+const card = (x, y, w, h, fill = COLORS.card) =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="${fill}" stroke="${COLORS.border}" />`;
 
-  const highlights = isZh ? HIGHLIGHTS.zh : HIGHLIGHTS.en;
+function generateSvg(lang) {
+  const copy = COPY[lang];
+  const local = (metric) => metric[lang];
 
-  // 网格环 (4 层几何多边形网格)
-  const gridPolygons = LEVELS.map((level) => {
-    const pts = METRICS_DATA.map((d) => {
-      const p = polarToCartesian(CX, CY, R * level, d.angleDeg);
-      return `${p.x.toFixed(2)},${p.y.toFixed(2)}`;
-    }).join(" ");
-    return `<polygon points="${pts}" fill="none" stroke="#223249" stroke-width="${level === 1.0 ? "1.5" : "1"}" stroke-dasharray="${level === 1.0 ? "none" : "3,3"}" />`;
-  }).join("\n        ");
+  const rings = [0.25, 0.5, 0.75, 1].map((level) => `<polygon points="${polygon(ANGLES.map(() => level))}" fill="none" stroke="${level === 1 ? COLORS.lineStrong : COLORS.line}" stroke-width="${level === 1 ? 1.2 : 1}" />`).join("\n    ");
+  const axes = ANGLES.map((angle) => {
+    const end = point(R, angle);
+    return `<line x1="${CX}" y1="${CY}" x2="${fmt(end.x)}" y2="${fmt(end.y)}" stroke="${COLORS.line}" />`;
+  }).join("\n    ");
 
-  // 轴线
-  const axisLines = METRICS_DATA.map((d) => {
-    const end = polarToCartesian(CX, CY, R, d.angleDeg);
-    return `<line x1="${CX}" y1="${CY}" x2="${end.x.toFixed(2)}" y2="${end.y.toFixed(2)}" stroke="#273b53" stroke-width="1.2" />`;
-  }).join("\n        ");
+  // A zero still sits slightly off-centre so the bare-agent shape stays readable.
+  const baselineShape = polygon(METRICS.map((metric) => Math.max(metric.baselineVal, 0.04)));
+  const pluginShape = polygon(METRICS.map((metric) => metric.pluginVal));
+  const baselineDots = METRICS.map((metric, index) => {
+    const p = point(R * Math.max(metric.baselineVal, 0.04), ANGLES[index]);
+    return `<circle cx="${fmt(p.x)}" cy="${fmt(p.y)}" r="3" fill="${COLORS.base}" />`;
+  }).join("\n    ");
+  const pluginDots = METRICS.map((metric, index) => {
+    const p = point(R * metric.pluginVal, ANGLES[index]);
+    return `<circle cx="${fmt(p.x)}" cy="${fmt(p.y)}" r="4.5" fill="${COLORS.card}" stroke="${COLORS.tone}" stroke-width="2.2" />`;
+  }).join("\n    ");
+  const axisLabels = METRICS.map((metric, index) => {
+    const angle = ANGLES[index];
+    const p = point(R + 24, angle);
+    const cos = Math.cos((angle * Math.PI) / 180);
+    const anchor = Math.abs(cos) < 0.1 ? "middle" : cos > 0 ? "start" : "end";
+    const dy = angle === -90 ? -4 : angle === 90 ? 14 : 5;
+    return text(p.x, p.y + dy, escapeXml(local(metric).short), { size: 14, weight: 650, anchor });
+  }).join("\n    ");
 
-  // 数据多边形
-  const baselinePath = buildPolygonPath(METRICS_DATA.map((d) => d.baselineVal));
-  const pluginPath = buildPolygonPath(METRICS_DATA.map((d) => d.pluginVal));
+  const listX = LIST_CARD.x + 28;
+  const listRight = LIST_CARD.x + LIST_CARD.w - 28;
+  const listW = listRight - listX;
+  const rows = METRICS.map((metric, index) => {
+    const y = ROW_Y + 80 + index * 62;
+    const unit = metric.unit[lang];
+    const unitSuffix = unit ? `${lang === "zh" ? "" : " "}${unit}` : "";
+    const baselineBar = metric.baselineVal > 0
+      ? `<rect x="${listX}" y="${y + 38}" width="${fmt(listW * metric.baselineVal)}" height="5" rx="2.5" fill="${COLORS.baseBar}" />`
+      : "";
+    return `${text(listX, y, escapeXml(local(metric).name), { size: 15, weight: 650 })}
+    <text x="${listRight}" y="${y}" text-anchor="end" fill="${COLORS.tone}"><tspan font-size="19" font-weight="700">${escapeXml(metric.plugin)}</tspan><tspan font-size="12.5" font-weight="600">${escapeXml(unitSuffix)}</tspan></text>
+    ${text(listX, y + 19, escapeXml(local(metric).detail), { size: 12.5, fill: COLORS.muted })}
+    ${text(listRight, y + 19, `vs ${escapeXml(metric.baseline + unitSuffix)}`, { size: 12.5, weight: 600, fill: COLORS.faint, anchor: "end" })}
+    <rect x="${listX}" y="${y + 30}" width="${listW}" height="5" rx="2.5" fill="${COLORS.line}" />
+    <rect x="${listX}" y="${y + 30}" width="${fmt(listW * metric.pluginVal)}" height="5" rx="2.5" fill="${COLORS.tone}" />
+    ${baselineBar}`;
+  }).join("\n    ");
 
-  // A 臂基线顶点圆点与标注
-  const baselinePoints = METRICS_DATA.map((d) => {
-    const pt = polarToCartesian(CX, CY, R * d.baselineVal, d.angleDeg);
-    const vx = pt.x + d.baselineValDx;
-    const vy = pt.y + d.baselineValDy;
-    const loc = isZh ? d.zh : d.en;
+  const statW = (WIDTH - PAD * 2 - 16 * 3) / 4;
+  const stats = HIGHLIGHTS[lang].map((item, index) => {
+    const x = PAD + index * (statW + 16);
+    return `${card(x, STAT_Y, statW, STAT_H)}
+    <text x="${x + 24}" y="${STAT_Y + 50}" fill="${COLORS.text}"><tspan font-size="34" font-weight="700" letter-spacing="-0.5">${escapeXml(item.value)}</tspan><tspan font-size="18" font-weight="650" fill="${COLORS.faint}">${escapeXml(item.suffix)}</tspan></text>
+    ${text(x + 24, STAT_Y + 76, escapeXml(item.label), { size: 14, weight: 600 })}
+    ${text(x + 24, STAT_Y + 95, escapeXml(item.sub), { size: 12.5, fill: COLORS.muted })}`;
+  }).join("\n    ");
 
-    const textMarkup = d.baselineRaw > 0 ? `
-      <text x="${vx.toFixed(2)}" y="${vy.toFixed(2)}" fill="#94a3b8" font-size="10" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" text-anchor="middle">${escapeXml(loc.baselineStat)}</text>
-    ` : "";
-
-    return `
-      <circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="4" fill="#94a3b8" stroke="#090d16" stroke-width="1.5" />
-      ${textMarkup}
-    `;
-  }).join("\n        ");
-
-  // B 臂插件顶点发光亮点与数值气泡（绝对不遮挡端点圆圈）
-  const pluginPoints = METRICS_DATA.map((d) => {
-    const pt = polarToCartesian(CX, CY, R * d.pluginVal, d.angleDeg);
-    const vx = pt.x + d.pluginValDx;
-    const vy = pt.y + d.pluginValDy;
-    const loc = isZh ? d.zh : d.en;
-
-    return `
-      <circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="7" fill="#10b981" fill-opacity="0.25" />
-      <circle cx="${pt.x.toFixed(2)}" cy="${pt.y.toFixed(2)}" r="4.5" fill="#34d399" stroke="#ffffff" stroke-width="1.5" filter="url(#glow)" />
-      <!-- 数值气泡：外离端点，完全不重合遮挡 -->
-      <g transform="translate(${vx.toFixed(2)}, ${vy.toFixed(2)})">
-        <rect x="-17" y="-9.5" width="34" height="17" rx="4.5" fill="#064e3b" fill-opacity="0.95" stroke="#059669" stroke-width="0.8" />
-        <text x="0" y="3" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(loc.pluginStat)}</text>
+  const legendY = 72;
+  const legend = `<g transform="translate(${WIDTH - PAD - 412}, ${legendY})">
+      <rect width="210" height="34" rx="17" fill="${COLORS.card}" stroke="${COLORS.border}" />
+      <circle cx="20" cy="17" r="5.5" fill="${COLORS.card}" stroke="${COLORS.tone}" stroke-width="2.4" />
+      ${text(34, 22, escapeXml(copy.plugin), { size: 13.5, weight: 650 })}
+      ${text(194, 22, escapeXml(copy.pluginStat), { size: 13.5, weight: 700, fill: COLORS.tone, anchor: "end" })}
+      <g transform="translate(220, 0)">
+        <rect width="192" height="34" rx="17" fill="${COLORS.card}" stroke="${COLORS.border}" />
+        <line x1="12" y1="17" x2="28" y2="17" stroke="${COLORS.base}" stroke-width="2" stroke-dasharray="4 3" />
+        ${text(36, 22, escapeXml(copy.baseline), { size: 13.5, weight: 650, fill: COLORS.muted })}
+        ${text(176, 22, escapeXml(copy.baselineStat), { size: 13.5, weight: 700, fill: COLORS.faint, anchor: "end" })}
       </g>
-    `;
-  }).join("\n        ");
-
-  // 指标卡片与标签（去掉了量程小字，更精炼高级）
-  const metricLabels = METRICS_DATA.map((d) => {
-    const loc = isZh ? d.zh : d.en;
-    const unitStr = isZh ? d.unit.zh : d.unit.en;
-    const unitSuffix = unitStr ? ` ${unitStr}` : "";
-
-    return `
-      <g transform="translate(${d.labelX}, ${d.labelY})">
-        <text x="0" y="0" text-anchor="${d.align}" fill="#f1f5f9" font-size="13.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
-          ${escapeXml(loc.name)}
-        </text>
-        <text x="0" y="18" text-anchor="${d.align}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">
-          <tspan fill="#34d399" font-weight="800">${escapeXml(loc.pluginStat + unitSuffix)}</tspan>
-          <tspan fill="#64748b" font-weight="500"> vs </tspan>
-          <tspan fill="#94a3b8" font-weight="600">${escapeXml(loc.baselineStat + unitSuffix)}</tspan>
-        </text>
-        <text x="0" y="34" text-anchor="${d.align}" fill="#94a3b8" font-size="10.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
-          ${escapeXml(loc.detail)}
-        </text>
-      </g>
-    `;
-  }).join("\n      ");
-
-  // 底部药丸摘要卡片
-  const pillWidth = 214;
-  const pillGap = 16;
-  const pillStartX = (WIDTH - (4 * pillWidth + 3 * pillGap)) / 2;
-  const pillY = 594;
-
-  const highlightCards = highlights.map((h, idx) => {
-    const px = pillStartX + idx * (pillWidth + pillGap);
-    return `
-      <g transform="translate(${px}, ${pillY})">
-        <rect width="${pillWidth}" height="60" rx="10" fill="#0d1422" stroke="#1e293b" stroke-width="1" />
-        <text x="14" y="20" fill="#94a3b8" font-size="11" font-weight="500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(h.label)}</text>
-        <text x="14" y="43" fill="#34d399" font-size="16" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(h.val)}</text>
-        <text x="${pillWidth - 14}" y="43" text-anchor="end" fill="#64748b" font-size="10" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(h.sub)}</text>
-      </g>
-    `;
-  }).join("\n      ");
+    </g>`;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}" font-family="${FONT}" role="img" aria-label="${escapeXml(copy.title)}">
   <defs>
-    <!-- 背景渐变 -->
-    <radialGradient id="bgGlow" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#0d2426" stop-opacity="0.45" />
-      <stop offset="60%" stop-color="#09101b" stop-opacity="0.95" />
-      <stop offset="100%" stop-color="#06090e" stop-opacity="1" />
-    </radialGradient>
-
-    <!-- 中心微光 -->
-    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#10b981" stop-opacity="0.10" />
-      <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
-    </radialGradient>
-
-    <!-- 插件区域渐变填充 -->
-    <linearGradient id="pluginGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10b981" stop-opacity="0.42" />
-      <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.28" />
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.18" />
+    <linearGradient id="radarCard" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="${COLORS.toneSoft}" />
+      <stop offset="0.7" stop-color="${COLORS.card}" />
     </linearGradient>
-
-    <!-- 发光滤镜 -->
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
-
-    <filter id="radarGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#10b981" flood-opacity="0.25" />
-    </filter>
   </defs>
+  <rect width="${WIDTH}" height="${HEIGHT}" rx="28" fill="${COLORS.bg}" />
 
-  <style>
-    text { text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; }
-  </style>
-
-  <!-- 主卡片背景 -->
-  <rect width="${WIDTH}" height="${HEIGHT}" rx="18" fill="url(#bgGlow)" stroke="#1e293b" stroke-width="1.5" />
-
-  <!-- 顶部 Header 区域（左侧标题，右侧图例，绝对不重叠） -->
-  <g id="header-section">
-    <!-- 左侧标题信息 -->
-    <g transform="translate(36, 26)">
-      <!-- 徽标 -->
-      <rect x="0" y="0" width="${t.badgeWidth}" height="22" rx="11" fill="#064e3b" fill-opacity="0.4" stroke="#059669" stroke-width="1" />
-      <circle cx="11" cy="11" r="3.5" fill="#34d399" />
-      <text x="22" y="15" fill="#6ee7b7" font-size="10" font-weight="700" letter-spacing="0.5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.badge)}</text>
-
-      <!-- 主标题 -->
-      <text x="0" y="46" fill="#f8fafc" font-size="20" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.title)}</text>
-
-      <!-- 副标题 -->
-      <text x="0" y="66" fill="#94a3b8" font-size="12" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.subtitle)}</text>
-    </g>
-
-    <!-- 右侧图例 Legend（宽度 260px，左右文字极大留白，绝不撞车） -->
-    <g transform="translate(684, 26)">
-      <!-- 插件图例 -->
-      <g transform="translate(0, 0)">
-        <rect x="0" y="0" width="260" height="28" rx="8" fill="#064e3b" fill-opacity="0.25" stroke="#059669" stroke-width="1" />
-        <circle cx="14" cy="14" r="5" fill="#10b981" filter="url(#glow)" />
-        <text x="28" y="18" fill="#f1f5f9" font-size="11.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.pluginLegend)}</text>
-        <text x="246" y="18" text-anchor="end" fill="#34d399" font-size="11.5" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.pluginLegendStat)}</text>
-      </g>
-
-      <!-- 基线图例 -->
-      <g transform="translate(0, 34)">
-        <rect x="0" y="0" width="260" height="28" rx="8" fill="#1e293b" fill-opacity="0.4" stroke="#334155" stroke-width="1" />
-        <circle cx="14" cy="14" r="4.5" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2,2" />
-        <text x="28" y="18" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.baselineLegend)}</text>
-        <text x="246" y="18" text-anchor="end" fill="#64748b" font-size="11.5" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${escapeXml(t.baselineLegendStat)}</text>
-      </g>
-    </g>
-
-    <!-- Header 分割线 -->
-    <line x1="36" y1="102" x2="944" y2="102" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,4" />
+  <g id="header">
+    ${text(PAD, 64, escapeXml(copy.eyebrow), { size: 13, weight: 700, fill: COLORS.tone })}
+    ${text(PAD, 102, escapeXml(copy.title), { size: 30, weight: 750, extra: ' letter-spacing="-0.4"' })}
+    ${text(PAD, 130, escapeXml(copy.subtitle), { size: 15, fill: COLORS.muted })}
+    ${legend}
   </g>
 
-  <!-- 中心微光背景 -->
-  <circle cx="${CX}" cy="${CY}" r="160" fill="url(#centerGlow)" />
-
-  <!-- 雷达图网格与坐标轴 -->
-  <g id="radar-grid">
-    ${gridPolygons}
-    ${axisLines}
+  <g id="radar">
+    ${card(RADAR_CARD.x, ROW_Y, RADAR_CARD.w, ROW_H, "url(#radarCard)")}
+    ${text(RADAR_CARD.x + 28, ROW_Y + 38, escapeXml(copy.radar), { size: 14, weight: 650, fill: COLORS.muted })}
+    ${text(RADAR_CARD.x + RADAR_CARD.w - 28, ROW_Y + 38, escapeXml(copy.radarNote), { size: 12.5, fill: COLORS.faint, anchor: "end" })}
+    ${rings}
+    ${axes}
+    <polygon points="${baselineShape}" fill="${COLORS.base}" fill-opacity="0.1" stroke="${COLORS.base}" stroke-width="1.8" stroke-dasharray="5 4" stroke-linejoin="round" />
+    ${baselineDots}
+    <polygon points="${pluginShape}" fill="${COLORS.tone}" fill-opacity="0.14" stroke="${COLORS.tone}" stroke-width="2.6" stroke-linejoin="round" />
+    ${pluginDots}
+    ${axisLabels}
   </g>
 
-  <!-- A 臂数据层 (Bare Agent Baseline) -->
-  <g id="baseline-layer">
-    <path d="${baselinePath}" fill="#64748b" fill-opacity="0.14" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="5,4" />
-    ${baselinePoints}
+  <g id="measures">
+    ${card(LIST_CARD.x, ROW_Y, LIST_CARD.w, ROW_H)}
+    ${text(LIST_CARD.x + 28, ROW_Y + 38, escapeXml(copy.list), { size: 14, weight: 650, fill: COLORS.muted })}
+    ${rows}
   </g>
 
-  <!-- B 臂数据层 (Plugin with Kernel) -->
-  <g id="plugin-layer" filter="url(#radarGlow)">
-    <path d="${pluginPath}" fill="url(#pluginGrad)" stroke="#10b981" stroke-width="2.6" stroke-linejoin="round" />
-    ${pluginPoints}
+  <g id="highlights">
+    ${stats}
   </g>
-
-  <!-- 6 维度指标卡片 -->
-  <g id="metric-labels">
-    ${metricLabels}
-  </g>
-
-  <!-- 底部汇总统计卡片 -->
-  <g id="highlight-cards">
-    ${highlightCards}
-  </g>
-</svg>`;
+</svg>
+`;
 }
 
-// 生成完整的 HTML 交互页面
-function generateHtml() {
-  const svgEn = generateSvg("en");
-  const svgZh = generateSvg("zh");
-
+function generateHtml(svgs) {
   return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Search Before Build - Empirical Benchmark Metrics Radar</title>
+  <title>Search Before Build · Benchmark radar</title>
   <style>
-    :root {
-      --bg: #070b12;
-      --card-bg: #0d131f;
-      --card-border: #1e293b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --accent: #10b981;
-      --accent-light: #34d399;
-      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    * { box-sizing: border-box; }
     body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      font-family: var(--font);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
+      margin: 0;
+      padding: 40px 24px 56px;
+      background: ${COLORS.bg};
+      color: ${COLORS.text};
+      font: 15px/1.6 ${FONT};
+      -webkit-font-smoothing: antialiased;
     }
-
-    .container {
-      max-width: 1020px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .top-bar h1 {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .top-bar p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: var(--text-main);
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
+    main { width: min(${WIDTH}px, 100%); margin: 0 auto; }
+    .bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    h1 { margin: 0; font-size: 22px; letter-spacing: -0.02em; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    button {
+      min-height: 38px;
+      padding: 8px 15px;
+      border: 0;
+      border-radius: 999px;
+      background: ${COLORS.card};
+      box-shadow: inset 0 0 0 1px ${COLORS.lineStrong};
+      color: ${COLORS.text};
+      font: 650 13px ${FONT};
       cursor: pointer;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
     }
-
-    .btn:hover {
-      background: #334155;
-      border-color: #475569;
-    }
-
-    .btn.active {
-      background: #064e3b;
-      border-color: #059669;
-      color: #6ee7b7;
-    }
-
-    .btn.highlight {
-      background: #065f46;
-      border-color: #10b981;
-      color: #ecfdf5;
-      font-weight: 700;
-    }
-
-    .btn.highlight:hover {
-      background: #047857;
-      border-color: #34d399;
-    }
-
-    .chart-box {
-      background: #0b0f17;
-      border-radius: 20px;
-      border: 1px solid var(--card-border);
-      padding: 16px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      position: relative;
-    }
-
-    .chart-box svg {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 16px;
-    }
-
-    .metric-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .metric-card:hover {
-      border-color: #059669;
-      transform: translateY(-2px);
-    }
-
-    .metric-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .metric-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #f1f5f9;
-    }
-
-    .metric-values {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
-
-    .val-plugin {
-      font-size: 22px;
-      font-weight: 800;
-      color: #34d399;
-    }
-
-    .val-base {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-dim);
-    }
-
-    .metric-detail {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
+    button:hover { box-shadow: inset 0 0 0 1px ${COLORS.text}; }
+    button[aria-pressed="true"], button.primary { background: ${COLORS.text}; color: ${COLORS.bg}; box-shadow: none; }
+    #chart svg { display: block; width: 100%; height: auto; }
     .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #10b981;
-      color: #064e3b;
-      font-weight: 700;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.25s ease;
-      pointer-events: none;
-      z-index: 999;
+      position: fixed; left: 50%; bottom: 24px; padding: 12px 18px; border-radius: 14px;
+      background: ${COLORS.text}; color: ${COLORS.bg}; font-weight: 620;
+      opacity: 0; transform: translate(-50%, 10px); transition: opacity 200ms, transform 200ms; pointer-events: none;
     }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .toast[data-visible="true"] { opacity: 1; transform: translate(-50%, 0); }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="top-bar">
-      <div>
-        <h1 id="page-title">Search Before Build · Concrete Metrics Radar</h1>
-        <p id="page-sub">Empirical measurements from 12 real-world software selection tasks (24 paired sessions)</p>
-      </div>
+  <main>
+    <div class="bar">
+      <h1>Search Before Build · Benchmark radar</h1>
       <div class="actions">
-        <button class="btn active" id="btn-en" onclick="setLang('en')">English</button>
-        <button class="btn" id="btn-zh" onclick="setLang('zh')">简体中文</button>
-        <button class="btn highlight" onclick="downloadPng(2)">Export 2x PNG</button>
-        <button class="btn" onclick="downloadSvg()">Save SVG</button>
-        <button class="btn" onclick="copySvg()">Copy SVG</button>
+        <button type="button" data-lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="zh" aria-pressed="false">简体中文</button>
+        <button type="button" class="primary" id="png">Export 2× PNG</button>
+        <button type="button" id="svg">Save SVG</button>
       </div>
     </div>
-
-    <div class="chart-box" id="chart-container">
-      <!-- SVG will be injected here -->
-    </div>
-
-    <div class="metric-grid" id="detail-grid">
-      <!-- Detail cards will be injected here -->
-    </div>
-  </div>
-
-  <div class="toast" id="toast">Ready!</div>
-
+    <div id="chart"></div>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
   <script>
-    const svgSources = {
-      en: ${JSON.stringify(svgEn)},
-      zh: ${JSON.stringify(svgZh)}
+    const svgs = ${JSON.stringify(svgs)};
+    let lang = "en";
+    const toast = (message) => {
+      const node = document.getElementById("toast");
+      node.textContent = message;
+      node.dataset.visible = "true";
+      setTimeout(() => { node.dataset.visible = "false"; }, 2200);
     };
-
-    const metricCardsData = ${JSON.stringify(METRICS_DATA)};
-
-    let currentLang = 'en';
-
-    function setLang(lang) {
-      currentLang = lang;
-      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-      document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
-      
-      document.getElementById('page-title').textContent = lang === 'zh' 
-        ? 'Search Before Build · 实测具体数值雷达图' 
-        : 'Search Before Build · Concrete Metrics Radar';
-      document.getElementById('page-sub').textContent = lang === 'zh'
-        ? '12 个真实软硬件选型场景成对双臂实测数据（具体数值，杜绝百分比通胀）'
-        : 'Empirical measurements from 12 real-world software selection tasks (concrete numbers, no % inflation)';
-
-      document.getElementById('chart-container').innerHTML = svgSources[lang];
-      renderCards(lang);
-    }
-
-    function renderCards(lang) {
-      const grid = document.getElementById('detail-grid');
-      const isZh = lang === 'zh';
-      grid.innerHTML = metricCardsData.map(d => {
-        const loc = isZh ? d.zh : d.en;
-        const unit = isZh ? d.unit.zh : d.unit.en;
-        const unitSuffix = unit ? ' <small style="font-size:13px;font-weight:600">' + unit + '</small>' : '';
-        const baseSuffix = unit ? ' ' + unit : '';
-        return (
-          '<div class="metric-card">' +
-            '<div class="metric-header">' +
-              '<span class="metric-title">' + loc.name + '</span>' +
-            '</div>' +
-            '<div class="metric-values">' +
-              '<span class="val-plugin">' + loc.pluginStat + unitSuffix + '</span>' +
-              '<span class="val-base">vs ' + loc.baselineStat + baseSuffix + '</span>' +
-            '</div>' +
-            '<div class="metric-detail">' + loc.detail + '</div>' +
-          '</div>'
-        );
-      }).join('');
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2500);
-    }
-
-    function copySvg() {
-      navigator.clipboard.writeText(svgSources[currentLang]).then(() => {
-        showToast(currentLang === 'zh' ? 'SVG 代码已复制！' : 'SVG copied!');
-      });
-    }
-
-    function downloadSvg() {
-      const blob = new Blob([svgSources[currentLang]], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'benchmark-radar.' + currentLang + '.svg';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    const download = (href, name) => {
+      const link = document.createElement("a");
+      link.href = href;
+      link.download = name;
+      document.body.append(link);
+      link.click();
+      link.remove();
+    };
+    const setLang = (next) => {
+      lang = next;
+      document.documentElement.lang = next === "zh" ? "zh-CN" : "en";
+      document.getElementById("chart").innerHTML = svgs[next];
+      document.querySelectorAll("[data-lang]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.lang === next)));
+    };
+    document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => setLang(button.dataset.lang)));
+    document.getElementById("svg").addEventListener("click", () => {
+      const url = URL.createObjectURL(new Blob([svgs[lang]], { type: "image/svg+xml;charset=utf-8" }));
+      download(url, lang === "zh" ? "benchmark-radar.zh.svg" : "benchmark-radar.svg");
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      showToast(currentLang === 'zh' ? 'SVG 文件已下载！' : 'SVG downloaded!');
-    }
-
-    // 将 SVG 无损渲染到 Canvas 并一键导出 2x Retina PNG
-    function downloadPng(scale = 2) {
-      showToast(currentLang === 'zh' ? '正在导出 2x 高清 PNG...' : 'Exporting 2x PNG...');
-      const svgStr = svgSources[currentLang];
-      const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      
-      img.onload = () => {
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = ${WIDTH} * scale;
-          canvas.height = ${HEIGHT} * scale;
-          const ctx = canvas.getContext('2d');
-          ctx.imageSmoothingEnabled = true;
-          ctx.imageSmoothingQuality = 'high';
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          canvas.toBlob((blob) => {
-            if (!blob) {
-              const dataUrl = canvas.toDataURL('image/png');
-              const a = document.createElement('a');
-              a.href = dataUrl;
-              a.download = 'benchmark-radar.' + currentLang + '@' + scale + 'x.png';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              showToast(currentLang === 'zh' ? '2x 高清 PNG 已下载！' : '2x PNG downloaded!');
-              return;
-            }
-            const pngUrl = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = pngUrl;
-            a.download = 'benchmark-radar.' + currentLang + '@' + scale + 'x.png';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(pngUrl), 1000);
-            showToast(currentLang === 'zh' ? '2x 高清 PNG 已下载！' : '2x PNG downloaded!');
-          }, 'image/png');
-        } catch (err) {
-          console.error('Canvas export error:', err);
-          showToast(currentLang === 'zh' ? '导出失败: ' + err.message : 'Export failed: ' + err.message);
-        }
+    });
+    document.getElementById("png").addEventListener("click", () => {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = ${WIDTH} * 2;
+        canvas.height = ${HEIGHT} * 2;
+        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          download(url, (lang === "zh" ? "benchmark-radar.zh" : "benchmark-radar") + "@2x.png");
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }, "image/png");
       };
-
-      img.onerror = (e) => {
-        console.error('SVG Image load error:', e);
-        showToast(currentLang === 'zh' ? '图片加载失败' : 'Failed to load image');
-      };
-
-      img.src = svgUrl;
-    }
-
-    // Initialize
-    setLang('en');
+      image.onerror = () => toast("PNG export failed");
+      image.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgs[lang]);
+    });
+    setLang("en");
   </script>
 </body>
 </html>
 `;
 }
 
-// 如果系统装有 Edge/Chrome，直接导出 2x 高清 PNG 文件备用
-function tryExportHeadlessPng() {
-  const edgePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
-  if (!existsSync(edgePath)) return;
-
-  const pairs = [
-    { svg: join(ASSETS_DIR, "benchmark-radar.svg"), png: join(ASSETS_DIR, "benchmark-radar.png") },
-    { svg: join(ASSETS_DIR, "benchmark-radar.zh.svg"), png: join(ASSETS_DIR, "benchmark-radar.zh.png") },
-  ];
-
-  for (const pair of pairs) {
-    try {
-      execFileSync(edgePath, [
-        "--headless",
-        `--screenshot=${pair.png}`,
-        `--window-size=${WIDTH},${HEIGHT}`,
-        "--hide-scrollbars",
-        `file:///${pair.svg.replace(/\\/g, "/")}`,
-      ], { stdio: "ignore" });
-    } catch {
-      // ignore
-    }
-  }
+mkdirSync(ASSETS_DIR, { recursive: true });
+const svgs = { en: generateSvg("en"), zh: generateSvg("zh") };
+const outputs = {
+  "benchmark-radar.svg": svgs.en,
+  "benchmark-radar.zh.svg": svgs.zh,
+  "benchmark-radar.html": generateHtml(svgs),
+};
+for (const [name, contents] of Object.entries(outputs)) {
+  writeFileSync(join(ASSETS_DIR, name), contents, "utf8");
+  console.log(join("assets", name));
 }
-
-// 主执行函数
-function main() {
-  mkdirSync(ASSETS_DIR, { recursive: true });
-
-  const svgEn = generateSvg("en");
-  const svgZh = generateSvg("zh");
-  const html = generateHtml();
-
-  const enPath = join(ASSETS_DIR, "benchmark-radar.svg");
-  const zhPath = join(ASSETS_DIR, "benchmark-radar.zh.svg");
-  const htmlPath = join(ASSETS_DIR, "benchmark-radar.html");
-
-  writeFileSync(enPath, svgEn, "utf8");
-  writeFileSync(zhPath, svgZh, "utf8");
-  writeFileSync(htmlPath, html, "utf8");
-
-  tryExportHeadlessPng();
-
-  console.log(`Generated:
-  - ${enPath}
-  - ${zhPath}
-  - ${htmlPath}
-  - ${join(ASSETS_DIR, "benchmark-radar.png")}
-  - ${join(ASSETS_DIR, "benchmark-radar.zh.png")}
-`);
-}
-
-main();
