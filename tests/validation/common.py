@@ -53,7 +53,7 @@ def assert_legacy_name_removed() -> None:
         if relative.startswith("bench/results/"):
             continue
         assert not any(name in relative for name in LEGACY_NAMES), relative
-        if path.suffix.lower() in {".md", ".json", ".mjs", ".py"}:
+        if path.suffix.lower() in {".md", ".json", ".js", ".mjs", ".py"}:
             text = path.read_text(encoding="utf-8")
             assert not any(name in text for name in LEGACY_NAMES), relative
 
