@@ -7,7 +7,7 @@
 
 **Before you start vibe coding, make sure the idea is actually worth building.**
 
-A pre-build research plugin for Codex and Claude Code: clarify your real needs, discover and aggregate similar projects and alternatives across platforms, and get a clear recommendation before you start building—use an existing tool, adapt a close match, or build from scratch.
+A pre-build research plugin for Claude Code, Codex, OpenCode, and other agents that load skills: clarify your real needs, discover and aggregate similar projects and alternatives across platforms, and get a clear recommendation before you start building—use an existing tool, adapt a close match, or build from scratch.
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
@@ -55,13 +55,16 @@ It ends with a clear recommendation that you remain free to override:
 
 | Skill | Best for | What it does |
 | --- | --- | --- |
-| `search-before-build-assess` | You have an idea but have not started | Reads the available context first, asks only for missing critical information (one question at a time, up to five), then researches and recommends a direction |
-| `search-before-build-compare` | You already have a plan, prototype, or repository | Extracts capabilities from the existing material, then looks directly for comparable products and reusable solutions |
+| `assess` | Deciding whether to build an idea, or whether to keep building an existing plan, prototype, or repository | Reads whatever you supply first (repository, docs, screenshots), asks only about what is still missing (one question at a time, up to five), confirms its understanding, then researches and recommends a direction with a full brief |
+| `quick-search` | A fast "does something like this already exist?" check | Asks nothing unless it must, checks a few relevant sources, and answers in the chat with up to five candidates and a clearly marked preliminary view |
 
 ```text
-/search-before-build:search-before-build-assess I want to build a tool that automatically organizes saved content
-/search-before-build:search-before-build-compare ./docs/plan.md
+/search-before-build:assess I want to build a tool that automatically organizes saved content
+/search-before-build:assess ./docs/plan.md
+/search-before-build:quick-search a CLI that converts OpenAPI specs to TypeScript clients
 ```
+
+When the host has a built-in tool for asking questions (such as `AskUserQuestion` in Claude Code or `question` in OpenCode), the skills ask through it; otherwise they ask in plain text, one question per turn.
 
 ## More than GitHub search
 
@@ -83,7 +86,7 @@ For SaaS products, commercial tools, app-store listings, and other solutions out
 
 ### Optional in-depth GitHub search
 
-If a GitHub MCP server, connector, or equivalent tool is available, the plugin reuses it. Otherwise, it can still work through public APIs and web search. With your consent, it can install GitHub’s official MCP server automatically:
+If a GitHub MCP server, connector, or equivalent tool is available, the plugin reuses it. Otherwise, it can still work through public APIs and web search. On Claude Code and Codex, `assess` can install GitHub’s official MCP server automatically with your consent:
 
 ```text
 Enable in-depth GitHub search
@@ -93,7 +96,7 @@ The installer downloads and verifies the official binary, then runs it with the 
 
 ## Temporary research brief and optional saving
 
-After research, the plugin renders a polished local HTML brief containing the final recommendation, search coverage, capability matrix, strongest candidates, reusable lessons, and unknowns. The page is a self-contained offline file with no CDN dependency. It overwrites one file in the OS temporary directory, so a casual question does not leave reports in the current project.
+After research, `assess` renders a polished local HTML brief containing the final recommendation, search coverage, capability matrix, strongest candidates, reusable lessons, and unknowns. The page is a self-contained offline file with no CDN dependency. It is written to the OS temporary directory, so a casual question does not leave reports in the current project.
 
 ### Read a research brief in three steps
 
@@ -148,13 +151,33 @@ codex plugin add search-before-build@search-before-build
 /plugin install search-before-build@search-before-build
 ```
 
-After installation, use `/search-before-build:search-before-build-assess` or `...-compare`. Update it with `/plugin marketplace update search-before-build`.
+After installation, use `/search-before-build:assess` or `/search-before-build:quick-search`. Update it with `/plugin marketplace update search-before-build`.
 
 **Claude Code (local loading)**
 
 ```bash
 claude --plugin-dir /path/to/search-before-build
 ```
+
+**OpenCode (v2 or later)**
+
+```bash
+opencode plugin add github:user-w-ui/search-before-build
+```
+
+The skills appear as `search-before-build-assess` and `search-before-build-quick-search`.
+
+**pi (not yet tested)**
+
+```bash
+pi install git:github.com/user-w-ui/search-before-build
+```
+
+**Cursor, GitHub Copilot, VS Code, and other Agent Plugins clients (not yet tested)**
+
+The repository root carries an [Agent Plugins](https://agent-plugins.org) `plugin.json`, so clients that support the format can install the repository directly.
+
+Automatic GitHub MCP installation is available only on Claude Code and Codex; on other hosts the skills reuse any GitHub tool you already have, or fall back to public APIs and web search.
 
 **Validate the plugin**
 

@@ -38,6 +38,7 @@ python tests/validate_plugin.py
 3. **B 臂**：另一空工作目录启动 `claude --plugin-dir <仓库根>`，用技能命令调用：
    - assess：`/search-before-build:search-before-build-assess <prompt>`
    - compare：`/search-before-build:search-before-build-compare <material路径>`
+   - 以上是本基准运行时（0.3.x）的命令。0.4.0 起两个技能合并为 `assess`，复跑时 assess 和 compare 用例都改用 `/search-before-build:assess <prompt 或 material路径>`。
    按脚本逐轮回答（最多 5 个信息性问题 + 1 次检索前确认），确认后批准其工具调用。结束时技能会返回临时简报的绝对路径（其父目录就是该 run 的 run-dir）。把证据存到 `../results/<case-id>/plugin/`。
 4. 写 `../results/<case-id>/comparison.md`：按 case 文件末尾的"对比焦点"逐项比较两臂证据。
 

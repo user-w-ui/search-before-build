@@ -8,7 +8,7 @@
 
 **在开始 vibe coding 之前，先确认这东西真的值得做。**
 
-一个面向 Codex / Claude Code 的开工前调研插件：先帮你理清真实需求，再跨平台搜索、聚合相似项目与替代方案，并在你动手实现想法之前给出一份明确的建议——直接用现成的、基于现有方案改改，还是真的值得从头写。
+一个面向 Claude Code、Codex、OpenCode 等支持技能的 Agent 的开工前调研插件：先帮你理清真实需求，再跨平台搜索、聚合相似项目与替代方案，并在你动手实现想法之前给出一份明确的建议——直接用现成的、基于现有方案改改，还是真的值得从头写。
 
 [![npm](https://img.shields.io/npm/v/@superq/search-before-build?label=npm)](https://www.npmjs.com/package/@superq/search-before-build)
 ![Codex](https://img.shields.io/badge/Codex-plugin-10a37f)
@@ -56,13 +56,16 @@ Vibe coding 让“有个想法”到“开始写代码”的距离变得非常�
 
 | 技能 | 适用场景 | 用法 |
 | --- | --- | --- |
-| `search-before-build-assess` | 只有想法、尚未开始 | 先读已有信息，仅在关键内容缺失时追问（每次一问，最多五个），再检索并给出建议 |
-| `search-before-build-compare` | 已有计划书、原型或仓库 | 从现有材料提取能力，直接寻找相似竞品和可复用方案 |
+| `assess` | 判断一个想法值不值得做，或者已有的计划书、原型、仓库值不值得继续做 | 先读你给的材料（仓库、文档、截图等），只追问材料里缺的关键信息（每次一问，最多五个），确认理解后再检索，给出建议和完整简报 |
+| `quick-search` | 快速看看“有没有类似的东西” | 非必要不提问，查几个相关来源，直接在对话里列出最多五个候选，并给一句标明“初步”的看法 |
 
 ```text
-/search-before-build:search-before-build-assess 我想做一个自动整理收藏内容的工具
-/search-before-build:search-before-build-compare ./docs/plan.md
+/search-before-build:assess 我想做一个自动整理收藏内容的工具
+/search-before-build:assess ./docs/plan.md
+/search-before-build:quick-search 把 OpenAPI 文档转成 TypeScript 客户端的命令行工具
 ```
+
+宿主自带提问工具时（比如 Claude Code 的 `AskUserQuestion`、OpenCode 的 `question`），技能会通过它提问；没有的话就用文字一问一答。
 
 ## 不只是搜索 GitHub
 
@@ -84,7 +87,7 @@ SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索�
 
 ### 可选的 GitHub 深度检索
 
-有 GitHub MCP、Connector 或等价工具时直接复用；没有也能通过公开 API 和网页搜索正常运行。经用户同意可自动安装 GitHub 官方 MCP：
+有 GitHub MCP、Connector 或等价工具时直接复用；没有也能通过公开 API 和网页搜索正常运行。在 Claude Code 和 Codex 上，经用户同意，`assess` 可自动安装 GitHub 官方 MCP：
 
 ```text
 启用 GitHub 深度检索
@@ -94,7 +97,7 @@ SaaS、商业产品、应用商店等不在目录中的方案，用网络搜索�
 
 ## 临时研究简报与可选保存
 
-研究完成后，插件会生成一份精心排版的本地 HTML 简报，集中展示最终建议、检索覆盖、能力矩阵、重点竞品、可复用经验和未知项。页面使用单文件离线渲染，不依赖 CDN，并覆盖写入系统临时目录，因此不会因为一次随手询问就在当前项目中留下报告文件。
+研究完成后，`assess` 会生成一份精心排版的本地 HTML 简报，集中展示最终建议、检索覆盖、能力矩阵、重点竞品、可复用经验和未知项。页面使用单文件离线渲染，不依赖 CDN，写入系统临时目录，因此不会因为一次随手询问就在当前项目中留下报告文件。
 
 ### 三步读懂一份研究简报
 
@@ -149,13 +152,33 @@ codex plugin add search-before-build@search-before-build
 /plugin install search-before-build@search-before-build
 ```
 
-安装后即可调用 `/search-before-build:search-before-build-assess` 与 `...-compare`；用 `/plugin marketplace update search-before-build` 更新。
+安装后即可调用 `/search-before-build:assess` 与 `/search-before-build:quick-search`；用 `/plugin marketplace update search-before-build` 更新。
 
 **Claude Code（本地加载）**
 
 ```bash
 claude --plugin-dir /path/to/search-before-build
 ```
+
+**OpenCode（需要 v2 及以上）**
+
+```bash
+opencode plugin add github:user-w-ui/search-before-build
+```
+
+技能名为 `search-before-build-assess` 和 `search-before-build-quick-search`。
+
+**pi（未实测）**
+
+```bash
+pi install git:github.com/user-w-ui/search-before-build
+```
+
+**Cursor、GitHub Copilot、VS Code 等 Agent Plugins 客户端（未实测）**
+
+仓库根目录带有 [Agent Plugins](https://agent-plugins.org) 格式的 `plugin.json`，支持该格式的客户端可以直接安装这个仓库。
+
+GitHub MCP 自动安装只支持 Claude Code 和 Codex；在其他宿主上，技能会复用你已有的 GitHub 工具，或退回公开 API 和网页搜索。
 
 **验证插件**
 

@@ -1,7 +1,7 @@
 {
   "name": "@superq/search-before-build",
   "version": "0.4.0",
-  "description": "Install the Search Before Build Codex plugin from its official marketplace.",
+  "description": "Search Before Build: check whether an idea is worth building before you code. Skills for Claude Code, Codex, OpenCode, and pi, plus a Codex plugin installer.",
   "license": "MIT",
   "type": "module",
   "author": "superq",
