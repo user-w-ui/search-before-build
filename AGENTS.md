@@ -6,7 +6,7 @@ This repository is a multi-host skill package, not a compiled application. `.cla
 
 ## Build, Test, and Development Commands
 
-The decision kernel in `src/` builds to `dist/` with `npm run build`; commit the rebuilt `dist/` with kernel changes. Run these commands from the repository root:
+The decision kernel in `src/` builds to `dist/` with `npm run build:kernel`; commit the rebuilt `dist/` with kernel changes. Run these commands from the repository root:
 
 ```bash
 claude plugin validate --strict .

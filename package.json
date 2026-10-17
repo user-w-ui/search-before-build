@@ -52,9 +52,9 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node --test tests/kernel/normalize.test.mjs tests/kernel/pipeline.test.mjs tests/kernel/cli.test.mjs tests/hosts/opencode-plugin.test.mjs && node --check bin/install.mjs",
-    "benchmark:offline": "npm run build && node bench/run-offline.mjs",
+    "build:kernel": "tsc -p tsconfig.json",
+    "test": "npm run build:kernel && node --test tests/kernel/normalize.test.mjs tests/kernel/pipeline.test.mjs tests/kernel/cli.test.mjs tests/hosts/opencode-plugin.test.mjs && node --check bin/install.mjs",
+    "benchmark:offline": "npm run build:kernel && node bench/run-offline.mjs",
     "pack:check": "npm pack --dry-run",
     "prepublishOnly": "node scripts/verify-release.mjs"
   },

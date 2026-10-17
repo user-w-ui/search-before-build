@@ -51,12 +51,15 @@ def validate() -> None:
     assert package["main"] == "./index.js"
     assert package["exports"] == {".": "./index.js"}
     assert package["pi"] == {"skills": ["./skills"]}
-    assert "prepare" not in package["scripts"], "git installs must not trigger a build"
+    # npm prepares a git dependency (npm install in the clone) when any of these
+    # scripts exist; OpenCode's bundled npm cannot run that step.
+    for script in ("prepare", "prepack", "build", "preinstall", "install", "postinstall"):
+        assert script not in package["scripts"], f"git installs must not trigger preparation: {script}"
     for shipped in ("index.js", "plugin.json", "skills/", "references/", "dist/"):
         assert shipped in package["files"], shipped
     assert package["scripts"]["prepublishOnly"] == "node scripts/verify-release.mjs"
-    assert package["scripts"]["build"] == "tsc -p tsconfig.json"
-    assert package["scripts"]["benchmark:offline"] == "npm run build && node bench/run-offline.mjs"
+    assert package["scripts"]["build:kernel"] == "tsc -p tsconfig.json"
+    assert package["scripts"]["benchmark:offline"] == "npm run build:kernel && node bench/run-offline.mjs"
     assert package.get("dependencies", {}) == {}, "The decision kernel must keep zero runtime dependencies"
     assert set(package["devDependencies"]) == {"@types/node", "typescript"}
     assert {"codex-plugin", "plugin", "claude code"} <= set(package["keywords"])

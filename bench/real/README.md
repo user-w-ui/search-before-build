@@ -12,7 +12,7 @@
 ```bash
 cd <repo root>
 npm install
-npm run build                # 确认 dist/cli.js 存在（内核入口）
+npm run build:kernel         # 确认 dist/cli.js 存在（内核入口）
 claude plugin validate --strict .
 python tests/validate_plugin.py
 ```
